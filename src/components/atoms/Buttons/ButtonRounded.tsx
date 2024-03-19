@@ -16,7 +16,7 @@ export const ButtonRounded: FC<Props> = memo(
   ({ children, type = 'button', href, onClick, className }) => {
     return (
       <SButtonRounded type={type} href={href} onClick={onClick} className={className}>
-        {children}
+        <span>{children}</span>
       </SButtonRounded>
     )
   },
@@ -37,7 +37,7 @@ const SButtonRounded = styled(Button)`
     font-family: var(--font-mincho);
     font-weight: 500;
     line-height: 1;
-    font-size: var(--size-24);
+    font-size: var(--size-20);
   }
 
   &:hover {
@@ -45,7 +45,24 @@ const SButtonRounded = styled(Button)`
     color: #fff;
   }
 
-  /* 矢印をつける */
+  /* isDark */
+  &.isDark {
+    background-color: #000;
+
+    > span {
+      color: #fff;
+    }
+
+    &:hover {
+      background-color: #fff;
+
+      > span {
+        color: #000;
+      }
+    }
+  }
+
+  /* isArrow */
   &.isArrow {
     &::after {
       content: '';

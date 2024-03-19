@@ -4,24 +4,26 @@ import { FC, ReactNode } from 'react'
 import { Text } from '@chakra-ui/react'
 import styled from 'styled-components'
 
-export const PageDescription: FC<Props> = ({ children }) => {
-  return (
-    <>
-      <SText>{children}</SText>
-    </>
-  )
-}
-
 // type
 type Props = {
   children: ReactNode
+  color?: String
+}
+
+export const PageDescription: FC<Props> = ({ children, color }) => {
+  return (
+    <>
+      <SText color={color}>{children}</SText>
+    </>
+  )
 }
 
 // style
 const SText = styled(Text)`
   padding: 2rem;
   margin-bottom: 2rem;
-  font-size: var(--size-20);
   text-align: center;
-  background-color: #f3f3f3;
+  font-size: var(--size-18);
+  color: var(--color-baseText);
+  background-color: ${(props) => (props.color ? props.color : '#f3f3f3')};
 `

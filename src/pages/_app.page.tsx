@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { DefaultLayout } from '@/components/templates/DefaultLayout'
 import type { AppProps } from 'next/app'
 import '@/styles/variables.css'
+import { AppProvider } from '@/contexts/AppContext'
 
 // DefaultLayoutを適用したくないページがあればパスを記載
 const pagesWithoutDefaultLayout: string[] = ['/test']
@@ -17,13 +18,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider theme={theme}>
-      {useDefaultLayout ? (
-        <DefaultLayout>
+      <AppProvider>
+        {useDefaultLayout ? (
+          <DefaultLayout>
+            <Component {...pageProps} />
+          </DefaultLayout>
+        ) : (
           <Component {...pageProps} />
-        </DefaultLayout>
-      ) : (
-        <Component {...pageProps} />
-      )}
+        )}
+      </AppProvider>
     </ChakraProvider>
   )
 }

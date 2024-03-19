@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
 
   //pageExtensionsを追加
   pageExtensions: ["page.tsx", "page.ts"],
