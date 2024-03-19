@@ -1,5 +1,5 @@
 import { DBDons } from '@/types/global_db.types'
-import {
+import React, {
   createContext,
   ReactNode,
   useContext,
@@ -9,18 +9,26 @@ import {
 } from 'react'
 
 // コンテキストを作成
-const AppContext = createContext<
-  [DBDons | undefined, Dispatch<SetStateAction<DBDons | undefined>>]
->([undefined, () => {}])
+type ContextType = [
+  DBDons | undefined,
+  Dispatch<SetStateAction<DBDons | undefined>>,
+  DBDons | undefined,
+  Dispatch<SetStateAction<DBDons | undefined>>,
+]
+const AppContext = createContext<ContextType>([undefined, () => {}, undefined, () => {}])
 
 // アプリケーション全体で利用する状態保持のプロバイダー
 const AppProvider = ({ children }: { children: ReactNode }) => {
-  // donステート
+  // donsステート
   const [dons, setDons] = useState<DBDons | undefined>()
+  // favoriteDonsステート
+  const [favoriteDons, setFavoriteDons] = useState<DBDons | undefined>()
 
   return (
     // AppContext.Providerを使って子コンポーネントに状態を提供
-    <AppContext.Provider value={[dons, setDons]}>{children}</AppContext.Provider>
+    <AppContext.Provider value={[dons, setDons, favoriteDons, setFavoriteDons]}>
+      {children}
+    </AppContext.Provider>
   )
 }
 

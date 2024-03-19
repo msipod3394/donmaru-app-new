@@ -4,21 +4,20 @@ import { useEffect, useState } from 'react'
 
 // 商品情報を取得するためのHook
 export function useAllDons() {
-  // const [loading, setLoading] = useState(false)
-  // const [dons, setDons] = useState([])
-  const [dons, setDons] = useAppContext()
+  const [fetchDons, setFetchDons] = useAppContext()
 
-  const fetchData = async () => {
+  const fetchDataDons = async () => {
     try {
-      // setLoading(true)
       const [allDons] = await Promise.all([getAllDons()])
-      setDons(allDons)
+      setFetchDons(allDons)
     } catch (error) {
       console.error('エラーが発生しました', error)
-    } finally {
-      // setLoading(false)
     }
   }
 
-  return { dons, fetchData }
+  useEffect(() => {
+    fetchDataDons()
+  }, [])
+
+  return { fetchDons }
 }

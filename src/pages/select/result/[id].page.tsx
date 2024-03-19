@@ -14,11 +14,10 @@ export default function PageResult() {
   // const [loading, setLoading] = useState<Boolean>(true)
   const loading = useLoadingState()
 
-  console.log(loading);
-  
-
   // 必要なデータが取得できなかったら、ホームヘリダイレクト
   useEffect(() => {
+    console.log('dons', dons)
+
     if (!resultId || !dons || Object.keys(dons).length === 0) {
       router.push('/')
     }

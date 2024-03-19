@@ -1,16 +1,19 @@
 import { useLoadingState } from '@/hooks/useLoadingState'
 import { useAllDons } from '@/hooks/useAllDons'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Omakase() {
   const router = useRouter()
-  const { dons, fetchData } = useAllDons()
+  const { fetchDons } = useAllDons()
   const loading = useLoadingState()
+
+  // state
+  const [dons, setDons] = useState()
 
   // 初回 データ取得
   useEffect(() => {
-    fetchData()
+    setDons(fetchDons)
   }, [])
 
   useEffect(() => {
