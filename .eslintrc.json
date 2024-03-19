@@ -1,3 +1,15 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react/recommended"
+  ],
+  "rules": {
+    "react/display-name": "off", // react/display-nameをオフ
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": "off"
+  }
 }

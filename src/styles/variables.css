@@ -1,0 +1,31 @@
+/* styles/globals.css */
+
+@import url(https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&family=Sawarabi+Mincho&display=swap);
+
+:root {
+  /* font */
+  --font-mincho: 'Sawarabi Mincho', serif;
+  --font-gothic: 'Noto Sans JP', sans-serif;
+
+  /* color */
+  --color-red: #f13b3a;
+  --color-baseText: #222;
+
+  /* 可変サイズ */
+  --size-8: min(0.66666vw, 8px);
+  --size-10: min(0.83333vw, 10px);
+  --size-12: min(1vw, 12px);
+  --size-16: min(1.33333vw, 16px);
+  --size-20: min(1.66666vw, 20px);
+  --size-24: min(2vw, 24px);
+  --size-28: min(2.33333vw, 28px);
+  --size-32: min(2.66666vw, 32px);
+  --size-36: min(3vw, 36px);
+  --size-40: min(3.33333vw, 40px);
+  --size-44: min(3.66666vw, 44px);
+  --size-48: min(4vw, 48px);
+  --size-52: min(4.33333vw, 52px);
+  --size-56: min(4.66666vw, 56px);
+  --size-60: min(5vw, 60px);
+  --size-64: min(5.33333vw, 64px);
+}
