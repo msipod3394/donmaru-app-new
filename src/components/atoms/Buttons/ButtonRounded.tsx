@@ -25,7 +25,10 @@ export const ButtonRounded: FC<Props> = memo(
 // 共通のボタンスタイル
 const SButtonRounded = styled(Button)`
   width: 100%;
+  max-width: 20rem;
   height: auto;
+  margin: 0 auto;
+  display: block;
   border: 3px solid #000;
   background-color: #fff;
   border-radius: 10rem;
@@ -33,10 +36,10 @@ const SButtonRounded = styled(Button)`
   > span {
     padding: 1rem 0;
     display: flex;
+    align-items: center;
     justify-content: center;
     font-family: var(--font-mincho);
     font-weight: 500;
-    line-height: 1;
     font-size: var(--size-20);
   }
 
@@ -63,7 +66,7 @@ const SButtonRounded = styled(Button)`
   }
 
   /* isArrow */
-  &.isArrow {
+  &.isArrow > span {
     &::after {
       content: '';
       display: block;

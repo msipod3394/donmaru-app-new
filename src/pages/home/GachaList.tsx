@@ -9,16 +9,16 @@ export const GachaList = memo(() => {
   return (
     <Stack spacing='1.5rem'>
       <ButtonRounded onClick={() => router.push('/select/omakase/')} className='isArrow'>
-        <span>おまかせガチャ</span>
+        おまかせガチャ
       </ButtonRounded>
       <ButtonRounded
         onClick={() => router.push('/select/ingredients/')}
         className='isArrow'
       >
-        <span>具材を選んでガチャ</span>
+        具材を選んでガチャ
       </ButtonRounded>
       <ButtonRounded onClick={() => router.push('/select/favorite/')} className='isArrow'>
-        <span>お気に入りからガチャ</span>
+        お気に入りからガチャ
       </ButtonRounded>
     </Stack>
   )

@@ -57,11 +57,11 @@ const SRightBox = styled(Box)`
   min-height: calc(100vh - 8rem);
   overflow: hidden;
   background-color: #fff;
-  padding: 4rem 1.6rem 0;
+  padding: 0 1.6rem;
   display: flex;
   align-items: center;
   flex-direction: column;
-  /* justify-content: center; */
+  justify-content: center;
 
   > h1 {
     font-size: 2.5rem;
