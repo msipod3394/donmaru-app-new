@@ -2,35 +2,36 @@ import React, { useCallback } from 'react'
 import NextLink from 'next/link'
 import { Link } from '@chakra-ui/react'
 import useAuth from '@/hooks/useAuth'
+import SignInForm from '@/components/organisms/SignUpAndInForm'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { ErrorText } from '@/components/atoms/Texts/ErrorText'
-import SignUpForm from '@/components/organisms/SignUpAndInForm'
 import { SignUpFormInput } from '@/types/SignUpFormInput'
 import { handleSubmit } from '../HandleSubmit'
 
-export default function SignUp() {
-  const { onSignUp, errorMessage } = useAuth()
+export default function SignIn() {
+  const { onSignIn, errorMessage } = useAuth()
 
   // 送信処理
-  const handleSignUp = useCallback(
+  const handleSignIn = useCallback(
     async (data: SignUpFormInput) => {
-      await handleSubmit(data, onSignUp)
+      await handleSubmit(data, onSignIn)
     },
-    [onSignUp],
+    [onSignIn],
   )
 
   return (
     <>
-      <PageTitle title='新規ユーザー登録' />
+      <PageTitle title='ログイン' />
 
-      <SignUpForm onSubmit={handleSignUp} submitMessage='登録' />
+      {/* エラー */}
+      <SignInForm onSubmit={handleSignIn} submitMessage='ログイン' />
 
       {/* エラー */}
       {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
 
-      {/* ログインはこちら */}
-      <Link as={NextLink} mt='1rem' href='/user/signin' textAlign='center'>
-        ログインはこちら
+      {/* 新規登録はこちら */}
+      <Link as={NextLink} mt='1rem' href='/user/signup' textAlign='center'>
+        新規登録はこちら
       </Link>
     </>
   )

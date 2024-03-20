@@ -1,15 +1,6 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { Heading } from '@chakra-ui/react'
 import styled from 'styled-components'
-
-export const PageTitle: FC<Props> = ({ title }) => {
-  return <SHeading as='h1'>{title}</SHeading>
-}
-
-// type
-type Props = {
-  title: string
-}
 
 // style
 const SHeading = styled(Heading)`
@@ -19,3 +10,7 @@ const SHeading = styled(Heading)`
   text-align: center;
   font-family: var(--font-mincho);
 `
+
+export const PageTitle: FC<{ title: string }> = memo(({ title }) => {
+  return <SHeading as='h1'>{title}</SHeading>
+})

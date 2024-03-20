@@ -49,7 +49,6 @@ const SLeftBox = styled(Box)`
     margin: 0 auto;
   }
 `
-
 const SRightBox = styled(Box)`
   width: 50%;
   max-width: 390px;
@@ -69,7 +68,6 @@ const SRightBox = styled(Box)`
     margin-bottom: 2rem;
   }
 `
-
 const SSRightBoxIn = styled(VStack)`
   width: 100%;
   overflow-y: scroll;

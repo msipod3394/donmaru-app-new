@@ -1,20 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+import React, { createContext, ReactNode, useContext, useState } from 'react'
 import { DBUser } from '@/types/global_db.types'
 
-const UserContext = createContext([])
-
-// DBUser 初期値
-const initialUser: DBUser = {
-  created_at: '',
-  email: '',
-  id: '',
-  password: '',
-  updated_at: '',
-  user_name: '',
-}
+const UserContext = createContext<
+  [DBUser | undefined, React.Dispatch<React.SetStateAction<DBUser | undefined>>]
+>([undefined, () => undefined])
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<DBUser>(initialUser)
+  const [user, setUser] = useState<DBUser>()
 
   return <UserContext.Provider value={[user, setUser]}>{children}</UserContext.Provider>
 }
@@ -22,5 +14,3 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 // コンテキストを利用するためのカスタムフック
 const useUserContext = () => useContext(UserContext)
 export { UserProvider, useUserContext }
-
-

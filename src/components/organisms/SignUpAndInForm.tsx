@@ -1,7 +1,7 @@
 import React from 'react'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { BaseInput } from '@/components/atoms/Input/BaseInput'
-import { SignUpFormInput } from '../../pages/signup/index.page'
+import { SignUpFormInput } from '../../pages/user/signup/index.page'
 
 // フォーム関連
 import * as yup from 'yup'

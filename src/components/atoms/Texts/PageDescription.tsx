@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React, { memo } from 'react'
 import { FC, ReactNode } from 'react'
 import { Text } from '@chakra-ui/react'
 import styled from 'styled-components'
@@ -7,15 +6,7 @@ import styled from 'styled-components'
 // type
 type Props = {
   children: ReactNode
-  color?: String
-}
-
-export const PageDescription: FC<Props> = ({ children, color }) => {
-  return (
-    <>
-      <SText color={color}>{children}</SText>
-    </>
-  )
+  color?: string
 }
 
 // style
@@ -27,3 +18,11 @@ const SText = styled(Text)`
   color: var(--color-baseText);
   background-color: ${(props) => (props.color ? props.color : '#f3f3f3')};
 `
+
+export const PageDescription: FC<Props> = memo(({ children, color }) => {
+  return (
+    <>
+      <SText color={color}>{children}</SText>
+    </>
+  )
+})
