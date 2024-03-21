@@ -1,6 +1,7 @@
 import { ReactNode, memo } from 'react'
 import styled from 'styled-components'
 import { Box, Container, Image, HStack, VStack, Stack } from '@chakra-ui/react'
+import { MenuDrawer } from '../organisms/Menu/MenuDrawer'
 
 type DefaultLayoutProps = {
   children: ReactNode
@@ -20,9 +21,9 @@ export const DefaultLayout = memo(({ children }: DefaultLayoutProps) => {
             </Stack>
           </SSRightBoxIn>
         </SRightBox>
-        {/* <MenuDrawerWrapper>
+        <MenuDrawerWrapper>
           <MenuDrawer />
-        </MenuDrawerWrapper> */}
+        </MenuDrawerWrapper>
       </SInner>
     </SLayoutWrap>
   )
@@ -78,8 +79,8 @@ const SSRightBoxIn = styled(VStack)`
   }
 `
 
-// const MenuDrawerWrapper = styled(Box)`
-//   position: absolute;
-//   top: 0.5rem;
-//   right: 0.5rem;
-// `;
+const MenuDrawerWrapper = styled(Box)`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+`
