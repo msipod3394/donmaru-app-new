@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react'
-import NextLink from 'next/link'
-import { Link } from '@chakra-ui/react'
 import useAuth from '@/hooks/useAuth'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
-import { ErrorText } from '@/components/atoms/Texts/ErrorText'
-import SignUpForm from '@/components/organisms/SignUpAndInForm'
+import { ErrorText } from '@/components/atoms/Texts/TextError'
+import { TextLink } from '@/components/atoms/Texts/TextLink'
 import { SignUpFormInput } from '@/types/SignUpFormInput'
+import SignUpForm from '@/pages/user/SignUpAndInForm'
 import { handleSubmit } from '../HandleSubmit'
 
 export default function SignUp() {
@@ -29,9 +28,7 @@ export default function SignUp() {
       {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
 
       {/* ログインはこちら */}
-      <Link as={NextLink} mt='1rem' href='/user/signin' textAlign='center'>
-        ログインはこちら
-      </Link>
+      <TextLink text='ログインはこちら' url='/user/signin' />
     </>
   )
 }

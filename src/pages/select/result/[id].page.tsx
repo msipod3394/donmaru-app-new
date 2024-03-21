@@ -1,63 +1,54 @@
-import { useLoadingState } from '@/hooks/useLoadingState'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Image, Stack, Text } from '@chakra-ui/react'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
-import { PageDescription } from '@/components/atoms/Texts/PageDescription'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { useAppContext } from '@/contexts/AppContext'
+import { DisplayResultDon } from './DisplayResultDon'
+import { ActionButtons } from '../../../components/molecules/ActionButtons'
+import { useUserContext } from '@/contexts/UserContext'
+import { useInsertOrder } from '@/hooks/useInsertOrder'
+import { useEffect } from 'react'
 
 export default function PageResult() {
   const router = useRouter()
-  const resultId = router.query.id
+  const resultId = router.query.id as string
+
   const [dons] = useAppContext()
-  // const [loading, setLoading] = useState<Boolean>(true)
-  const loading = useLoadingState()
+  const [user] = useUserContext()
+  const { insertOrderTable, error } = useInsertOrder()
 
-  // 必要なデータが取得できなかったら、ホームヘリダイレクト
+  // データがセットされていない場合、ホームにリダイレクトする
   useEffect(() => {
-    console.log('dons', dons)
-
-    if (!resultId || !dons || Object.keys(dons).length === 0) {
+    // クライアントサイドでのみ実行されるようにする
+    if (!dons && typeof window !== 'undefined') {
       router.push('/')
     }
-  }, [resultId, dons, router])
+  }, [dons, router])
+
+  // 注文履歴に追加
+  const handleAddOrder = async () => {
+    if (dons[resultId] && user) {
+      const don_id = dons[resultId].id
+      const user_id = user.id
+      const success = await insertOrderTable(don_id, user_id)
+
+      if (success) {
+        alert('注文履歴に追加しました！')
+      } else {
+        console.error('注文履歴追加エラー:', error)
+      }
+    }
+  }
+
+  // 操作ボタンの追加
+  const ActionButtonsData = [
+    { func: handleAddOrder, text: '注文履歴に追加する', className: 'isDark' },
+    { func: () => router.push('/'), text: 'もう一回ガチャする', className: '' },
+  ]
 
   return (
     <>
-      {loading ? (
-        <p>読み込み中</p>
-      ) : (
-        <>
-          <PageTitle title='へいお待ち!' />
-          <Image mb='1rem' src={`/menu/${dons[resultId].image}`} alt='test' />
-          <PageTitle title={dons[resultId].title} />
-          <PageDescription color='#ffecec'>
-            {dons[resultId].dons_netas &&
-              Array.isArray(dons[resultId].dons_netas) &&
-              dons[resultId].dons_netas.map((neta, index) => {
-                const netaName = neta.netas && neta.netas.name
-                return (
-                  <Text as='span' fontSize='md' textAlign='center' key={index}>
-                    {index > 0 && <>・</>}
-                    {netaName}
-                  </Text>
-                )
-              })}
-          </PageDescription>
-          <Stack spacing='1rem'>
-            <ButtonRounded
-              onClick={() => router.push('/select/omakase/')}
-              className='isDark'
-            >
-              注文履歴に追加する
-            </ButtonRounded>
-            <ButtonRounded onClick={() => router.push('/')} className='isArrow'>
-              もう一回ガチャする
-            </ButtonRounded>
-          </Stack>
-        </>
-      )}
+      <PageTitle title='へいお待ち!' />
+      {dons && <DisplayResultDon don={dons[resultId]} />}
+      <ActionButtons data={ActionButtonsData} />
     </>
   )
 }

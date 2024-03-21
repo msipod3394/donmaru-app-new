@@ -1,13 +1,18 @@
 import React from 'react'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { BaseInput } from '@/components/atoms/Input/BaseInput'
-import { SignUpFormInput } from '../../pages/user/signup/index.page'
+import { SignUpFormInput } from '@/types/SignUpFormInput'
 
 // フォーム関連
+import { FormControl, FormLabel, FormErrorMessage, Stack } from '@chakra-ui/react'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { FormControl, FormLabel, FormErrorMessage, Stack } from '@chakra-ui/react'
+
+type Props = {
+  onSubmit: (data: SignUpFormInput) => void
+  submitMessage: String
+}
 
 // バリデーションスキーマ
 const schema = yup.object().shape({
@@ -21,11 +26,6 @@ const schema = yup.object().shape({
     .min(6, 'パスワードは6文字以上で入力してください')
     .required('パスワードは必須です'),
 })
-
-interface Props {
-  onSubmit: (data: SignUpFormInput) => void
-  submitMessage: String
-}
 
 const SignUpForm: React.FC<Props> = ({ onSubmit, submitMessage }) => {
   const {

@@ -5,7 +5,7 @@ export function useLoadingState() {
 
   useEffect(() => {
     setLoading(false)
-    console.log("ローディング終了");
+    console.log('ローディング終了')
   }, [])
 
   return loading

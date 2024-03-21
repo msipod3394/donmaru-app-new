@@ -58,6 +58,14 @@ const useAuth = () => {
 
         // ユーザー情報をグローバルに使えるように値をセット
         setUser(data.user)
+        // setUser({
+        //   id: data.user.id,
+        //   email: data.user.email,
+        //   user_name: data.user.user_name,
+        //   password: data.user.password,
+        //   created_at: data.user.created_at,
+        //   updated_at: data.user.updated_at,
+        // })
 
         // ローカルストレージにユーザー情報を保存
         const checkUseLocalStorage = typeof window !== 'undefined'
