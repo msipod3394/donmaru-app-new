@@ -1,3 +1,5 @@
+// 使わない
+
 import { getAllDons } from '@/hooks/supabaseFunctions'
 import { useEffect, useState } from 'react'
 
@@ -5,18 +7,17 @@ import { useEffect, useState } from 'react'
 export function useAllDons() {
   const [fetchDonsData, setFetchDonsData] = useState(null)
 
-  useEffect(() => {
-    const fetchDataDons = async () => {
-      try {
-        const [allDons] = await Promise.all([getAllDons()])
-        setFetchDonsData(allDons)
-      } catch (error) {
-        console.error('エラーが発生しました', error)
-      }
+  // 初回読み込み時
+  const fetchData = async () => {
+    try {
+      const allDons = await getAllDons()
+      setFetchDonsData(allDons)
+    } catch (error) {
+      console.error('エラーが発生しました', error)
     }
+  }
 
-    fetchDataDons()
-  }, [])
+  // fetchData()
 
-  return { fetchDonsData } // 取得したDonsデータを返す
+  return { fetchData }
 }

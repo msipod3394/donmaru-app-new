@@ -3,6 +3,8 @@ import { Database } from '@/types/database.types'
 export type DBDislikes = Database['public']['Tables']['dislikes']['Row']
 // export type DBDons = Database["public"]["Tables"]["dons"]["Row"];
 export type DBDons = {
+  count: any
+  dons: any
   dons_netas: boolean
   length: number
   created_at: string

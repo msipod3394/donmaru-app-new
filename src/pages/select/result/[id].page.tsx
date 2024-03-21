@@ -11,6 +11,8 @@ export default function PageResult() {
   const router = useRouter()
   const resultId = router.query.id as string
 
+  console.log(resultId);
+
   const [dons] = useAppContext()
   const [user] = useUserContext()
   const { insertOrderTable, error } = useInsertOrder()
@@ -21,7 +23,8 @@ export default function PageResult() {
     if (!dons && typeof window !== 'undefined') {
       router.push('/')
     }
-  }, [dons, router])
+    // console.log(dons[resultId]);
+  }, [dons])
 
   // 注文履歴に追加
   const handleAddOrder = async () => {

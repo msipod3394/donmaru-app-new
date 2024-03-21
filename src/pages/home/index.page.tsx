@@ -3,13 +3,27 @@ import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { PageDescription } from '@/components/atoms/Texts/PageDescription'
 import { GachaList } from '@/pages/home/GachaList'
 import { useLoginCheck } from '@/hooks/useLoginCheck'
+import { useUserContext } from '@/contexts/UserContext'
 
 export default function Home() {
-  const user = useLoginCheck()
+  // ユーザー情報
+  const getUser = useLoginCheck()
+  const [, setUser] = useUserContext()
 
   useEffect(() => {
-    console.log('ユーザー情報', user)
-  }, [user])
+    console.log('ユーザー情報', getUser)
+
+    if (getUser) {
+      setUser({
+        id: getUser.id,
+        email: getUser.email,
+        user_name: '',
+        password: '',
+        created_at: '',
+        updated_at: '',
+      })
+    }
+  }, [])
 
   return (
     <>

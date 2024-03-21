@@ -3,34 +3,43 @@ import { useAllDons } from '@/hooks/useAllDons'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAppContext } from '@/contexts/AppContext'
+import { DBDons } from '@/types/global_db.types'
+import { getAllDons } from '@/hooks/supabaseFunctions'
 
 export default function OmakasePage() {
   const loading = useLoadingState()
   const router = useRouter()
 
-  // 全丼データ取得
-  const { fetchDonsData } = useAllDons()
-
   // 全Donsデータ（結果画面にデータ受け渡し）
   const [dons, setDons] = useAppContext()
 
+  // 初回読み込み時
+  const fetchData = async () => {
+    try {
+      const allDons = await getAllDons()
+      setDons(allDons)
+    } catch (error) {
+      console.error('エラーが発生しました', error)
+    }
+  }
+
   useEffect(() => {
-    console.log('全Donsデータ', fetchDonsData)
+    fetchData()
+  }, [])
 
-    // dons取得後の処理
-    if (fetchDonsData) {
-      // 全Donsデータを次の画面に受け渡すためにセット
-      setDons(fetchDonsData)
+  // データが取得された後に実行
+  useEffect(() => {
+    console.log('dons', dons)
 
-      const selectedId = Math.floor(Math.random() * fetchDonsData.length)
-      console.log(fetchDonsData[selectedId].id)
+    if (dons) {
+      const selectedId = Math.floor(Math.random() * dons.length)
+      console.log(dons[selectedId])
+      console.log(dons[selectedId].id)
 
       // 結果画面へ遷移
-      console.log(`/select/result/${fetchDonsData[selectedId].id}`)
-      router.push(`/select/result/${fetchDonsData[selectedId].id}`)
-      // router.push(`/select/result/0`)
+      router.push(`/select/result/${dons[selectedId].id}`)
     }
-  }, [fetchDonsData])
+  }, [dons])
 
   return <>{loading && <p>Loading...</p>}</>
 }
