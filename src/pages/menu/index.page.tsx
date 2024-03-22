@@ -5,7 +5,7 @@ import { useLoadingState } from '@/hooks/useLoadingState'
 import { useFetchDonData } from '@/hooks/useFetchDonData'
 import { useAppContext } from '@/contexts/AppContext'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
-import { ItemCard } from './ItemCard'
+import { ItemCardShort } from '../../components/molecules/Cards/ItemCardShort'
 import { DBDons } from '@/types/global_db.types'
 
 export default function PageAllMenu() {
@@ -26,7 +26,7 @@ export default function PageAllMenu() {
     <>
       <PageTitle title='メニュー一覧' />
       {dons &&
-        dons.map((item: { item: DBDons }) => <ItemCard key={item.id} item={item} />)}
+        dons.map((item: { item: DBDons }) => <ItemCardShort key={item.id} item={item} />)}
     </>
   )
 }

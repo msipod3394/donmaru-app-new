@@ -60,7 +60,7 @@ export function useFavoriteData(userId: string) {
       }
     }
 
-    fetchData()
+    fetchData() // 関数実行
   }, [userId])
 
   return { loading, favoriteDons }

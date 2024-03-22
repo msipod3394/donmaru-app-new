@@ -3,16 +3,9 @@ import { ItemCard } from '@/components/molecules/ItemCard'
 import { DBDons } from '@/types/global_db.types'
 
 export function ItemCardList({ items }: { items: DBDons[] }) {
-  console.log('items', items)
+  console.log(items)
 
   return (
-    <>
-      {items &&
-        items.map((item: DBDons) => (
-          <>
-            <ItemCard key={item.id} don={item} />
-          </>
-        ))}
-    </>
+    <>{items && items.map((item: DBDons) => <ItemCard key={item.id} don={item} />)}</>
   )
 }

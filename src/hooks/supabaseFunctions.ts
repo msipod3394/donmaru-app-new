@@ -16,7 +16,10 @@ export const getAllDons: () => Promise<DBDons[]> = async () => {
 // 全てのお気に入りではない丼を取得
 export const getNotFavoriteDons = async (favoriteid: number[]) => {
   const result = `(${favoriteid.join(',')})`
-  const unFavoritseDons = await supabase.from('dons').select(`*`).not('id', 'in', result)
+  const unFavoritseDons = await supabase
+    .from('dons')
+    .select(`*, dons_netas( netas( * ) ) `)
+    .not('id', 'in', result)
   return unFavoritseDons.data
 }
 

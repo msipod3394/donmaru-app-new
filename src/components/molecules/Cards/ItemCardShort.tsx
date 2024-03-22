@@ -7,7 +7,7 @@ type Props = {
   don: DBDons
 }
 
-export const ItemCard: FC<Props> = memo(({ item }) => {
+export const ItemCardShort: FC<Props> = memo(({ item }) => {
   return (
     <SBox key={item.id}>
       <Image w='80px' src={`/menu/${item.image}`} alt={item.title} />
