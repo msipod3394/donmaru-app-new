@@ -4,7 +4,7 @@ import { useLoginCheck } from '@/hooks/useLoginCheck'
 import { useOrderData } from '@/hooks/useFetchOrderData'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { ItemCardList } from '../_components/ItemCardList'
+import { ItemCardList } from '../../../components/molecules/ItemCardList'
 
 export default function PageOrder() {
   const getUser = useLoginCheck()

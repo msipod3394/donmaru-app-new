@@ -19,5 +19,5 @@ export function useAllDons() {
 
   // fetchData()
 
-  return { fetchData }
+  return fetchDonsData
 }

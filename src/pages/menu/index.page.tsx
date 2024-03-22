@@ -1,50 +1,48 @@
-import { useEffect, useState } from 'react'
-import { useAllDons } from '@/hooks/useAllDons'
+import { useEffect } from 'react'
+import styled from 'styled-components'
+import { VStack, HStack, Image } from '@chakra-ui/react'
+import { useLoadingState } from '@/hooks/useLoadingState'
+import { useFetchDonData } from '@/hooks/useFetchDonData'
+import { useAppContext } from '@/contexts/AppContext'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
-import { DonCard } from '@/components/molecules/DonCard'
-import { useUserContext } from '@/contexts/UserContext'
-import { useOrderAllDons } from '@/hooks/useAllOrderDons'
+import { ItemCard } from './ItemCard'
+import { DBDons } from '@/types/global_db.types'
 
-export default function Menu() {
-  const [loading, setLoading] = useState(false)
+export default function PageAllMenu() {
+  const loading = useLoadingState()
 
-  // 全丼データのステート
-  const [dons, setDons] = useState({})
+  // 全Donsデータ
+  const [dons, setDons] = useAppContext()
 
-  // 注文履歴
-  const [order, setOrder] = useState({})
+  // 初回読み込み時、全丼データ取得
+  const fetchDons = useFetchDonData()
 
-  // ユーザー情報
-  const [user] = useUserContext()
-
-  // 全丼データ取得
-  const { fetchDonsData } = useAllDons()
-  // const { fetchOrderDonsData } = useOrderAllDons(user.id)
-
+  // データが取得された後に実行
   useEffect(() => {
-    setLoading(true)
-
-    if (fetchDonsData) {
-      setDons(fetchDonsData)
-      setLoading(false)
-    }
-
-    console.log('user', user)
-    // console.log('fetchOrderDonsData', fetchOrderDonsData)
-  }, [fetchDonsData])
+    setDons(fetchDons)
+  }, [fetchDons])
 
   return (
     <>
       <PageTitle title='メニュー一覧' />
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {Object.keys(dons).map((key) => (
-            <DonCard key={key} don={dons[key]} />
-          ))}
-        </>
-      )}
+      {dons &&
+        dons.map((item: { item: DBDons }) => <ItemCard key={item.id} item={item} />)}
     </>
   )
 }
+
+// スタイル
+const SBox = styled(HStack)`
+  position: relative;
+  width: 100%;
+  border: 2px solid #000;
+  padding: 1rem;
+  border-radius: 5px;
+`
+const SBoxIn = styled(VStack)`
+  align-items: flex-start;
+`
+const SFixButtonArea = styled(VStack)`
+  position: fixed;
+  bottom: 2.4rem;
+`

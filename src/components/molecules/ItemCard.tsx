@@ -7,11 +7,10 @@ type Props = {
   don: DBDons
 }
 
-export const DonCard: FC<Props> = ({ don }) => {
+export const ItemCard: FC<Props> = ({ don }) => {
   const item = don.dons
   const updated_at = don.updated_at
-  const count = don.count
-
+  const count = don.count  
   return (
     <>
       <SBox key={item.id}>
@@ -23,7 +22,7 @@ export const DonCard: FC<Props> = ({ don }) => {
           <HStack gap={0} flexWrap='wrap'>
             {item.dons_netas &&
               Array.isArray(item.dons_netas) &&
-              item.dons_netas.map((neta: { netas: { name: any } }, index: number) => {
+              item.dons_netas.map((neta: { netas: { name: string } }, index: number) => {
                 const netaName = neta.netas && neta.netas.name
                 return (
                   <Text as='span' fontSize='xs' key={index}>
