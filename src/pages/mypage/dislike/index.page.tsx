@@ -8,6 +8,8 @@ import { useFetchNetaData } from '@/hooks/useFetchNetaData'
 import { Box, Checkbox } from '@chakra-ui/react'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { supabase } from '@/lib/supabase'
+import { handleUpdate } from './handleUpdate'
+import { CheckboxItem } from './CheckboxItem'
 
 export default function PageDislike() {
   const getUser = useLoginCheck()
@@ -54,76 +56,7 @@ export default function PageDislike() {
   }, [dislike, ingredients])
 
   // 苦手ネタ更新
-  const onSubmit = useCallback(async () => {
-    try {
-      // DBに登録のないネタのみ登録
-      const insertPromises = isChecked.map(async (netaId) => {
-        try {
-          // 既存の neta_id がデータベースに登録されているか確認
-          const existingRecord = await supabase
-            .from('dislikes')
-            .select('*')
-            .eq('neta_id', netaId)
-
-          // 返ってきたデータの中身を確認する
-          const checkExistingRecord = existingRecord.data?.length === 0
-
-          // 存在・登録チェック
-          if (existingRecord.data && checkExistingRecord) {
-            console.log('レコードが存在しない=>新しく挿入', netaId)
-            const { data, error } = await supabase
-              .from('dislikes')
-              .insert([{ neta_id: netaId, user_id: user.id }])
-          } else {
-            console.log('登録済みID', netaId)
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      })
-
-      // DBに登録のある、チェックのないネタを削除
-      const deletePromises = isChecked.map(async (netaId) => {
-        try {
-          const joinisChecked = `(${isChecked.join(',')})`
-
-          // 既存の neta_id がデータベースに登録されているか確認
-          const existingRecords = await supabase
-            .from('dislikes')
-            .select('*')
-            .not('neta_id', 'in', joinisChecked)
-
-          console.log('existingRecords', existingRecords.data)
-
-          // 各既存レコードに対して非同期操作を行う
-          if (existingRecords.data) {
-            await Promise.all(
-              existingRecords.data.map(async (record) => {
-                try {
-                  const { data, error } = await supabase
-                    .from('dislikes')
-                    .delete()
-                    .eq('neta_id', record.neta_id)
-                    .eq('user_id', user.id)
-
-                  console.log('削除済みID', record.neta_id)
-                } catch (error) {
-                  console.error(error)
-                }
-              }),
-            )
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      })
-
-      // 非同期処理完了まで待つ
-      await Promise.all([insertPromises, deletePromises])
-    } catch (error) {
-      console.error('error', error)
-    }
-  }, [isChecked, user])
+  const onSubmit = () => handleUpdate(isChecked, user)
 
   return (
     <>
@@ -134,14 +67,13 @@ export default function PageDislike() {
         <>
           {ingredients &&
             Object.values(ingredients).map((item) => (
-              <Box key={item.id}>
-                <Checkbox
-                  isChecked={isChecked.includes(item.id)}
-                  onChange={() => handleCheckbox(item.id)}
-                >
-                  {item.name}
-                </Checkbox>
-              </Box>
+              <CheckboxItem
+                key={item.id}
+                id={item.id}
+                label={item.name}
+                isChecked={isChecked.includes(item.id)}
+                onChange={handleCheckbox}
+              />
             ))}
           <ButtonRounded onClick={onSubmit} className='isDark'>
             更新
