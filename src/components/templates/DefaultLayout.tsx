@@ -71,8 +71,9 @@ const SRightBox = styled(Box)`
 `
 const SSRightBoxIn = styled(VStack)`
   width: 100%;
+  min-height: 100vh;
   overflow-y: scroll;
-  padding: 2rem 0;
+  padding: 4rem 0;
 
   &::-webkit-scrollbar {
     display: none;
