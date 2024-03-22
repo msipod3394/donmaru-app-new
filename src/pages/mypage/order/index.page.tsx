@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useUserContext } from '@/contexts/UserContext'
 import { useLoginCheck } from '@/hooks/useLoginCheck'
-import { useOrderData } from '@/hooks/useOrderData'
+import { useOrderData } from '@/hooks/useFetchOrderData'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { OrderHistory } from './OrderHistory'
+import { ItemCardList } from '../_components/ItemCardList'
 
 export default function PageOrder() {
   const getUser = useLoginCheck()
@@ -28,7 +28,7 @@ export default function PageOrder() {
   return (
     <>
       <PageTitle title='注文履歴' />
-      {loading ? <LoadingIndicator /> : <OrderHistory orderDons={orderDons} />}
+      {loading ? <LoadingIndicator /> : <ItemCardList items={orderDons} />}
     </>
   )
 }
