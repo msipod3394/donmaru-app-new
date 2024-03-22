@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
-import { PageDescription } from '@/components/atoms/Texts/PageDescription'
 import { ButtonLinkList } from '@/pages/home/ButtonLinkList'
 import { useLoginCheck } from '@/hooks/useLoginCheck'
 import { useUserContext } from '@/contexts/UserContext'
-import { SelectLinks } from '@/components/SettingLink'
+import { MypageLinks } from '@/components/SettingLink'
 
-export default function Home() {
+export default function PageMypage() {
   // ユーザー情報
   const getUser = useLoginCheck()
   const [, setUser] = useUserContext()
@@ -28,13 +27,8 @@ export default function Home() {
 
   return (
     <>
-      <PageTitle title='丼丸ガチャ' />
-      <PageDescription>
-        本日あなたにぴったりの
-        <br />
-        海鮮丼を選びます 🐟
-      </PageDescription>
-      <ButtonLinkList links={SelectLinks} />
+      <PageTitle title='マイページ' />
+      <ButtonLinkList links={MypageLinks} />
     </>
   )
 }

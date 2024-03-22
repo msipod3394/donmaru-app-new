@@ -12,7 +12,6 @@ type Props = {
 }
 
 export const ButtonRounded: FC<Props> = memo(
-  // eslint-disable-next-line react/prop-types
   ({ children, type = 'button', href, onClick, className }) => {
     return (
       <SButtonRounded type={type} href={href} onClick={onClick} className={className}>

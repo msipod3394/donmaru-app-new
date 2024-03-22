@@ -1,3 +1,5 @@
+// ドロワー・Home・マイページで使用
+
 export const UserLinks = [
   { text: '新規登録', href: '/signup' },
   { text: 'ログイン', href: '/login' },

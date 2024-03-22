@@ -39,14 +39,14 @@ export default function PageDislike() {
   const [isChecked, setIsChecked] = useState<number[]>([])
 
   // チェックボックスの更新
-  const handleCheckbox = (id: number) => {
+  const handleCheckbox = useCallback((id: number) => {
     setIsChecked((prevArray) => {
       const newArray = prevArray.includes(id)
         ? prevArray.filter((item) => item !== id)
         : [...prevArray, id]
       return newArray
     })
-  }
+  }, [])
 
   // 苦手ネタをisCheckedにセット（既存チェック）
   useEffect(() => {
@@ -57,11 +57,11 @@ export default function PageDislike() {
   }, [dislike, ingredients])
 
   // 苦手ネタ更新
-  const onSubmit = () => {
+  const onSubmit = useCallback(() => {
     if (user) {
       handleUpdate(isChecked, user)
     }
-  }
+  }, [])
 
   return (
     <>

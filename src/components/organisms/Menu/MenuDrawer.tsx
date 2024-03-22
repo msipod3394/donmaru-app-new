@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import { useUserContext } from '@/contexts/UserContext'
-import { MypageLinks, SelectLinks, UserLinks } from './Link'
+import { MypageLinks, SelectLinks, UserLinks } from '../../SettingLink'
 
 export const MenuDrawer = memo(() => {
   // 閉じ・開きの管理
@@ -41,11 +41,11 @@ export const MenuDrawer = memo(() => {
   return (
     <>
       {/* ハンバーガーアイコン */}
-      <Button ref={btnRef} onClick={onOpen}>
+      <Button onClick={onOpen}>
         <HamburgerIcon />
       </Button>
       {/* Drawer部分 */}
-      <Drawer isOpen={isOpen} onClose={onClose} placement='left' finalFocusRef={btnRef}>
+      <Drawer isOpen={isOpen} onClose={onClose} placement='right'>
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />
