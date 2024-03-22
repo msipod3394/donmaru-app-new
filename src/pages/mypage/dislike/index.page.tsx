@@ -10,13 +10,14 @@ import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { supabase } from '@/lib/supabase'
 import { handleUpdate } from './handleUpdate'
 import { CheckboxItem } from './CheckboxItem'
+import { DBNetas } from '@/types/global_db.types'
 
 export default function PageDislike() {
   const getUser = useLoginCheck()
   const [user, setUser] = useUserContext()
 
   useEffect(() => {
-    if (getUser) {
+    if (getUser && getUser.id) {
       setUser({
         id: getUser.id,
         email: getUser.email,
@@ -29,7 +30,7 @@ export default function PageDislike() {
   }, [])
 
   // ユーザーの苦手ネタを取得
-  const { dislike } = useFetchDislikeData(user?.id)
+  const { dislike } = useFetchDislikeData(user?.id || '')
 
   // 全てのネタデータを取得
   const { loading, ingredients } = useFetchNetaData()
@@ -50,13 +51,17 @@ export default function PageDislike() {
   // 苦手ネタをisCheckedにセット（既存チェック）
   useEffect(() => {
     if (dislike) {
-      const registeredDislike = dislike.map((item) => item.netas.id)
+      const registeredDislike = dislike.map((item: DBNetas) => item.netas.id)
       setIsChecked(registeredDislike)
     }
   }, [dislike, ingredients])
 
   // 苦手ネタ更新
-  const onSubmit = () => handleUpdate(isChecked, user)
+  const onSubmit = () => {
+    if (user) {
+      handleUpdate(isChecked, user)
+    }
+  }
 
   return (
     <>
@@ -66,7 +71,7 @@ export default function PageDislike() {
       ) : (
         <>
           {ingredients &&
-            Object.values(ingredients).map((item) => (
+            Object.values(ingredients).map((item: DBNetas) => (
               <CheckboxItem
                 key={item.id}
                 id={item.id}

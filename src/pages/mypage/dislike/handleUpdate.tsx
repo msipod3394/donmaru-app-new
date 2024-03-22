@@ -1,7 +1,7 @@
 import React from 'react'
 import { supabase } from '@/lib/supabase'
 
-export async function handleUpdate(isChecked: number[], user: { id: number }) {
+export async function handleUpdate(isChecked: number[], user: { id: string }) {
   try {
     // DBに登録のないネタのみ登録
     const insertPromises = isChecked.map(async (netaId) => {
