@@ -5,17 +5,18 @@ import { DisplayResultDon } from './DisplayResultDon'
 import { ActionButtons } from '../../../components/molecules/ActionButtons'
 import { useUserContext } from '@/contexts/UserContext'
 import { useInsertOrder } from '@/hooks/useInsertOrder'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { DBDons } from '@/types/global_db.types'
 
 export default function PageResult() {
   const router = useRouter()
-  const resultId = router.query.id as string
-
-  console.log(resultId);
+  const resultID = Number(router.query.id)
 
   const [dons] = useAppContext()
   const [user] = useUserContext()
   const { insertOrderTable, error } = useInsertOrder()
+
+  const [result, setResult] = useState<DBDons | unknown>({})
 
   // データがセットされていない場合、ホームにリダイレクトする
   useEffect(() => {
@@ -23,13 +24,19 @@ export default function PageResult() {
     if (!dons && typeof window !== 'undefined') {
       router.push('/')
     }
-    // console.log(dons[resultId]);
-  }, [dons])
+
+    // 対象の商品を探してステートにセット
+    if (dons) {
+      let findResultDon = dons.find((don) => don.id === resultID)
+      setResult(findResultDon)
+      console.log('result', result)
+    }
+  }, [resultID])
 
   // 注文履歴に追加
   const handleAddOrder = async () => {
-    if (dons[resultId] && user) {
-      const don_id = dons[resultId].id
+    if (result && user) {
+      const don_id = result
       const user_id = user.id
       const success = await insertOrderTable(don_id, user_id)
 
@@ -50,7 +57,7 @@ export default function PageResult() {
   return (
     <>
       <PageTitle title='へいお待ち!' />
-      {dons && <DisplayResultDon don={dons[resultId]} />}
+      {result && <DisplayResultDon don={result} />}
       <ActionButtons data={ActionButtonsData} />
     </>
   )

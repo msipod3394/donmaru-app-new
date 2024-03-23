@@ -6,7 +6,7 @@ export const useInsertOrder = () => {
   const [error, setError] = useState<string | null>('')
   const [loading, setLoading] = useState<boolean>(false)
 
-  const insertOrderTable = async (don_id: string | undefined, user_id: string) => {
+  const insertOrderTable = async (don_id: number | unknown, user_id: string) => {
     setLoading(true)
     try {
       const { data, error } = await supabase

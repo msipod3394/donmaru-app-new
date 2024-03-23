@@ -5,8 +5,6 @@ import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { DBDons } from '@/types/global_db.types'
 
 export const DisplayResultDon: FC<{ don: DBDons }> = memo(({ don }) => {
-  // console.log(don)
-
   return (
     <>
       <Image mb='1rem' src={`/menu/${don.image}`} alt='test' />

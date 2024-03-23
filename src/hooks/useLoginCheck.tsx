@@ -21,6 +21,5 @@ export function useLoginCheck(): { id: string; email: string } | undefined {
     }
   } else {
     console.error('ローカルストレージが利用できません')
-    // または、ローカルストレージが利用できない場合の適切な処理を行う
   }
 }

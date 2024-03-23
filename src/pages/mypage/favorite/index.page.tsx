@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useUserContext } from '@/contexts/UserContext'
-import { useFavoriteData } from '@/hooks/useFetchFavoriteData'
+import { useFetchFavoriteData } from '@/hooks/useFetchFavoriteData'
 import { useLoginCheck } from '@/hooks/useLoginCheck'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
@@ -13,6 +13,8 @@ import { DBDons } from '@/types/global_db.types'
 
 export default function PageOrder() {
   const getUser = useLoginCheck()
+
+  // ユーザーチェック
   const [user, setUser] = useUserContext()
 
   useEffect(() => {
@@ -28,10 +30,11 @@ export default function PageOrder() {
     }
   }, [])
 
+  // お気に入り丼の取得
+  const { loading, favoriteDons } = useFetchFavoriteData(user?.id)
+
   // お気に入りではない丼のステート
   const [notFavoriteDons, setNotFavoriteDons] = useState([])
-
-  const { loading, favoriteDons } = useFavoriteData(user?.id)
 
   useEffect(() => {
     console.log('favoriteDons', favoriteDons)

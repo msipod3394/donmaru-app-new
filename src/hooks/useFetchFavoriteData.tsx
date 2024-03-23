@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { getAllFavorite } from '@/hooks/supabaseFunctions'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 
-export function useFavoriteData(userId: string) {
+export function useFetchFavoriteData(userId: string) {
   // ローディング
   const [loading, setLoading] = useState(false)
 

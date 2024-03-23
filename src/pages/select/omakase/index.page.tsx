@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useAppContext } from '@/contexts/AppContext'
 import { getAllDons } from '@/hooks/supabaseFunctions'
 
@@ -28,12 +28,14 @@ export default function OmakasePage() {
     console.log('dons', dons)
 
     if (dons) {
-      const selectedId = Math.floor(Math.random() * dons.length)
-      console.log(dons[selectedId])
-      console.log(dons[selectedId].id)
+      const shuffleID = Math.floor(Math.random() * dons.length)
+      console.log('shuffle', shuffleID)
+
+      const resultID = dons[shuffleID].id
+      console.log('丼ID', resultID)
 
       // 結果画面へ遷移
-      router.push(`/select/result/${dons[selectedId].id}`)
+      router.push(`/select/result/${resultID}`)
     }
   }, [dons])
 

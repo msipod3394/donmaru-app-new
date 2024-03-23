@@ -7,8 +7,8 @@ export const UserLinks = [
 
 export const SelectLinks = [
   { text: 'おまかせガチャ', href: '/select/omakase' },
-  { text: '具材を選んでガチャ', href: '/select/ingredients' },
   { text: 'お気に入りからガチャ', href: '/select/favorite' },
+  { text: '具材を選んでガチャ', href: '/select/ingredients' },
   { text: 'メニュー一覧', href: '/menu' },
 ]
 

@@ -3,6 +3,7 @@ import { Database } from '@/types/database.types'
 export type DBDislikes = Database['public']['Tables']['dislikes']['Row']
 // export type DBDons = Database["public"]["Tables"]["dons"]["Row"];
 export type DBDons = {
+  find(arg0: (don: DBDons) => boolean): unknown
   map(arg0: (item: { item: DBDons }) => import("react").JSX.Element): unknown
   count: any
   dons: any
