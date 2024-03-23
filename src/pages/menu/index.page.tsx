@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import styled from 'styled-components'
 import { VStack, HStack, Image } from '@chakra-ui/react'
-import { useLoadingState } from '@/hooks/useLoadingState'
 import { useFetchDonData } from '@/hooks/useFetchDonData'
 import { useAppContext } from '@/contexts/AppContext'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
@@ -9,7 +8,6 @@ import { ItemCardShort } from '../../components/molecules/Cards/ItemCardShort'
 import { DBDons } from '@/types/global_db.types'
 
 export default function PageAllMenu() {
-  const loading = useLoadingState()
 
   // 全Donsデータ
   const [dons, setDons] = useAppContext()

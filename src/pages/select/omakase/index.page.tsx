@@ -1,13 +1,9 @@
-import { useLoadingState } from '@/hooks/useLoadingState'
-import { useAllDons } from '@/hooks/useAllDons'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAppContext } from '@/contexts/AppContext'
-import { DBDons } from '@/types/global_db.types'
 import { getAllDons } from '@/hooks/supabaseFunctions'
 
 export default function OmakasePage() {
-  const loading = useLoadingState()
   const router = useRouter()
 
   // 全Donsデータ（結果画面にデータ受け渡し）
@@ -41,5 +37,5 @@ export default function OmakasePage() {
     }
   }, [dons])
 
-  return <>{loading && <p>Loading...</p>}</>
+  // return <>{loading && <p>Loading...</p>}</>
 }

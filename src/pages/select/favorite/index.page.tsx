@@ -1,15 +1,9 @@
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
-import { useAllDons } from '@/hooks/useAllDons'
-import { useAllFavoriteDons } from '@/hooks/useAllFavorites'
-import { useLoadingState } from '@/hooks/useLoadingState'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 export default function PageFavorite() {
   const router = useRouter()
-  const { fetchDons } = useAllDons()
-  const { fetchFavoriteDons } = useAllFavoriteDons()
-  const loading = useLoadingState()
 
   // state
   const [dons, setDons] = useState()
