@@ -7,6 +7,11 @@ import { AppProvider } from '@/contexts/AppContext'
 import { UserProvider } from '@/contexts/UserContext'
 import '@/styles/reset.min.css'
 import '@/styles/variables.css'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+const client = new ApolloClient({
+  uri: 'http://localhost:3001/graphql',
+  cache: new InMemoryCache(),
+})
 
 // DefaultLayoutを適用したくないページがあればパスを記載
 const pagesWithoutDefaultLayout: string[] = ['/test']
@@ -18,17 +23,19 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider theme={theme}>
-      <AppProvider>
-        <UserProvider>
-          {useDefaultLayout ? (
-            <DefaultLayout>
+      <ApolloProvider client={client}>
+        <AppProvider>
+          <UserProvider>
+            {useDefaultLayout ? (
+              <DefaultLayout>
+                <Component {...pageProps} />
+              </DefaultLayout>
+            ) : (
               <Component {...pageProps} />
-            </DefaultLayout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </UserProvider>
-      </AppProvider>
+            )}
+          </UserProvider>
+        </AppProvider>
+      </ApolloProvider>
     </ChakraProvider>
   )
 }

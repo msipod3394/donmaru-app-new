@@ -1,0 +1,64 @@
+type Dislike {
+  createdAt: ISO8601DateTime!
+  id: ID!
+  ingredient: Ingredient!
+  updatedAt: ISO8601DateTime!
+  user: User!
+}
+
+type Favorite {
+  createdAt: ISO8601DateTime!
+  id: ID!
+  item: Item!
+  updatedAt: ISO8601DateTime!
+  user: User!
+}
+
+"""
+An ISO 8601-encoded datetime
+"""
+scalar ISO8601DateTime @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
+
+type Ingredient {
+  createdAt: ISO8601DateTime!
+  id: ID!
+  name: String!
+  updatedAt: ISO8601DateTime!
+}
+
+type Item {
+  createdAt: ISO8601DateTime!
+  id: ID!
+  image: String!
+  name: String!
+  updatedAt: ISO8601DateTime!
+}
+
+type Mutation
+
+type Order {
+  createdAt: ISO8601DateTime!
+  id: ID!
+  item: Item!
+  updatedAt: ISO8601DateTime!
+  user: User!
+}
+
+type Query {
+  dislikes(email: String, userId: ID): [Dislike!]!
+  favorites(email: String, userId: ID): [Favorite!]!
+  ingredients(fieldName: String, fieldValue: String): [Ingredient!]!
+  itemsAll(fieldName: String, fieldValue: String): [Item!]!
+  itemsSearch(fieldName: String, fieldValue: String): [Item!]!
+  orders(fieldName: String, fieldValue: String): [Order!]!
+  users(fieldName: String, fieldValue: String): [User!]!
+}
+
+type User {
+  createdAt: ISO8601DateTime!
+  email: String!
+  id: ID!
+  password: String!
+  updatedAt: ISO8601DateTime!
+  userName: String!
+}
