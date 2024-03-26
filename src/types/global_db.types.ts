@@ -4,6 +4,7 @@ export type DBDislikes = Database['public']['Tables']['dislikes']['Row']
 // export type DBDons = Database["public"]["Tables"]["dons"]["Row"];
 
 export type DBDons = {
+  dons_netas: boolean
   // find(arg0: (don: DBDons) => boolean): unknown
   // map(arg0: (item: { item: DBDons }) => import("react").JSX.Element): unknown
   // count: any
