@@ -20,7 +20,8 @@ const AppContext = createContext<ContextType>([undefined, () => {}, undefined, (
 // アプリケーション全体で利用する状態保持のプロバイダー
 const AppProvider = ({ children }: { children: ReactNode }) => {
   // donsステート
-  const [dons, setDons] = useState<DBDons | undefined>()
+  const [dons, setDons] = useState([])
+  
   // favoriteDonsステート
   const [favoriteDons, setFavoriteDons] = useState<DBDons | undefined>()
 

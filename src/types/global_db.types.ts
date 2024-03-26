@@ -2,17 +2,16 @@ import { Database } from '@/types/database.types'
 
 export type DBDislikes = Database['public']['Tables']['dislikes']['Row']
 // export type DBDons = Database["public"]["Tables"]["dons"]["Row"];
+
 export type DBDons = {
-  find(arg0: (don: DBDons) => boolean): unknown
-  map(arg0: (item: { item: DBDons }) => import("react").JSX.Element): unknown
-  count: any
-  dons: any
-  dons_netas: boolean
-  length: number
-  created_at: string
+  // find(arg0: (don: DBDons) => boolean): unknown
+  // map(arg0: (item: { item: DBDons }) => import("react").JSX.Element): unknown
+  // count: any
+  // length: number
   id: number
-  image: string
   title: string
+  image: string
+  created_at: string
   updated_at: string
 }
 export type DBDons_netas = Database['public']['Tables']['dons_netas']['Row']

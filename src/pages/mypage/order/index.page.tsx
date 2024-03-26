@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useUserContext } from '@/contexts/UserContext'
 import { useLoginCheck } from '@/hooks/useLoginCheck'
-import { useOrderData } from '@/hooks/useFetchOrderData'
+import { useFetchOrders } from '@/hooks/fetch/useFetchOrders'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { ItemCardList } from '../../../components/molecules/ItemCardList'
+import { ItemCardList } from '@/components/molecules/ItemCardList'
 
 export default function PageOrder() {
   const getUser = useLoginCheck()
@@ -23,12 +23,19 @@ export default function PageOrder() {
     }
   }, [])
 
-  const { loading, orderDons } = useOrderData(user?.id)
+  // 注文情報の取得
+  const { fetchOrders, loading } = useFetchOrders(user.id)
 
   return (
     <>
       <PageTitle title='注文履歴' />
-      {loading ? <LoadingIndicator /> : <ItemCardList items={orderDons} />}
+      {loading ? (
+        <LoadingIndicator />
+      ) : fetchOrders.length === 0 ? (
+        <p>注文履歴はありません</p>
+      ) : (
+        <ItemCardList items={fetchOrders} />
+      )}
     </>
   )
 }

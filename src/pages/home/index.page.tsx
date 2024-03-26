@@ -19,17 +19,17 @@ const GET_POSTS = gql`
 
 export default function Home() {
   // gql
-  const { loading, error, data } = useQuery(GET_POSTS, {
-    fetchPolicy: 'network-only', // キャッシュの仕方
-    onCompleted(data) {
-      // 完了時の処理
-      console.log('data', data)
-    },
-    onError: (error) => {
-      // エラー時の処理
-      console.error('error', error)
-    },
-  })
+  // const { loading, error, data } = useQuery(GET_POSTS, {
+  //   fetchPolicy: 'network-only', // キャッシュの仕方
+  //   onCompleted(data) {
+  //     // 完了時の処理
+  //     console.log('data', data)
+  //   },
+  //   onError: (error) => {
+  //     // エラー時の処理
+  //     console.error('error', error)
+  //   },
+  // })
 
   // ユーザー情報
   const getUser = useLoginCheck()
