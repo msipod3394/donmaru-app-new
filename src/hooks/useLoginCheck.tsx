@@ -1,25 +1,34 @@
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { DBUser } from '@/types/global_db.types'
 
 // ログイン状況のチェック
-export function useLoginCheck(): { id: string; email: string } | undefined {
+export const useCheckLogin = () => {
   const router = useRouter()
+  const [getUser, setGetUser] = useState<DBUser>()
 
-  // サーバーとクライアントでローカルストレージが使えるかチェック
-  const isLocalStorageAvailable = typeof window !== 'undefined' && window.localStorage
+  const checkLogin = useCallback(() => {
+    const isLocalStorageAvailable = typeof window !== 'undefined' && window.localStorage
 
-  if (isLocalStorageAvailable) {
-    // ローカルストレージにデータがあるか確認
-    const isSetUser = window.localStorage.getItem('loginUser')
-
-    if (isSetUser) {
-      const jsonObject = JSON.parse(isSetUser)
-      const { id, email } = jsonObject
-      return { id, email }
+    // ローカルストレージにログインユーザーのデータがあるかどうか
+    if (isLocalStorageAvailable) {
+      const isSetUser = window.localStorage.getItem('loginUser')
+      if (isSetUser) {
+        const jsonObject = JSON.parse(isSetUser)
+        setGetUser(jsonObject)
+      } else {
+        // ログインしていない場合は、ログインページにリダイレクト
+        console.log('ログイン画面へ')
+        router.push('/user/signin')
+      }
     } else {
-      console.log('ログイン画面へ')
-      router.push('/login')
+      console.error('ローカルストレージが利用できません')
     }
-  } else {
-    console.error('ローカルストレージが利用できません')
-  }
+  }, [router])
+
+  useEffect(() => {
+    checkLogin()
+  }, [checkLogin])
+
+  return { checkLogin, getUser }
 }

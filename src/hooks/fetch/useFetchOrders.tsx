@@ -1,31 +1,48 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useCheckLogin } from '../useLoginCheck'
+import { DBUser } from '@/types/global_db.types'
 
-export const useFetchOrders = (userID: string) => {
+export const useFetchOrders = () => {
+  // State管理
   const [loading, setLoading] = useState(false)
-  const [fetchOrders, setFetchOrders] = useState([])
+  const [user, setUser] = useState<DBUser>()
+  const [fetchOrders, setFetchOrders] = useState<DBUser[]>([])
+
+  // ユーザー情報を取得
+  const { getUser } = useCheckLogin()
 
   //  supabaseから値を取得
-  const getFetchOrders = useCallback(async (userID: string) => {
+  const getFetchOrders = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('orders')
-      .select(`*,  dons( *, dons_netas( netas( * ) ) )`)
-      .eq('user_id', userID)
-    if (error) {
-      console.error('Error fetching items:', error.message)
+    if (user && user.id) {
+      const { data, error } = await supabase
+        .from('orders')
+        .select(`*,  dons( *, dons_netas( netas( * ) ) )`)
+        .eq('user_id', user.id)
+      if (error) {
+        console.error('Error:', error.message)
+      } else {
+        setFetchOrders(data)
+      }
+      setLoading(false)
     } else {
-      setFetchOrders(data)
+      console.log('ユーザー情報が取得できません')
     }
-    setLoading(false)
   }, [])
 
+  // ユーザー情報を取得実行
   useEffect(() => {
-    getFetchOrders(userID)
+    setUser(getUser)
+  }, [getUser])
+
+  // 注文情報を取得実行
+  useEffect(() => {
+    getFetchOrders()
   }, [getFetchOrders])
 
   return { getFetchOrders, fetchOrders, loading }
 }
 
 // 呼ぶ側
-// const { getFetchOrders, fetchOrders, loading } = useFetchOrders(userId)
+// const { getFetchOrders, fetchOrders, loading } = useFetchOrders()
