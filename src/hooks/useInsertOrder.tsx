@@ -1,7 +1,8 @@
+// 注文履歴テーブルに新しく追加する
+
 import React, { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
-// 注文履歴テーブルに追加
 export const useInsertOrder = () => {
   const [error, setError] = useState<string | null>('')
   const [loading, setLoading] = useState<boolean>(false)

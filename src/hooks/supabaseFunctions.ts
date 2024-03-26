@@ -1,3 +1,5 @@
+// Hooks整理できたら削除予定
+
 import { supabase } from '@/lib/supabase'
 import {
   DBDislikes,

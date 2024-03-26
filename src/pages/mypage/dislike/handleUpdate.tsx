@@ -1,4 +1,3 @@
-import React from 'react'
 import { supabase } from '@/lib/supabase'
 
 export async function handleUpdate(isChecked: number[], user: { id: string }) {

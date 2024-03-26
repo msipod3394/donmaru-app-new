@@ -1,5 +1,6 @@
+// 丼カードに注文回数・最新注文日を入れた配列に整形する
+
 import { useEffect, useState } from 'react'
-import { DBDons } from '@/types/global_db.types'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 
 type Props = {

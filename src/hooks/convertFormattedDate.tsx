@@ -1,3 +1,5 @@
+// 日付をフォーマットする
+
 export const convertFormattedDate = (isoTimestamp: string | number | Date) => {
   const dateObject = new Date(isoTimestamp)
 

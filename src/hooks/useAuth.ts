@@ -1,3 +1,5 @@
+// ユーザー認証
+
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'

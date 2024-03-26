@@ -1,8 +1,9 @@
+// ログイン状況のチェック
+
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { DBUser } from '@/types/global_db.types'
 
-// ログイン状況のチェック
 export const useCheckLogin = () => {
   const router = useRouter()
   const [getUser, setGetUser] = useState<DBUser>()
