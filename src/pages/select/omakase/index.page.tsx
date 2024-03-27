@@ -5,7 +5,7 @@ import { useFetchItems } from '@/hooks/fetch/useFetchItems'
 export default function PageSelectOmakase() {
   const router = useRouter()
 
-  // 全Donsデータ取得
+  // 全ての丼データ取得
   const { fetchItems, loading } = useFetchItems()
   console.log('fetchItems', fetchItems)
 

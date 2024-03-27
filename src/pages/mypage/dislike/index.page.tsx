@@ -4,10 +4,10 @@ import { useFetchNetas } from '@/hooks/fetch/useFetchNetas'
 import { useFetchDislikes } from '@/hooks/fetch/useFetchDislikes'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { NetaCheckbox } from '@/components/atoms/Checkbox/NetaCheckbox'
 import { DBNetas, DBUser } from '@/types/global_db.types'
 // ページ独自
 import { handleUpdate } from './handleUpdate'
-import { CheckboxItem } from './CheckboxItem'
 
 type Dislikes = {
   netas: [id: string]
@@ -31,7 +31,7 @@ export default function PageDislike() {
   // 苦手ネタの取得
   const { fetchDislikes } = useFetchDislikes()
 
-  // 全てのネタデータを取得
+  // 全てのネタ情報を取得
   const { fetchNetas } = useFetchNetas()
 
   // チェックが入っているネタを管理
@@ -75,7 +75,7 @@ export default function PageDislike() {
         Object.values(fetchNetas).map((item: Netas) => {
           // console.log('item', item)
           return (
-            <CheckboxItem
+            <NetaCheckbox
               key={item.id}
               id={item.id}
               label={item.name}

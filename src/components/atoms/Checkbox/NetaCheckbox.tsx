@@ -8,7 +8,7 @@ type Props = {
   onChange: (arg0: number) => void
 }
 
-export const CheckboxItem: FC<Props> = memo(({ id, label, isChecked, onChange }) => {
+export const NetaCheckbox: FC<Props> = memo(({ id, label, isChecked, onChange }) => {
   return (
     <Box key={id}>
       <Checkbox isChecked={isChecked} onChange={() => onChange(id)}>
