@@ -4,7 +4,7 @@ import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 
 export default function PageFavorite() {
-  // 注文情報の取得
+  // お気に入り情報の取得
   const { fetchFavorites, loading } = useFetchFavorites()
 
   return (

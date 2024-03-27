@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useFetchItems } from '@/hooks/fetch/useFetchItems'
-import { useAppContext } from '@/contexts/AppContext'
 
-export default function PageOmakase() {
+export default function PageSelectOmakase() {
   const router = useRouter()
 
   // 全Donsデータ取得
   const { fetchItems, loading } = useFetchItems()
+  console.log('fetchItems', fetchItems)
 
   // データが取得された後に実行
   useEffect(() => {
