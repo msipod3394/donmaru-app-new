@@ -9,7 +9,7 @@ import { ItemCardList } from '@/components/molecules/ItemCardList'
 export default function PageSelectFavorite() {
   const router = useRouter()
 
-  // 結果をstate管理
+  // 結果をステート管理
   const [result, setResult] = useState('')
 
   // お気に入り情報の取得

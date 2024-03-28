@@ -240,6 +240,7 @@ export interface Database {
       }
       users: {
         Row: {
+          don_id: any
           created_at: string
           email: string
           id: string
