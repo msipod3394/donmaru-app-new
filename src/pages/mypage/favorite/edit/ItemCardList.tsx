@@ -1,110 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { useFetchOrders } from '@/hooks/fetch/useFetchOrders'
-import { convertFormattedDate } from '@/hooks/convertFormattedDate'
-import { ItemCard } from './ItemCard'
 import { useFetchFavorites } from '@/hooks/fetch/useFetchFavorites'
+import { useFetchOrdersData } from './useFetchOrdersData'
+import { useFilterItems } from './useFilterItems'
+import { ItemCard } from './ItemCard'
+import { formattedData } from '@/types/formattedData'
+import { useCallback, useEffect, useState } from 'react'
 
-type Props = {
-  id: number
-  title: string
-  image: string
-  created_at: string
-  updated_at: string
-  don_id: number
-  order_latest: string
-  count: number
-  favorite: boolean
-}
+export function ItemCardList({ items }: { items: formattedData[] }) {
+  // お気に入り更新のステート管理
+  const [FavoritesIdArray, setFavoritesIdArray] = useState<number[] | undefined>()
 
-type FilterData = {
-  don_id: number
-  updated_at: string
-  count: number
-}
-
-export function ItemCardList({ items }: { items: Props[] }) {
-  // 履歴の情報取得
-  const { fetchOrders } = useFetchOrders()
-
-  // お気に入り丼の情報取得
+  // お気に入りを取得
   const { fetchFavorites } = useFetchFavorites()
 
-  // 最新の注文履歴ステート
-  const [order, setOrder] = useState<FilterData[]>([])
+  // 注文履歴を取得
+  const order = useFetchOrdersData()
 
-  // 最終的にItemCardに送るオブジェクト
-  const [endItem, setEndItem] = useState<Props[]>([])
-
-  // 履歴の重複チェック・注文回数を取得
-  useEffect(() => {
-    const filterArray: FilterData[] = []
-
-    fetchOrders.forEach((item) => {
-      // id, 最終注文日を抽出
-      const { don_id, updated_at } = item
-
-      // 重複した場合の状態を返す
-      const existingItemIndex = filterArray.findIndex(
-        (filterItem) => filterItem.don_id === don_id,
-      )
-      // console.log(item.id, existingItemIndex)
-
-      // 注文回数をセット
-      if (existingItemIndex === -1) {
-        // 重複がない場合、1でセット
-        filterArray.push({ don_id, updated_at, count: 1 })
-      } else {
-        // 重複がある場合、countをインクリメント
-        filterArray[existingItemIndex].count++
-      }
-    })
-
-    setOrder(filterArray)
-  }, [fetchOrders])
+  // ItemCard に送る形に整形
+  const getEndItems = useFilterItems(items, order, fetchFavorites)
+  const [endItems, setEndItems] = useState([])
 
   useEffect(() => {
-    // 注文履歴のIDだけの配列を作成
-    const orderIdArray = order.map((item) => item.don_id)
+    if (fetchFavorites) {
+      const FavoritesIdArray = fetchFavorites.map((item) => item.don_id)
+      setFavoritesIdArray(FavoritesIdArray)
+    }
+    setEndItems([...getEndItems])
+  }, [fetchFavorites])
 
-    // お気に入りのIDだけの配列を作成
-    const favDonIdArray = fetchFavorites.map((item) => item.don_id)
-
-    // 全丼から注文履歴に一致する丼を検索
-    const targetItems = items.map((item) => {
-      // 初期値
-      let order_latest = ''
-      let count = 0
-      let favorite
-
-      if (orderIdArray.includes(item.id)) {
-        const targetId = item.id
-        const targetItem = order.find((item) => item.don_id === targetId)
-        // 該当すれば、最新注文日・注文回数を追加
-        if (targetItem) {
-          order_latest = convertFormattedDate(targetItem.updated_at)
-          count = targetItem.count
-        }
-      }
-
-      // お気に入りのプロパティ更新
-      if (favDonIdArray.includes(item.id)) {
-        favorite = true
+  // 「お気に入りに追加する」クリック時の処理
+  const clickAddFavorite = useCallback((id: number) => {
+    setFavoritesIdArray((prevstate) => {
+      if (prevstate && !prevstate.includes(id)) {
+        setEndItems((prevItems) => {
+          return prevItems.map((item) => {
+            if (item.id === id) {
+              return { ...item, favorite: true }
+            }
+            return item
+          })
+        })
+        return [...prevstate, id]
       } else {
-        favorite = false
+        return [...prevstate]
       }
-
-      return { ...item, order_latest, count, favorite }
     })
+  }, [endItems])
 
-    // console.log(targetItems)
-    setEndItem(targetItems)
-  }, [items, order, fetchFavorites])
+  // 「お気に入りから削除する」クリック時の処理
+  const clickRemoveFavorite = useCallback((id: number) => {
+    setFavoritesIdArray((prevstate) => {
+      if (prevstate && prevstate.includes(id)) {
+        setEndItems((prevItems) => {
+          return prevItems.map((item) => {
+            if (item.id === id) {
+              return { ...item, favorite: false }
+            }
+            return item
+          })
+        })
+        return prevstate.filter(itemId => itemId !== id); // id を削除した新しい配列を返す
+      } else {
+        return [...prevstate]
+      }
+    })
+  }, [endItems])
+  
+  useEffect(() => {
+    console.log('FavoritesIdArray', FavoritesIdArray)
+  }, [FavoritesIdArray])
 
   return (
     <>
-      {endItem.map((item) => (
-        <ItemCard key={item.id} item={item} />
-      ))}
+      {endItems && (
+        <>
+          <p>
+            選択中:
+            {FavoritesIdArray?.map((item) => <span>{item},</span>)}
+          </p>
+          {endItems.map((item) => (
+            <ItemCard
+              key={item.id}
+              item={item}
+              FavoritesIds={FavoritesIdArray}
+              clickAddFavorite={clickAddFavorite}
+              clickRemoveFavorite={clickRemoveFavorite}
+            />
+          ))}
+        </>
+      )}
     </>
   )
 }

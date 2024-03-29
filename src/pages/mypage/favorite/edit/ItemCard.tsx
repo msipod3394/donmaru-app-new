@@ -1,30 +1,24 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, memo, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image, Button, Link } from '@chakra-ui/react'
 import { StarIcon, TimeIcon } from '@chakra-ui/icons'
+import { DBNetas } from '@/types/global_db.types'
 
-type Props = {
-  id: number
-  title: string
-  image: string
-  created_at: string
-  updated_at: string
-  don_id: number
-  order_latest: string
-  count: number
-  favorite: boolean
-}
-
-export const ItemCard: FC<Props> = ({ item }) => {
-  const clickAddFav = () => {
-    console.log('clickAddFav')
-  }
+export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) => {
+  // const { item, clickAddFavorite, clickRemoveFavorite } = props
+  console.log('item', item)
 
   return (
     <>
       <SBox key={item.id} className={item.favorite ? '_isFavorite' : ''}>
         <Image w='80px' src={`/menu/${item.image}`} alt={item.title} />
         <SBoxIn spacing={1}>
+          {item.favorite && (
+            <HStack gap={1}>
+              <StarIcon boxSize={2} color='orange' />
+              <SFavText>お気に入り登録中</SFavText>
+            </HStack>
+          )}
           <Text size='sm' fontWeight='500'>
             {item.title}
           </Text>
@@ -62,31 +56,35 @@ export const ItemCard: FC<Props> = ({ item }) => {
               </>
             )}
           </HStack>
-          <HStack gap={1}>
-            <StarIcon boxSize={2} color='red.500' />
+          <HStack>
             {item.favorite ? (
-              <SFavText>お気に入りに登録中です</SFavText>
+              <SRemoveFavText onClick={() => clickRemoveFavorite(item.id)}>
+                お気に入りから削除する
+              </SRemoveFavText>
             ) : (
-              <SAddFavText onClick={clickAddFav}>お気に入りに追加する</SAddFavText>
+              <SAddFavText onClick={() => clickAddFavorite(item.id)}>
+                お気に入りに追加する
+              </SAddFavText>
             )}
           </HStack>
         </SBoxIn>
       </SBox>
     </>
   )
-}
+})
 
 // スタイル
 const SBox = styled(HStack)`
   position: relative;
   width: 100%;
   padding: 1rem;
-  border: 2px solid #000;
+  border: 2px solid #222;
   box-sizing: border-box;
   border-radius: 5px;
 
   &._isFavorite {
-    border: 3px solid #ce1919;
+    border: 2px solid #068e08;
+    background: rgba(26, 158, 0, 0.1);
   }
 `
 const SBoxIn = styled(VStack)`
@@ -95,9 +93,18 @@ const SBoxIn = styled(VStack)`
 
 const SFavText = styled(Text)`
   font-size: 12px;
-  color: #ce1919;
+  font-weight: 500;
+  color: #068e08;
 `
-const SAddFavText = styled(Text)`
+const SAddFavText = styled(Button)`
   font-size: 12px;
-  color: #ce1919;
+  color: #068e08;
+  background: rgba(26, 158, 0, 0.1);
+`
+
+const SRemoveFavText = styled(Button)`
+  font-size: 12px;
+  color: #555;
+  border: 1px solid #555;
+  background: #fff;
 `
