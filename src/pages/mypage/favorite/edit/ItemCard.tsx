@@ -3,11 +3,9 @@ import styled from 'styled-components'
 import { Text, VStack, HStack, Image, Button, Link } from '@chakra-ui/react'
 import { StarIcon, TimeIcon } from '@chakra-ui/icons'
 import { DBNetas } from '@/types/global_db.types'
+import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 
 export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) => {
-  // const { item, clickAddFavorite, clickRemoveFavorite } = props
-  console.log('item', item)
-
   return (
     <>
       <SBox key={item.id} className={item.favorite ? '_isFavorite' : ''}>
@@ -58,9 +56,9 @@ export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) =
           </HStack>
           <HStack>
             {item.favorite ? (
-              <SRemoveFavText onClick={() => clickRemoveFavorite(item.id)}>
+              <SRemoveFavButton onClick={() => clickRemoveFavorite(item.id)}>
                 お気に入りから削除する
-              </SRemoveFavText>
+              </SRemoveFavButton>
             ) : (
               <SAddFavText onClick={() => clickAddFavorite(item.id)}>
                 お気に入りに追加する
@@ -100,11 +98,19 @@ const SAddFavText = styled(Button)`
   font-size: 12px;
   color: #068e08;
   background: rgba(26, 158, 0, 0.1);
+
+  &:hover {
+    background: rgba(26, 158, 0, 0.25);
+  }
 `
 
-const SRemoveFavText = styled(Button)`
+const SRemoveFavButton = styled(Button)`
   font-size: 12px;
   color: #555;
   border: 1px solid #555;
   background: #fff;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.8);
+  }
 `

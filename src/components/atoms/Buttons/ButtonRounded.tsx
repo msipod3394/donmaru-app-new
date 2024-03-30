@@ -82,4 +82,10 @@ const SButtonRounded = styled(Button)`
       background-color: #fff;
     }
   }
+
+  /* isFixed */
+  &.isFixed {
+    position: fixed;
+    bottom: 1rem;
+  }
 `
