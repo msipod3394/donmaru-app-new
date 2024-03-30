@@ -1,12 +1,7 @@
-type Neta = {
-  id: number
-  name: string
-  created_at: string
-  updated_at: string
-}
+import { DBNetas } from './global_db.types'
 
 type DonsNetas = {
-  netas: Neta[]
+  netas: DBNetas[]
 }
 
 type Don = {
