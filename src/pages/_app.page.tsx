@@ -8,7 +8,9 @@ import { UserProvider } from '@/contexts/UserContext'
 import '@/styles/reset.min.css'
 import '@/styles/variables.css'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
-const client = new ApolloClient({
+
+// Apollo Clientの初期化
+const client: ApolloClient<{}> = new ApolloClient({
   uri: 'http://localhost:3001/graphql',
   cache: new InMemoryCache(),
 })
@@ -18,7 +20,6 @@ const pagesWithoutDefaultLayout: string[] = ['/test']
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
-
   const useDefaultLayout: boolean = !pagesWithoutDefaultLayout.includes(router.pathname)
 
   return (
