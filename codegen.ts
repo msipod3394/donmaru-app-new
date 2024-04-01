@@ -3,11 +3,19 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   overwrite: true,
   schema: './schema.graphql',
-  documents: 'src/**/*.tsx',
+  documents: 'src/**/*.graphql',
   generates: {
     'src/gql/': {
       preset: 'client',
       plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        skipTypename: false,
+        withHOC: true, // Hookを作ることを許可
+        withComponent: false,
+        scalars: {
+          uniqueidentifier: 'string',
+        },
+      },
     },
   },
 }
