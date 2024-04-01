@@ -9,9 +9,12 @@ import { VStack } from '@chakra-ui/react'
 import styled from 'styled-components'
 import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { DBUser } from '@/types/global_db.types'
-import { handleUpdate } from '../handleUpdate'
+import { useUpdateFavorite } from '../handleUpdate'
+import { useRouter } from 'next/router'
 
 export function ItemCardList({ items }: { items: formattedData[] }) {
+  const router = useRouter()
+
   // ユーザー情報を取得
   const { getUser } = useCheckLogin()
   const [user, setUser] = useState<DBUser>()
@@ -90,14 +93,21 @@ export function ItemCardList({ items }: { items: formattedData[] }) {
     setUser(getUser)
   }, [getUser])
 
+  const { loading, error, handleUpdate } = useUpdateFavorite()
+
   // お気に入りの更新
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (user) {
-      console.log('FavoritesIdArray', FavoritesIdArray)
-      console.log('user', user)
-      handleUpdate(FavoritesIdArray, user)
+      await handleUpdate(FavoritesIdArray, user)
     }
   }, [FavoritesIdArray])
+
+  useEffect(() => {
+    if (!loading) {
+      alert('更新に成功しました')
+      router.push('/mypage/favorite')
+    }
+  }, [loading, handleUpdate])
 
   return (
     <SBox>
