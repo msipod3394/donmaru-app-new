@@ -4,6 +4,7 @@ import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { useRouter } from 'next/router'
+import { Text } from '@chakra-ui/react'
 
 export default function PageFavorite() {
   const router = useRouter()
@@ -23,15 +24,15 @@ export default function PageFavorite() {
       {loading ? (
         <LoadingIndicator />
       ) : fetchFavorites.length === 0 ? (
-        <p>注文履歴はありません</p>
+        <Text align='center' mb='2rem'>
+          お気に入り登録はありません
+        </Text>
       ) : (
-        <>
-          <ItemCardList items={fetchFavorites} />
-          <ButtonRounded onClick={clickEditFavorite} className='isDark'>
-            編集する
-          </ButtonRounded>
-        </>
+        <ItemCardList items={fetchFavorites} />
       )}
+      <ButtonRounded onClick={clickEditFavorite} className='isDark'>
+        編集する
+      </ButtonRounded>
     </>
   )
 }

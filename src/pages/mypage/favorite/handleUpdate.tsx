@@ -1,8 +1,13 @@
+import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
+import { useState, useCallback } from 'react'
 
 export async function handleUpdate(FavoritesIdArray: number[], user: { id: string }) {
   console.log('FavoritesIdArray', FavoritesIdArray)
   console.log('user', user)
+
+  //すべての操作が成功したかどうかをチェック
+  let allOperationsSuccessful = true
 
   try {
     // DBに登録のない丼IDのみ登録
@@ -25,6 +30,7 @@ export async function handleUpdate(FavoritesIdArray: number[], user: { id: strin
             .insert([{ don_id: donId, user_id: user.id }])
         } else {
           console.log('登録済みID', donId)
+          allOperationsSuccessful = false
         }
       } catch (error) {
         console.error(error)
@@ -58,18 +64,53 @@ export async function handleUpdate(FavoritesIdArray: number[], user: { id: strin
                 console.log('削除済みID', record.don_id)
               } catch (error) {
                 console.error(error)
+                allOperationsSuccessful = false
               }
             }),
           )
         }
       } catch (error) {
         console.error(error)
+        allOperationsSuccessful = false
       }
     })
 
     // 非同期処理完了まで待つ
     await Promise.all([insertPromises, deletePromises])
+
+    // 処理が完了したら
+    if (allOperationsSuccessful) {
+      alert('更新に成功しました')
+    } else {
+      alert('何らかのエラーが発生しました')
+    }
   } catch (error) {
     console.error('error', error)
+  }
+}
+
+export const useUpdateFavorite = () => {
+  const [data, setData] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  const handleUpdate = useCallback((FavoritesIdArray: number[], user: { id: string }) => {
+    setLoading(true)
+    // DBで保存する処理
+
+    // FavoritesIdArrayを保存する処理
+    // 成功
+    setData(true)
+    // エラー
+    // setError(e.message())
+
+    setLoading(false)
+  }, [])
+
+  return {
+    data,
+    error,
+    loading,
+    handleUpdate,
   }
 }

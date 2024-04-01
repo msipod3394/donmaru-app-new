@@ -7,18 +7,14 @@ import { useUserContext } from '@/contexts/UserContext'
 import { SelectLinks } from '@/components/SettingLink'
 import { useFetchUser } from '@/hooks/gql/useFetchUser'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { useGetIngredientsQuery } from '@/gql/graphql'
 
 export default function Home() {
   // gql
-  // const { loading, error, data } = useFetchUser()
+  const { loading, error, data } = useFetchUser()
 
-  // // ユーザー情報
+  // ユーザー情報
   const { getUser } = useCheckLogin()
   const [user, setUser] = useUserContext()
-
-  const { data, loading, error } = useGetIngredientsQuery()
-  console.log('data', data)
 
   useEffect(() => {
     setUser(getUser)

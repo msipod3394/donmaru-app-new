@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { VStack } from '@chakra-ui/react'
 import { useFetchItems } from '@/hooks/fetch/useFetchItems'
 import { useFetchNetas } from '@/hooks/fetch/useFetchNetas'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
@@ -80,7 +81,7 @@ export default function PageSelectIngredient() {
       {loading ? (
         <LoadingIndicator />
       ) : (
-        <>
+        <VStack mb='2rem' alignItems='flex-start'>
           {fetchNetas &&
             Object.values(fetchNetas).map((item) => {
               return (
@@ -93,7 +94,7 @@ export default function PageSelectIngredient() {
                 />
               )
             })}
-        </>
+        </VStack>
       )}
       <ButtonRounded onClick={clickShowResult} className='isDark'>
         ガチャする

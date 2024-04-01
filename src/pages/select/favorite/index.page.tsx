@@ -5,6 +5,7 @@ import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
+import { Text } from '@chakra-ui/react'
 
 export default function PageSelectFavorite() {
   const router = useRouter()
@@ -41,13 +42,25 @@ export default function PageSelectFavorite() {
       {loading ? (
         <LoadingIndicator />
       ) : fetchFavorites.length === 0 ? (
-        <p>注文履歴はありません</p>
+        <>
+          <Text align='center' mb='2rem'>
+            お気に入り登録はありません
+          </Text>
+          <ButtonRounded
+            onClick={() => router.push('/mypage/favorite')}
+            className='isDark'
+          >
+            お気に入りを登録しよう
+          </ButtonRounded>
+        </>
       ) : (
-        <ItemCardList items={fetchFavorites} />
+        <>
+          <ItemCardList items={fetchFavorites} />
+          <ButtonRounded onClick={clickShowResult} className='isDark'>
+            ガチャする
+          </ButtonRounded>
+        </>
       )}
-      <ButtonRounded onClick={clickShowResult} className='isDark'>
-        ガチャする
-      </ButtonRounded>
     </>
   )
 }
