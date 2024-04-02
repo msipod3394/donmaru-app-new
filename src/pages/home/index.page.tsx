@@ -11,9 +11,9 @@ import { useGetIngredientsQuery } from '@/gql/graphql'
 
 export default function Home() {
   // gql
-  const { loading, error, data } = useFetchUser()
-  // const { data, loading, error } = useGetIngredientsQuery()
-  // console.log('data', data)
+  // const { loading, error, data } = useFetchUser()
+  const { data, loading, error } = useGetIngredientsQuery()
+  console.log('data', data)
 
   // ユーザー情報
   const { getUser } = useCheckLogin()
