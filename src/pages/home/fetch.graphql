@@ -4,3 +4,18 @@ query GetIngredients {
   }
 }
 
+mutation CreateUser($userName: String!, $email: String!) {
+  createUser(userName: $userName, email: $email) {
+    id
+    userName
+    email
+  }
+}
+
+query FetchUser {
+  users {
+    id
+    userName
+    email
+  }
+}

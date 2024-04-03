@@ -34,8 +34,6 @@ type Item {
   updatedAt: ISO8601DateTime!
 }
 
-type Mutation
-
 type Order {
   createdAt: ISO8601DateTime!
   id: ID!
@@ -61,4 +59,8 @@ type User {
   password: String!
   updatedAt: ISO8601DateTime!
   userName: String!
+}
+
+type Mutation {
+  createUser(userName: String!, email: String!): User!
 }

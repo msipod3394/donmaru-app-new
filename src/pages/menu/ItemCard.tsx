@@ -2,23 +2,19 @@ import React, { FC } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image } from '@chakra-ui/react'
 import { DBDons } from '@/types/global_db.types'
-import { convertFormattedDate } from '@/hooks/convertFormattedDate'
+import { Item } from '@/gql/graphql'
 
 type Props = {
-  item: DBDons
+  item: Item
 }
 
 export const ItemCard: FC<Props> = ({ item }) => {
-
-  // const formattedDate = convertFormattedDate(item.updated_at)
-  // console.log(formattedDate)
-
   return (
     <SBox key={item.id}>
-      <Image w='80px' src={`/menu/${item.image}`} alt={item.title} />
+      <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
       <SBoxIn spacing={0.5}>
         <Text size='sm' fontWeight='500'>
-          {item.title}
+          {item.name}
         </Text>
         <HStack gap={0} flexWrap='wrap'>
           {item.dons_netas &&
@@ -33,17 +29,6 @@ export const ItemCard: FC<Props> = ({ item }) => {
               )
             })}
         </HStack>
-        {/* <HStack gap='.5rem'>
-          {formattedDate && (
-            <>
-              <HStack gap='.25rem'>
-                <Text fontSize='xs' color='gray.500'>
-                  最終注文日：{formattedDate}
-                </Text>
-              </HStack>
-            </>
-          )}
-        </HStack> */}
       </SBoxIn>
     </SBox>
   )

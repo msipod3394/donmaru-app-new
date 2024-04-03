@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { DBDons } from '@/types/global_db.types'
-import { ItemCardConvert } from '@/hooks/ItemCardConvert'
 import { ItemCard } from './ItemCard'
+import { Item } from '@/gql/graphql'
 
 type Props = {
-  id: number
-  don_id: number
-  title: string
-  image: string
-  created_at: string
-  updated_at: string
+  itemsAll: Item[]
 }
 
-export function ItemCardList({ items }: { items: Props[] }) {
+export function ItemCardList({ data }: { data: Props }) {
+  console.log(data)
+  const { itemsAll } = data
+
   return (
     <>
-      {Object.keys(items).map((key) => (
-        <ItemCard key={key} item={items[key]} />
+      {itemsAll.map((item, index) => (
+        <ItemCard key={index} item={item} />
       ))}
     </>
   )
