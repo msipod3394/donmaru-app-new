@@ -1,0 +1,6 @@
+query GetIngredients {
+	ingredients{
+    id
+    name
+  }
+}

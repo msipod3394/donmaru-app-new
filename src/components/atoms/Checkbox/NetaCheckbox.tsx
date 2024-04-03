@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react'
 import { Box, Checkbox } from '@chakra-ui/react'
 
 type Props = {
-  id: number
+  id: string
   label: string
   isChecked: boolean
   onChange: (arg0: number) => void
