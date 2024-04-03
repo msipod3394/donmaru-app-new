@@ -2,40 +2,51 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUserContext } from '@/contexts/UserContext'
 import { useInsertOrder } from '@/hooks/useInsertOrder'
-import { useFetchItems } from '@/hooks/fetch/useFetchItems'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { ActionButtons } from '@/components/molecules/ActionButtons'
-import { DisplayResultDon } from './DisplayResultDon'
-import { DBDons } from '@/types/global_db.types'
+import { DisplayResultItem } from './DisplayResultItem'
+import {
+  Exact,
+  InputMaybe,
+  Item,
+  SearchItemsByIdQuery,
+  useSearchItemsByIdQuery,
+} from '@/gql/graphql'
+import { QueryHookOptions } from '@apollo/client'
+import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 
 export default function PageResult() {
   const router = useRouter()
-  const resultID = Number(router.query.id)
+  const resultID: string | undefined = router.query.id
+  console.log(resultID)
+
+  const queryOptions: QueryHookOptions<
+    SearchItemsByIdQuery,
+    Exact<{ id?: InputMaybe<string> | undefined }>
+  > = {
+    variables: { id: resultID },
+  }
 
   // ステートで管理するもの
-  const [result, setResult] = useState<DBDons | undefined>()
-  // const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<Item | undefined>()
 
   // ユーザー情報取得
   const [user] = useUserContext()
 
   // 丼データ取得
-  const { fetchItems } = useFetchItems()
+  // const { fetchItems } = useFetchItems()
+  const { data, loading } = useSearchItemsByIdQuery(queryOptions)
 
   // 注文履歴テーブルに追加するHooks
   const { insertOrderTable, error } = useInsertOrder()
 
   // 結果の丼を取得
   useEffect(() => {
-    if (fetchItems) {
-      // setLoading(true)
-
-      let findResultDon = fetchItems.find((item) => item.id === resultID)
-      setResult(findResultDon)
-
-      // setLoading(false)
+    if (data) {
+      // console.log('結果', data.items[0])
+      setResult(data.items[0])
     }
-  }, [resultID, fetchItems])
+  }, [resultID, data])
 
   // 注文履歴に追加ボタン
   const handleAddOrder = async () => {
@@ -56,15 +67,17 @@ export default function PageResult() {
     { func: () => router.push('/'), text: 'もう一回ガチャする', className: '' },
   ]
 
-  // if (loading) {
-  //   return <div>Loading...</div>
-  // }
-
   return (
     <>
       <PageTitle title='へいお待ち!' />
-      {result && <DisplayResultDon don={result} />}
-      <ActionButtons data={ActionButtonsData} />
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          {result && <DisplayResultItem item={result} />}
+          <ActionButtons data={ActionButtonsData} />
+        </>
+      )}
     </>
   )
 }

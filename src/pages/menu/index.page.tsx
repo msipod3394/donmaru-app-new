@@ -11,7 +11,7 @@ export default function PageAllMenu() {
 
   // const { data, loading, error } = useFetchItems()
   const { data, loading, error } = useGetItemsAllQuery()
-  console.log(data)
+  // console.log(data)
 
   return (
     <>

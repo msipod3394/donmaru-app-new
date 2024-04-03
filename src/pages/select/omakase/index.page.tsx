@@ -1,29 +1,31 @@
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useFetchItems } from '@/hooks/fetch/useFetchItems'
+import { useGetItemsQuery } from '@/gql/graphql'
 
 export default function PageSelectOmakase() {
   const router = useRouter()
 
   // 全ての丼データ取得
-  const { fetchItems, loading } = useFetchItems()
-  console.log('fetchItems', fetchItems)
+  const { data, loading, error } = useGetItemsQuery()
 
   // データが取得された後に実行
   useEffect(() => {
-    console.log('fetchItems', fetchItems?.length)
+    console.log('data', data)
+    
+    if (data) {
+      console.log('data', data.items)
+      const itemsAll = data.items
 
-    if (fetchItems.length > 0) {
-      const shuffleID = Math.floor(Math.random() * fetchItems.length)
+      const shuffleID = Math.floor(Math.random() * itemsAll.length)
       console.log('shuffle', shuffleID)
 
-      const resultID = fetchItems[shuffleID].id
+      const resultID = itemsAll[shuffleID].id
       console.log('丼ID', resultID)
 
       // 結果画面へ遷移
       router.push(`/select/result/${resultID}`)
     }
-  }, [fetchItems])
+  }, [data])
 
   return null
 }

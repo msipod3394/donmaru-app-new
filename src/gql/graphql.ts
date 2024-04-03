@@ -85,8 +85,7 @@ export type Query = {
   dislikes: Array<Dislike>;
   favorites: Array<Favorite>;
   ingredients: Array<Ingredient>;
-  itemsAll: Array<Item>;
-  itemsSearch: Array<Item>;
+  items: Array<Item>;
   orders: Array<Order>;
   users: Array<User>;
 };
@@ -110,15 +109,10 @@ export type QueryIngredientsArgs = {
 };
 
 
-export type QueryItemsAllArgs = {
+export type QueryItemsArgs = {
   fieldName?: InputMaybe<Scalars['String']['input']>;
   fieldValue?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryItemsSearchArgs = {
-  fieldName?: InputMaybe<Scalars['String']['input']>;
-  fieldValue?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -161,10 +155,17 @@ export type FetchUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FetchUserQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, userName: string, email: string }> };
 
-export type GetItemsAllQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetItemsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetItemsAllQuery = { __typename?: 'Query', itemsAll: Array<{ __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+
+export type SearchItemsByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type SearchItemsByIdQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
 
 
 export const GetIngredientsDocument = gql`
@@ -322,9 +323,9 @@ export type FetchUserQueryHookResult = ReturnType<typeof useFetchUserQuery>;
 export type FetchUserLazyQueryHookResult = ReturnType<typeof useFetchUserLazyQuery>;
 export type FetchUserSuspenseQueryHookResult = ReturnType<typeof useFetchUserSuspenseQuery>;
 export type FetchUserQueryResult = Apollo.QueryResult<FetchUserQuery, FetchUserQueryVariables>;
-export const GetItemsAllDocument = gql`
-    query GetItemsAll {
-  itemsAll {
+export const GetItemsDocument = gql`
+    query GetItems {
+  items {
     id
     name
     image
@@ -335,48 +336,107 @@ export const GetItemsAllDocument = gql`
   }
 }
     `;
-export type GetItemsAllProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetItemsAllQuery, GetItemsAllQueryVariables>
+export type GetItemsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<GetItemsQuery, GetItemsQueryVariables>
     } & TChildProps;
-export function withGetItemsAll<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+export function withGetItems<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
-  GetItemsAllQuery,
-  GetItemsAllQueryVariables,
-  GetItemsAllProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetItemsAllQuery, GetItemsAllQueryVariables, GetItemsAllProps<TChildProps, TDataName>>(GetItemsAllDocument, {
-      alias: 'getItemsAll',
+  GetItemsQuery,
+  GetItemsQueryVariables,
+  GetItemsProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, GetItemsQuery, GetItemsQueryVariables, GetItemsProps<TChildProps, TDataName>>(GetItemsDocument, {
+      alias: 'getItems',
       ...operationOptions
     });
 };
 
 /**
- * __useGetItemsAllQuery__
+ * __useGetItemsQuery__
  *
- * To run a query within a React component, call `useGetItemsAllQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetItemsAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetItemsAllQuery({
+ * const { data, loading, error } = useGetItemsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetItemsAllQuery(baseOptions?: Apollo.QueryHookOptions<GetItemsAllQuery, GetItemsAllQueryVariables>) {
+export function useGetItemsQuery(baseOptions?: Apollo.QueryHookOptions<GetItemsQuery, GetItemsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetItemsAllQuery, GetItemsAllQueryVariables>(GetItemsAllDocument, options);
+        return Apollo.useQuery<GetItemsQuery, GetItemsQueryVariables>(GetItemsDocument, options);
       }
-export function useGetItemsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetItemsAllQuery, GetItemsAllQueryVariables>) {
+export function useGetItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetItemsQuery, GetItemsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetItemsAllQuery, GetItemsAllQueryVariables>(GetItemsAllDocument, options);
+          return Apollo.useLazyQuery<GetItemsQuery, GetItemsQueryVariables>(GetItemsDocument, options);
         }
-export function useGetItemsAllSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetItemsAllQuery, GetItemsAllQueryVariables>) {
+export function useGetItemsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetItemsQuery, GetItemsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetItemsAllQuery, GetItemsAllQueryVariables>(GetItemsAllDocument, options);
+          return Apollo.useSuspenseQuery<GetItemsQuery, GetItemsQueryVariables>(GetItemsDocument, options);
         }
-export type GetItemsAllQueryHookResult = ReturnType<typeof useGetItemsAllQuery>;
-export type GetItemsAllLazyQueryHookResult = ReturnType<typeof useGetItemsAllLazyQuery>;
-export type GetItemsAllSuspenseQueryHookResult = ReturnType<typeof useGetItemsAllSuspenseQuery>;
-export type GetItemsAllQueryResult = Apollo.QueryResult<GetItemsAllQuery, GetItemsAllQueryVariables>;
+export type GetItemsQueryHookResult = ReturnType<typeof useGetItemsQuery>;
+export type GetItemsLazyQueryHookResult = ReturnType<typeof useGetItemsLazyQuery>;
+export type GetItemsSuspenseQueryHookResult = ReturnType<typeof useGetItemsSuspenseQuery>;
+export type GetItemsQueryResult = Apollo.QueryResult<GetItemsQuery, GetItemsQueryVariables>;
+export const SearchItemsByIdDocument = gql`
+    query SearchItemsById($id: ID) {
+  items(id: $id) {
+    id
+    name
+    image
+    ingredients {
+      id
+      name
+    }
+  }
+}
+    `;
+export type SearchItemsByIdProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>
+    } & TChildProps;
+export function withSearchItemsById<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  SearchItemsByIdQuery,
+  SearchItemsByIdQueryVariables,
+  SearchItemsByIdProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, SearchItemsByIdQuery, SearchItemsByIdQueryVariables, SearchItemsByIdProps<TChildProps, TDataName>>(SearchItemsByIdDocument, {
+      alias: 'searchItemsById',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useSearchItemsByIdQuery__
+ *
+ * To run a query within a React component, call `useSearchItemsByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchItemsByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchItemsByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSearchItemsByIdQuery(baseOptions?: Apollo.QueryHookOptions<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>(SearchItemsByIdDocument, options);
+      }
+export function useSearchItemsByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>(SearchItemsByIdDocument, options);
+        }
+export function useSearchItemsByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>(SearchItemsByIdDocument, options);
+        }
+export type SearchItemsByIdQueryHookResult = ReturnType<typeof useSearchItemsByIdQuery>;
+export type SearchItemsByIdLazyQueryHookResult = ReturnType<typeof useSearchItemsByIdLazyQuery>;
+export type SearchItemsByIdSuspenseQueryHookResult = ReturnType<typeof useSearchItemsByIdSuspenseQuery>;
+export type SearchItemsByIdQueryResult = Apollo.QueryResult<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>;

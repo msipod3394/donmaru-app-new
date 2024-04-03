@@ -1,5 +1,5 @@
-query GetItems {
-  items {
+query SearchItemsById($id: ID) {
+  items(id: $id) {
     id
     name
     image
@@ -9,4 +9,3 @@ query GetItems {
     }
   }
 }
-
