@@ -1,0 +1,12 @@
+query GetItemsAll {
+  itemsAll {
+    id
+    name
+    image
+    ingredients {
+      id
+      name
+    }
+  }
+}
+

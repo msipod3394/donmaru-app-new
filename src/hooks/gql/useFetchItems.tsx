@@ -3,15 +3,16 @@ import { useQuery, gql } from '@apollo/client'
 
 // クエリ定義
 const GET_POSTS = gql`
-  query {
-    itemsAll {
+query {
+  itemsAll {
+    id
+    name
+    ingredients {
       id
       name
-      image
-      createdAt
-      updatedAt
     }
   }
+}
 `
 
 export const useFetchItems = () => {

@@ -26,13 +26,19 @@ type Ingredient {
   updatedAt: ISO8601DateTime!
 }
 
+type IngredientItem {
+  id: ID!
+  name: String!
+}
+
 type Item {
-  createdAt: ISO8601DateTime!
   id: ID!
   image: String!
+  ingredients: [IngredientItem!]!
   name: String!
-  updatedAt: ISO8601DateTime!
 }
+
+type Mutation
 
 type Order {
   createdAt: ISO8601DateTime!

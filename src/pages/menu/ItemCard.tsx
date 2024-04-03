@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image } from '@chakra-ui/react'
-import { DBDons } from '@/types/global_db.types'
 import { Item } from '@/gql/graphql'
 
 type Props = {
@@ -17,17 +16,17 @@ export const ItemCard: FC<Props> = ({ item }) => {
           {item.name}
         </Text>
         <HStack gap={0} flexWrap='wrap'>
-          {item.dons_netas &&
-            Array.isArray(item.dons_netas) &&
-            item.dons_netas.map((neta: { netas: { name: string } }, index: number) => {
-              const netaName = neta.netas && neta.netas.name
-              return (
-                <Text as='span' fontSize='xs' key={index}>
-                  {index > 0 && <>・</>}
-                  {netaName}
-                </Text>
-              )
-            })}
+          {item.ingredients && Array.isArray(item.ingredients) && (
+            <>
+              {Array.isArray(item.ingredients) &&
+                item.ingredients.map((ingredient, index) => (
+                  <Text as='span' fontSize='xs' key={index}>
+                    {index > 0 && <>・</>}
+                    {ingredient.name}
+                  </Text>
+                ))}
+            </>
+          )}
         </HStack>
       </SBoxIn>
     </SBox>

@@ -46,13 +46,18 @@ export type Ingredient = {
   updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
+export type IngredientItem = {
+  __typename?: 'IngredientItem';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Item = {
   __typename?: 'Item';
-  createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
+  ingredients: Array<IngredientItem>;
   name: Scalars['String']['output'];
-  updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
 export type Mutation = {
@@ -155,6 +160,11 @@ export type FetchUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FetchUserQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, userName: string, email: string }> };
+
+export type GetItemsAllQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetItemsAllQuery = { __typename?: 'Query', itemsAll: Array<{ __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
 
 
 export const GetIngredientsDocument = gql`
@@ -312,3 +322,61 @@ export type FetchUserQueryHookResult = ReturnType<typeof useFetchUserQuery>;
 export type FetchUserLazyQueryHookResult = ReturnType<typeof useFetchUserLazyQuery>;
 export type FetchUserSuspenseQueryHookResult = ReturnType<typeof useFetchUserSuspenseQuery>;
 export type FetchUserQueryResult = Apollo.QueryResult<FetchUserQuery, FetchUserQueryVariables>;
+export const GetItemsAllDocument = gql`
+    query GetItemsAll {
+  itemsAll {
+    id
+    name
+    image
+    ingredients {
+      id
+      name
+    }
+  }
+}
+    `;
+export type GetItemsAllProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<GetItemsAllQuery, GetItemsAllQueryVariables>
+    } & TChildProps;
+export function withGetItemsAll<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  GetItemsAllQuery,
+  GetItemsAllQueryVariables,
+  GetItemsAllProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, GetItemsAllQuery, GetItemsAllQueryVariables, GetItemsAllProps<TChildProps, TDataName>>(GetItemsAllDocument, {
+      alias: 'getItemsAll',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useGetItemsAllQuery__
+ *
+ * To run a query within a React component, call `useGetItemsAllQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetItemsAllQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetItemsAllQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetItemsAllQuery(baseOptions?: Apollo.QueryHookOptions<GetItemsAllQuery, GetItemsAllQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetItemsAllQuery, GetItemsAllQueryVariables>(GetItemsAllDocument, options);
+      }
+export function useGetItemsAllLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetItemsAllQuery, GetItemsAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetItemsAllQuery, GetItemsAllQueryVariables>(GetItemsAllDocument, options);
+        }
+export function useGetItemsAllSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetItemsAllQuery, GetItemsAllQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetItemsAllQuery, GetItemsAllQueryVariables>(GetItemsAllDocument, options);
+        }
+export type GetItemsAllQueryHookResult = ReturnType<typeof useGetItemsAllQuery>;
+export type GetItemsAllLazyQueryHookResult = ReturnType<typeof useGetItemsAllLazyQuery>;
+export type GetItemsAllSuspenseQueryHookResult = ReturnType<typeof useGetItemsAllSuspenseQuery>;
+export type GetItemsAllQueryResult = Apollo.QueryResult<GetItemsAllQuery, GetItemsAllQueryVariables>;
