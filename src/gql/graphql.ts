@@ -62,13 +62,34 @@ export type Item = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createDislike: Dislike;
+  createFavorite: Favorite;
+  createOrder: Order;
   createUser: User;
+};
+
+
+export type MutationCreateDislikeArgs = {
+  ingredientId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateFavoriteArgs = {
+  itemId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateOrderArgs = {
+  itemId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationCreateUserArgs = {
   email: Scalars['String']['input'];
-  userName: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type Order = {
@@ -92,7 +113,7 @@ export type Query = {
 
 
 export type QueryDislikesArgs = {
-  email?: InputMaybe<Scalars['String']['input']>;
+  ingredientId?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -153,6 +174,14 @@ export type SearchItemsByIdQueryVariables = Exact<{
 
 
 export type SearchItemsByIdQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+
+export type CreateOrderMutationVariables = Exact<{
+  itemId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string }, user: { __typename?: 'User', id: string, userName: string } } };
 
 
 export const GetItemsDocument = gql`
@@ -325,3 +354,61 @@ export type SearchItemsByIdQueryHookResult = ReturnType<typeof useSearchItemsByI
 export type SearchItemsByIdLazyQueryHookResult = ReturnType<typeof useSearchItemsByIdLazyQuery>;
 export type SearchItemsByIdSuspenseQueryHookResult = ReturnType<typeof useSearchItemsByIdSuspenseQuery>;
 export type SearchItemsByIdQueryResult = Apollo.QueryResult<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>;
+export const CreateOrderDocument = gql`
+    mutation CreateOrder($itemId: String!, $userId: String!) {
+  createOrder(itemId: $itemId, userId: $userId) {
+    id
+    item {
+      id
+      name
+      image
+    }
+    user {
+      id
+      userName
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateOrderMutationFn = Apollo.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+export type CreateOrderProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: Apollo.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>
+    } & TChildProps;
+export function withCreateOrder<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  CreateOrderMutation,
+  CreateOrderMutationVariables,
+  CreateOrderProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, CreateOrderMutation, CreateOrderMutationVariables, CreateOrderProps<TChildProps, TDataName>>(CreateOrderDocument, {
+      alias: 'createOrder',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      itemId: // value for 'itemId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+      }
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = Apollo.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = Apollo.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;

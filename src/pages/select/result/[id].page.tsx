@@ -10,6 +10,7 @@ import {
   InputMaybe,
   Item,
   SearchItemsByIdQuery,
+  useCreateOrderMutation,
   useSearchItemsByIdQuery,
 } from '@/gql/graphql'
 import { QueryHookOptions } from '@apollo/client'
@@ -17,8 +18,9 @@ import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 
 export default function PageResult() {
   const router = useRouter()
-  const resultID: string | undefined = router.query.id
-  console.log(resultID)
+
+  // ！！ここの型指定 謎なので質問する
+  const resultID: InputMaybe<string> = router.query.id as InputMaybe<string>
 
   const queryOptions: QueryHookOptions<
     SearchItemsByIdQuery,
@@ -48,16 +50,27 @@ export default function PageResult() {
     }
   }, [resultID, data])
 
-  // 注文履歴に追加ボタン
-  const handleAddOrder = async () => {
-    if (result && user) {
-      const success = await insertOrderTable(result.id, user.id)
+  const [
+    createOrderMutation,
+    { data: sendOrderData, loading: sendOrderLoading, error: sendOrderError },
+  ] = useCreateOrderMutation()
 
-      if (success) {
-        alert('注文履歴に追加しました！')
-      } else {
-        console.error('注文履歴追加エラー:', error)
-      }
+  // 注文履歴に追加ボタン
+  const handleAddOrder = () => {
+    if (result && user) {
+      createOrderMutation({
+        variables: {
+          itemId: result.id,
+          // userId: user.id,
+          userId: '4', // 後ほど修正
+        },
+      })
+        .then((order_result) => {
+          console.log('注文履歴登録成功:', order_result.data?.createOrder)
+        })
+        .catch((error) => {
+          console.error('注文履歴登録エラー:', error)
+        })
     }
   }
 

@@ -38,7 +38,12 @@ type Item {
   name: String!
 }
 
-type Mutation
+type Mutation {
+  createDislike(ingredientId: String!, userId: String!): Dislike!
+  createFavorite(itemId: String!, userId: String!): Favorite!
+  createOrder(itemId: String!, userId: String!): Order!
+  createUser(email: String!, password: String!): User!
+}
 
 type Order {
   createdAt: ISO8601DateTime!
@@ -49,7 +54,7 @@ type Order {
 }
 
 type Query {
-  dislikes(email: String, userId: ID): [Dislike!]!
+  dislikes(ingredientId: String, userId: ID): [Dislike!]!
   favorites(email: String, userId: ID): [Favorite!]!
   ingredients(fieldName: String, fieldValue: String): [Ingredient!]!
   items(fieldName: String, fieldValue: String, id: ID): [Item!]!
@@ -64,8 +69,4 @@ type User {
   password: String!
   updatedAt: ISO8601DateTime!
   userName: String!
-}
-
-type Mutation {
-  createUser(userName: String!, email: String!): User!
 }
