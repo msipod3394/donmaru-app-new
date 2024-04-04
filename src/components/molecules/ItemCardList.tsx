@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { ItemCard } from '@/components/molecules/ItemCard'
-import { DBDons } from '@/types/global_db.types'
 import { ItemCardConvert } from '@/hooks/ItemCardConvert'
+import { Item, User } from '@/gql/graphql'
 
 type Props = {
-  id: number
-  title: string
-  image: string
-  created_at: string
-  updated_at: string
-  don_id: number
+  id: string
+  item: Item
+  user: User
+  count: number
+  updatedAt: string
 }
 
-export function ItemCardList({ items }: { items: Props[] }) {
+export function ItemCardList({ items }: { items: Item[] }) {
   const selectItems = ItemCardConvert(items)
-
-  console.log('selectItems', selectItems)
-
   return (
     <>
-      {selectItems.map((item: DBDons) => (
-        <ItemCard key={item.id} don={item} />
+      {selectItems.map((item: Props) => (
+        <ItemCard key={item.id} item={item} />
       ))}
     </>
   )

@@ -32,10 +32,12 @@ type IngredientItem {
 }
 
 type Item {
+  createdAt: ISO8601DateTime!
   id: ID!
   image: String!
   ingredients: [IngredientItem!]!
   name: String!
+  updatedAt: ISO8601DateTime!
 }
 
 type Mutation {

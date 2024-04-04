@@ -54,10 +54,12 @@ export type IngredientItem = {
 
 export type Item = {
   __typename?: 'Item';
+  createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
   ingredients: Array<IngredientItem>;
   name: Scalars['String']['output'];
+  updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
 export type Mutation = {

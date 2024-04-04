@@ -7,15 +7,6 @@ import { useFetchOrders } from './usefetchOrder'
 export default function PageOrder() {
   // 注文情報の取得
   const { fetchOrders, loading } = useFetchOrders()
-  // console.log(fetchOrders)
-
-  // const { data, loading, error } = useSearchOrderByUserIdQuery({
-  //   variables: {
-  //     userId: 1, // ユーザーIDを指定
-  //   },
-  // });
-
-  // console.log(data);
 
   return (
     <>

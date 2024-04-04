@@ -1,6 +1,10 @@
 // 日付をフォーマットする
 
-export const convertFormattedDate = (isoTimestamp: string | number | Date) => {
+import { Scalars } from '@/gql/graphql'
+
+export const convertFormattedDate = (
+  isoTimestamp: string | number | Date | Scalars['ISO8601DateTime']['output'],
+) => {
   const dateObject = new Date(isoTimestamp)
 
   // 年月日を取得
