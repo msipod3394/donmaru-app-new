@@ -58,7 +58,11 @@ type Query {
   favorites(email: String, userId: ID): [Favorite!]!
   ingredients(fieldName: String, fieldValue: String): [Ingredient!]!
   items(fieldName: String, fieldValue: String, id: ID): [Item!]!
-  orders(fieldName: String, fieldValue: String): [Order!]!
+
+  """
+  emailを指定して検索、emailの指定がなければ全件取得
+  """
+  order(email: String): [Order!]!
   users(fieldName: String, fieldValue: String): [User!]!
 }
 

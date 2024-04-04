@@ -8,11 +8,13 @@ type Props = {
   title: string
   image: string
   created_at: string
-  updated_at: string
+  updatedAt: string
   don_id: number
 }
 
 export const ItemCardConvert = (items: Props[]) => {
+  // console.log(items)
+
   // 注文履歴データ管理
   const [orderDons, setOrderDons] = useState<Props[]>([])
 
@@ -20,6 +22,8 @@ export const ItemCardConvert = (items: Props[]) => {
     // 取得したデータに注文回数を追加
     const idCounts: Record<number, number> = {}
     items.forEach((item) => {
+      console.log(item);
+      
       const id = item.don_id
       idCounts[id] = (idCounts[id] || 0) + 1
     })
@@ -34,11 +38,12 @@ export const ItemCardConvert = (items: Props[]) => {
     const latestItemsMap = new Map()
     itemsAddCount.forEach((item) => {
       const existingItem = latestItemsMap.get(item.don_id)
-      const formattedDate = convertFormattedDate(item.updated_at)
-      item.updated_at = formattedDate
+      const formattedDate = convertFormattedDate(item.updatedAt)
+      item.updatedAt = formattedDate
+      
       if (
         !existingItem ||
-        new Date(item.updated_at) > new Date(existingItem.updated_at)
+        new Date(item.updatedAt) > new Date(existingItem.updatedAt)
       ) {
         latestItemsMap.set(item.don_id, item)
       }

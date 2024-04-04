@@ -15,6 +15,8 @@ type Props = {
 export function ItemCardList({ items }: { items: Props[] }) {
   const selectItems = ItemCardConvert(items)
 
+  console.log('selectItems', selectItems)
+
   return (
     <>
       {selectItems.map((item: DBDons) => (

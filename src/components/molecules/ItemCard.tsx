@@ -8,37 +8,39 @@ type Props = {
 }
 
 export const ItemCard: FC<Props> = ({ don }) => {
-  const item = don.dons
-  const updated_at = don.updated_at
-  const count = don.count  
+  const item = don.item
+  const updatedAt = don.updatedAt
+  const count = don.count
+  console.log('item', item)
+
   return (
     <>
       <SBox key={item.id}>
-        <Image w='80px' src={`/menu/${item.image}`} alt={item.title} />
+        <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
         <SBoxIn spacing={0.5}>
           <Text size='sm' fontWeight='500'>
-            {item.title}
+            {item.name}
           </Text>
           <HStack gap={0} flexWrap='wrap'>
-            {item.dons_netas &&
-              Array.isArray(item.dons_netas) &&
-              item.dons_netas.map((neta: { netas: { name: string } }, index: number) => {
-                const netaName = neta.netas && neta.netas.name
-                return (
+          {item.ingredients && Array.isArray(item.ingredients) && (
+            <>
+              {Array.isArray(item.ingredients) &&
+                item.ingredients.map((ingredient, index) => (
                   <Text as='span' fontSize='xs' key={index}>
                     {index > 0 && <>・</>}
-                    {netaName}
+                    {ingredient.name}
                   </Text>
-                )
-              })}
-          </HStack>
+                ))}
+            </>
+          )}
+        </HStack>
           <HStack gap='.5rem'>
-            {updated_at && (
+            {updatedAt && (
               <>
                 <HStack gap='.25rem'>
                   {/* <TimeIcon boxSize={3} color='red' /> */}
                   <Text fontSize='xs' color='gray.500'>
-                    {updated_at}
+                    {updatedAt}
                   </Text>
                 </HStack>
               </>

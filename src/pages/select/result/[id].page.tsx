@@ -65,12 +65,12 @@ export default function PageResult() {
           userId: '4', // 後ほど修正
         },
       })
-        .then((order_result) => {
-          console.log('注文履歴登録成功:', order_result.data?.createOrder)
-        })
-        .catch((error) => {
-          console.error('注文履歴登録エラー:', error)
-        })
+      .then((order_result) => {
+        console.log('注文履歴登録成功:', order_result.data?.createOrder)
+      })
+      .catch((error) => {
+        console.error('注文履歴登録エラー:', error)
+      })
     }
   }
 

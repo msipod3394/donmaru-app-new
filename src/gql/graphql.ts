@@ -107,7 +107,8 @@ export type Query = {
   favorites: Array<Favorite>;
   ingredients: Array<Ingredient>;
   items: Array<Item>;
-  orders: Array<Order>;
+  /** emailを指定して検索、emailの指定がなければ全件取得 */
+  order: Array<Order>;
   users: Array<User>;
 };
 
@@ -137,9 +138,8 @@ export type QueryItemsArgs = {
 };
 
 
-export type QueryOrdersArgs = {
-  fieldName?: InputMaybe<Scalars['String']['input']>;
-  fieldValue?: InputMaybe<Scalars['String']['input']>;
+export type QueryOrderArgs = {
+  email?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -162,6 +162,13 @@ export type GetItemsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+
+export type SearchOrderByUserEmailQueryVariables = Exact<{
+  email?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchOrderByUserEmailQuery = { __typename?: 'Query', order: Array<{ __typename?: 'Order', id: string, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, ingredients: Array<{ __typename?: 'IngredientItem', name: string }> }, user: { __typename?: 'User', id: string, email: string } }> };
 
 export type GetIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -242,6 +249,72 @@ export type GetItemsQueryHookResult = ReturnType<typeof useGetItemsQuery>;
 export type GetItemsLazyQueryHookResult = ReturnType<typeof useGetItemsLazyQuery>;
 export type GetItemsSuspenseQueryHookResult = ReturnType<typeof useGetItemsSuspenseQuery>;
 export type GetItemsQueryResult = Apollo.QueryResult<GetItemsQuery, GetItemsQueryVariables>;
+export const SearchOrderByUserEmailDocument = gql`
+    query SearchOrderByUserEmail($email: String) {
+  order(email: $email) {
+    id
+    updatedAt
+    item {
+      id
+      name
+      image
+      ingredients {
+        name
+      }
+    }
+    user {
+      id
+      email
+    }
+  }
+}
+    `;
+export type SearchOrderByUserEmailProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>
+    } & TChildProps;
+export function withSearchOrderByUserEmail<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  SearchOrderByUserEmailQuery,
+  SearchOrderByUserEmailQueryVariables,
+  SearchOrderByUserEmailProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables, SearchOrderByUserEmailProps<TChildProps, TDataName>>(SearchOrderByUserEmailDocument, {
+      alias: 'searchOrderByUserEmail',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useSearchOrderByUserEmailQuery__
+ *
+ * To run a query within a React component, call `useSearchOrderByUserEmailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchOrderByUserEmailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchOrderByUserEmailQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSearchOrderByUserEmailQuery(baseOptions?: Apollo.QueryHookOptions<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>(SearchOrderByUserEmailDocument, options);
+      }
+export function useSearchOrderByUserEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>(SearchOrderByUserEmailDocument, options);
+        }
+export function useSearchOrderByUserEmailSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>(SearchOrderByUserEmailDocument, options);
+        }
+export type SearchOrderByUserEmailQueryHookResult = ReturnType<typeof useSearchOrderByUserEmailQuery>;
+export type SearchOrderByUserEmailLazyQueryHookResult = ReturnType<typeof useSearchOrderByUserEmailLazyQuery>;
+export type SearchOrderByUserEmailSuspenseQueryHookResult = ReturnType<typeof useSearchOrderByUserEmailSuspenseQuery>;
+export type SearchOrderByUserEmailQueryResult = Apollo.QueryResult<SearchOrderByUserEmailQuery, SearchOrderByUserEmailQueryVariables>;
 export const GetIngredientsDocument = gql`
     query GetIngredients {
   ingredients {
