@@ -7,13 +7,13 @@ import { useUserContext } from '@/contexts/UserContext'
 import { SelectLinks } from '@/components/SettingLink'
 import { useFetchUser } from '@/hooks/gql/useFetchUser'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { useGetIngredientsQuery } from '@/gql/graphql'
+import { useFetchIngredientsQuery } from '@/gql/graphql'
 
 export default function Home() {
   // gql
   // const { loading, error, data } = useFetchUser()
-  const { data, loading, error } = useGetIngredientsQuery()
-  console.log('data', data)
+  // const { data, loading, error } = useFetchIngredientsQuery()
+  // console.log('data', data)
 
   // ユーザー情報
   const { getUser } = useCheckLogin()
@@ -25,19 +25,13 @@ export default function Home() {
 
   return (
     <>
-      {loading ? (
-        <LoadingIndicator />
-      ) : (
-        <>
-          <PageTitle title='丼丸ガチャ' />
-          <PageDescription>
-            本日あなたにぴったりの
-            <br />
-            海鮮丼を選びます 🐟
-          </PageDescription>
-          <ButtonLinkList links={SelectLinks} />
-        </>
-      )}
+      <PageTitle title='丼丸ガチャ' />
+      <PageDescription>
+        本日あなたにぴったりの
+        <br />
+        海鮮丼を選びます 🐟
+      </PageDescription>
+      <ButtonLinkList links={SelectLinks} />
     </>
   )
 }

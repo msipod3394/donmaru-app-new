@@ -1,6 +1,7 @@
-query GetIngredients {
+query fetchIngredients {
 	ingredients{
     id
     name
   }
 }
+

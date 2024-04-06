@@ -5,6 +5,8 @@ import { useSearchOrderByUserEmailQuery } from '@/gql/graphql'
 export const useFetchOrders = () => {
   const [loading, setLoading] = useState(false)
   const [fetchOrders, setFetchOrders] = useState([])
+
+  // ユーザー情報を取得
   const { getUser } = useCheckLogin()
   const [user, setUser] = useState(1)
 
@@ -12,6 +14,7 @@ export const useFetchOrders = () => {
     setUser(getUser)
   }, [getUser])
 
+  // GQLから注文履歴を取得
   const {
     data: sendOrderData,
     loading: sendOrderLoading,
@@ -29,7 +32,7 @@ export const useFetchOrders = () => {
         try {
           await refetchOrdersByUserEmail()
         } catch (error) {
-          console.error('注文データの取得エラー:', error)
+          console.error('取得エラー:', error)
         } finally {
           setLoading(false)
         }

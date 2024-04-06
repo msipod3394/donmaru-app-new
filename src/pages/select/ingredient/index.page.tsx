@@ -7,7 +7,12 @@ import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { NetaCheckbox } from '@/components/atoms/Checkbox/NetaCheckbox'
 import { PageDescription } from '@/components/atoms/Texts/PageDescription'
 import { DBDons } from '@/types/global_db.types'
-import { useGetIngredientsQuery, useGetItemsQuery, Ingredient, Item } from '@/gql/graphql'
+import {
+  useFetchIngredientsQuery,
+  useGetItemsQuery,
+  Ingredient,
+  Item,
+} from '@/gql/graphql'
 
 export default function PageSelectIngredient() {
   const router = useRouter()
@@ -30,7 +35,7 @@ export default function PageSelectIngredient() {
     data: data_ingredients,
     loading: ingredientLoading,
     error: ingredientError,
-  } = useGetIngredientsQuery()
+  } = useFetchIngredientsQuery()
   // console.log('ネタ情報', data_ingredients.ingredients)
 
   // 全ての丼情報取得
@@ -92,7 +97,7 @@ export default function PageSelectIngredient() {
   }, [isChecked])
 
   // Hit数の初期値を設定
-  useEffect(() => {    
+  useEffect(() => {
     if (items) {
       setHitCount(items.length)
     }

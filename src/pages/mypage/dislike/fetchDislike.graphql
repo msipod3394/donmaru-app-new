@@ -1,0 +1,14 @@
+# 苦手ネタに追加
+mutation addDislike($ingredientId: ID!, $userId: ID!) {
+  createDislike(ingredientId: $ingredientId, userId: $userId) {
+    id
+    ingredient {
+      id
+    }
+    user {
+      id
+    }
+    createdAt
+    updatedAt
+  }
+}

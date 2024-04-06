@@ -56,7 +56,10 @@ type Order {
 }
 
 type Query {
-  dislikes(ingredientId: String, userId: ID): [Dislike!]!
+  """
+  emailを指定して検索、emailの指定がなければ全件取得
+  """
+  dislikes(email: String): [Dislike!]!
   favorites(email: String, userId: ID): [Favorite!]!
   ingredients(fieldName: String, fieldValue: String): [Ingredient!]!
   items(fieldName: String, fieldValue: String, id: ID): [Item!]!
