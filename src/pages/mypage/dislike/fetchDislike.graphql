@@ -1,5 +1,5 @@
 # 苦手ネタに追加
-mutation addDislike($ingredientId: ID!, $userId: ID!) {
+mutation addDislike($ingredientId: String!, $userId: String!) {
   createDislike(ingredientId: $ingredientId, userId: $userId) {
     id
     ingredient {
