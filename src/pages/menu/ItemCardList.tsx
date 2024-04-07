@@ -1,5 +1,5 @@
-import { ItemCard } from './ItemCard'
 import { Item } from '@/gql/graphql'
+import { ItemCard } from '@/components/molecules/ItemCard'
 
 type Props = {
   itemsAll: Item[]
@@ -7,11 +7,11 @@ type Props = {
 
 export function ItemCardList({ data }: { data: Props }) {
   console.log(data)
-  const { itemsAll } = data
+  // const { itemsAll } = data
 
   return (
     <>
-      {itemsAll.map((item, index) => (
+      {data.map((item, index) => (
         <ItemCard key={index} item={item} />
       ))}
     </>

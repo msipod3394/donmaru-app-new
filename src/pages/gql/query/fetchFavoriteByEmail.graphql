@@ -1,0 +1,12 @@
+# お気に入り丼を取得
+query fetchFavoriteByEmail($email: String) {
+  favorites(email: $email) {
+    id
+    item{
+      id
+      name
+      image
+      updatedAt
+    }
+  }
+}

@@ -36,7 +36,6 @@ export default function PageSelectIngredient() {
     loading: ingredientLoading,
     error: ingredientError,
   } = useFetchIngredientsQuery()
-  // console.log('ネタ情報', data_ingredients.ingredients)
 
   // 全ての丼情報取得
   const { data: data_items, loading: itemLoading, error: itemError } = useGetItemsQuery()

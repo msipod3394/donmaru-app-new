@@ -14,16 +14,16 @@ type Props = {
 export const ItemCard: FC<Props> = ({ item }) => {
   return (
     <SBox key={item.id}>
-      <Image w='80px' src={`/menu/${item.item.image}`} alt={item.item.name} />
+      <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
       <SBoxIn spacing={0.5}>
         <Text size='sm' fontWeight='500'>
-          {item.item.name}
+          {item.name}
         </Text>
         <HStack gap={0} flexWrap='wrap'>
-          {item.item.ingredients && Array.isArray(item.item.ingredients) && (
+          {item.ingredients && Array.isArray(item.ingredients) && (
             <>
-              {Array.isArray(item.item.ingredients) &&
-                item.item.ingredients.map((ingredient, index) => (
+              {Array.isArray(item.ingredients) &&
+                item.ingredients.map((ingredient, index) => (
                   <Text as='span' fontSize='xs' key={index}>
                     {index > 0 && <>・</>}
                     {ingredient.name}
@@ -33,10 +33,10 @@ export const ItemCard: FC<Props> = ({ item }) => {
           )}
         </HStack>
         <HStack gap='.5rem'>
-          {item.updatedAt && (
+          {item.updatedAt && item.count > 0 && (
             <HStack gap='.25rem'>
               <Text fontSize='xs' color='gray.500'>
-                {item.updatedAt}
+                注文日 {item.updatedAt}
               </Text>
             </HStack>
           )}

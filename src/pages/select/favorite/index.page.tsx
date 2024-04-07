@@ -1,35 +1,63 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useFetchFavorites } from '@/hooks/fetch/useFetchFavorites'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { Text } from '@chakra-ui/react'
+import { Favorite, Item, useFetchFavoriteByEmailQuery, User } from '@/gql/graphql'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageSelectFavorite() {
   const router = useRouter()
 
+  // 取得したお気に入りデータ
+  const [favorites, setFavorites] = useState<Item[]>([])
+
   // 結果をステート管理
   const [result, setResult] = useState('')
 
+  // ユーザー情報を取得
+  const { getUser } = useCheckLogin()
+  const [user, setUser] = useState<User>()
+
+  // ユーザー情報を取得実行
+  useEffect(() => {
+    setUser(getUser)
+  }, [getUser])
+
   // お気に入り情報の取得
-  const { fetchFavorites, loading } = useFetchFavorites()
-  console.log('fetchFavorites', fetchFavorites)
+  const {
+    data,
+    loading,
+    refetch: refetchFavoritesByUserEmail,
+  } = useFetchFavoriteByEmailQuery({
+    variables: { email: user && user.email ? user.email : null },
+    skip: !user,
+  })
 
   // データが取得された後に実行
   useEffect(() => {
-    console.log('fetchFavorites', fetchFavorites?.length)
+    if (data) {
+      // console.log('data', data.favorites)
+      const filterItems = data.favorites.map((favorite) => favorite.item)
+      // console.log('filterItems', filterItems)
 
-    if (fetchFavorites.length > 0) {
-      const shuffleID = Math.floor(Math.random() * fetchFavorites.length)
+      setFavorites(filterItems)
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (favorites.length !== 0) {
+      console.log('favorites', favorites)
+      const shuffleID = favorites[Math.floor(Math.random() * favorites.length)]
       console.log('shuffle', shuffleID)
 
-      const resultID = fetchFavorites[shuffleID].don_id
-      console.log('丼ID', resultID)
-      setResult(resultID)
+      const favoritesID = shuffleID.id
+      console.log('丼ID', favoritesID)
+      setResult(favoritesID)
     }
-  }, [fetchFavorites])
+  }, [favorites, setFavorites])
 
   // 結果画面へ遷移
   const clickShowResult = () => {
@@ -41,7 +69,7 @@ export default function PageSelectFavorite() {
       <PageTitle title='お気に入りからガチャ' />
       {loading ? (
         <LoadingIndicator />
-      ) : fetchFavorites.length === 0 ? (
+      ) : favorites.length === 0 ? (
         <>
           <Text align='center' mb='2rem'>
             お気に入り登録はありません
@@ -55,7 +83,7 @@ export default function PageSelectFavorite() {
         </>
       ) : (
         <>
-          <ItemCardList items={fetchFavorites} />
+          <ItemCardList items={favorites} />
           <ButtonRounded onClick={clickShowResult} className='isDark'>
             ガチャする
           </ButtonRounded>

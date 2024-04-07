@@ -2,7 +2,7 @@ import { AddDislikeMutationVariables } from '@/gql/graphql'
 
 export async function handleUpdate(
   isChecked: number[],
-  user: { id: string },
+  user: { email: string },
   registeredDislikes: number[],
   addDislikeMutation: (variables: AddDislikeMutationVariables) => void,
 ) {
@@ -15,9 +15,8 @@ export async function handleUpdate(
   const mutationVariablesList: AddDislikeMutationVariables[] = addRegisterItems.map(
     (ingredientId) => {
       return {
-        ingredientId,
-        // userId: user.id
-        userId: 5,
+        ingredientId: ingredientId,
+        email: user.email,
       }
     },
   )

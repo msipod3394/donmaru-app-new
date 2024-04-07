@@ -3,6 +3,7 @@ query GetItems {
     id
     name
     image
+    updatedAt
     ingredients {
       id
       name

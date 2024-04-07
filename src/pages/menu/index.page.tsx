@@ -1,22 +1,16 @@
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { ItemCardList } from './ItemCardList'
-import { useGetItemsAllQuery } from '@/gql/graphql'
-// import { useFetchItems } from '@/hooks/fetch/useFetchItems'
+import { useGetItemsQuery } from '@/gql/graphql'
+import { ItemCardList } from '@/components/molecules/ItemCardList'
 
 export default function PageAllMenu() {
   // 全Donsデータ
-  // const { fetchItems, loading } = useFetchItems()
-  // console.log(fetchItems);
-
-  // const { data, loading, error } = useFetchItems()
-  const { data, loading, error } = useGetItemsAllQuery()
-  // console.log(data)
+  const { data, loading, error } = useGetItemsQuery()
 
   return (
     <>
       <PageTitle title='メニュー一覧' />
-      {loading ? <LoadingIndicator /> : <ItemCardList data={data} />}
+      {loading ? <LoadingIndicator /> : <ItemCardList items={data.items} />}
     </>
   )
 }
