@@ -6,7 +6,7 @@ import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { Text } from '@chakra-ui/react'
 import { Favorite, Item, useFetchFavoriteByEmailQuery, User } from '@/gql/graphql'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
+import { useUserContext } from '@/contexts/UserContext'
 
 export default function PageSelectFavorite() {
   const router = useRouter()
@@ -18,13 +18,11 @@ export default function PageSelectFavorite() {
   const [result, setResult] = useState('')
 
   // ユーザー情報を取得
-  const { getUser } = useCheckLogin()
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useUserContext()
 
-  // ユーザー情報を取得実行
   useEffect(() => {
-    setUser(getUser)
-  }, [getUser])
+    console.log('user', user)
+  }, [user])
 
   // お気に入り情報の取得
   const {
@@ -39,7 +37,7 @@ export default function PageSelectFavorite() {
   // データが取得された後に実行
   useEffect(() => {
     if (data) {
-      // console.log('data', data.favorites)
+      console.log('data', data.favorites)
       const filterItems = data.favorites.map((favorite) => favorite.item)
       // console.log('filterItems', filterItems)
 

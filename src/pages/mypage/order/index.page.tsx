@@ -1,8 +1,8 @@
 // import { useFetchOrders } from '@/hooks/fetch/useFetchOrders'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { useFetchOrders } from './usefetchOrder'
+import { ItemCardList } from './ItemCardList'
 
 export default function PageOrder() {
   // 注文情報の取得

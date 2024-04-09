@@ -57,7 +57,7 @@ export const MenuDrawer = memo(() => {
                     <>
                       <Text as='b'>こんにちは！{user.email} さん</Text>
                       <Stack mt='24px'>
-                        <HoverLink text='ホーム画面' href='/home' />
+                        <HoverLink text='ホーム' href='/home' />
                       </Stack>
                     </>
                   ) : (

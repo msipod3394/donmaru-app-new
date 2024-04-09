@@ -1,5 +1,5 @@
 # 苦手ネタに追加
-mutation addDislike($ingredientId: ID!, $email: String!) {
+mutation addDislike($ingredientId: String!, $email: String!) {
   createDislike(ingredientId: $ingredientId, email: $email) {
     id
     ingredient {
@@ -14,7 +14,7 @@ mutation addDislike($ingredientId: ID!, $email: String!) {
 }
 
 # 苦手ネタ削除
-mutation deleteDislike($ingredientId: ID!, $email: String!) {
+mutation deleteDislike($ingredientId: String!, $email: String!) {
   deleteDislike(input: { ingredientId: $ingredientId, email: $email }) {
     success
   }

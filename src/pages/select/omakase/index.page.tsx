@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { useGetItemsQuery } from '@/gql/graphql'
 
 export default function PageSelectOmakase() {
@@ -10,8 +10,6 @@ export default function PageSelectOmakase() {
 
   // データが取得された後に実行
   useEffect(() => {
-    console.log('data', data)
-    
     if (data) {
       console.log('data', data.items)
       const itemsAll = data.items

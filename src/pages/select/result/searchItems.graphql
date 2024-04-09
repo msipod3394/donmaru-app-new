@@ -22,7 +22,6 @@ mutation CreateOrder($itemId: String!, $userId: String!) {
     }
     user {
       id
-      userName
     }
     createdAt
     updatedAt

@@ -3,6 +3,7 @@
 export const UserLinks = [
   { text: '新規登録', href: '/signup' },
   { text: 'ログイン', href: '/login' },
+  { text: 'ホーム', href: '/home' },
 ]
 
 export const SelectLinks = [

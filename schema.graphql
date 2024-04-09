@@ -7,7 +7,7 @@ input DeleteDislikeInput {
   """
   clientMutationId: String
   email: String!
-  ingredientId: ID!
+  ingredientId: String!
 }
 
 """
@@ -23,7 +23,7 @@ type DeleteDislikePayload {
 
 type Dislike {
   createdAt: ISO8601DateTime!
-  id: ID!
+  id: String!
   ingredient: Ingredient!
   updatedAt: ISO8601DateTime!
   user: User!
@@ -44,13 +44,13 @@ scalar ISO8601DateTime @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
 
 type Ingredient {
   createdAt: ISO8601DateTime!
-  id: ID!
+  id: String!
   name: String!
   updatedAt: ISO8601DateTime!
 }
 
 type IngredientItem {
-  id: ID!
+  id: String!
   name: String!
 }
 
@@ -64,7 +64,7 @@ type Item {
 }
 
 type Mutation {
-  createDislike(email: String!, ingredientId: ID!): Dislike!
+  createDislike(email: String!, ingredientId: String!): Dislike!
   createFavorite(itemId: String!, userId: String!): Favorite!
   createOrder(itemId: String!, userId: String!): Order!
   createUser(email: String!, password: String!): User!

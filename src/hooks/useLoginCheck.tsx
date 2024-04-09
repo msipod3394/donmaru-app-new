@@ -1,5 +1,4 @@
 // ログイン状況のチェック
-
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { DBUser } from '@/types/global_db.types'

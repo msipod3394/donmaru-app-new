@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUserContext } from '@/contexts/UserContext'
-import { useInsertOrder } from '@/hooks/useInsertOrder'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { ActionButtons } from '@/components/molecules/ActionButtons'
 import { DisplayResultItem } from './DisplayResultItem'
@@ -36,41 +35,35 @@ export default function PageResult() {
   const [user] = useUserContext()
 
   // 丼データ取得
-  // const { fetchItems } = useFetchItems()
   const { data, loading } = useSearchItemsByIdQuery(queryOptions)
-
-  // 注文履歴テーブルに追加するHooks
-  const { insertOrderTable, error } = useInsertOrder()
 
   // 結果の丼を取得
   useEffect(() => {
     if (data) {
-      // console.log('結果', data.items[0])
       setResult(data.items[0])
     }
   }, [resultID, data])
 
-  const [
-    createOrderMutation,
-    { data: sendOrderData, loading: sendOrderLoading, error: sendOrderError },
-  ] = useCreateOrderMutation()
+  const [createOrderMutation] = useCreateOrderMutation()
 
   // 注文履歴に追加ボタン
   const handleAddOrder = () => {
-    if (result && user) {
+    if (result) {
       createOrderMutation({
         variables: {
           itemId: result.id,
-          // userId: user.id,
-          userId: '4', // 後ほど修正
+          // userId: user.email,
+          userId: '1', // 一旦
         },
       })
-      .then((order_result) => {
-        console.log('注文履歴登録成功:', order_result.data?.createOrder)
-      })
-      .catch((error) => {
-        console.error('注文履歴登録エラー:', error)
-      })
+        .then((order_result) => {
+          console.log('注文履歴登録成功:', order_result.data?.createOrder)
+          alert('注文履歴に登録しました！')
+        })
+        .catch((error) => {
+          console.error('注文履歴登録エラー:', error)
+          alert('注文履歴登録時にエラーが発生しました')
+        })
     }
   }
 

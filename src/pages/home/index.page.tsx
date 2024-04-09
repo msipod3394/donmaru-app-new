@@ -1,23 +1,15 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { PageDescription } from '@/components/atoms/Texts/PageDescription'
 import { ButtonLinkList } from '@/pages/home/ButtonLinkList'
 import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { useUserContext } from '@/contexts/UserContext'
 import { SelectLinks } from '@/components/SettingLink'
-import { useFetchUser } from '@/hooks/gql/useFetchUser'
-import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { useFetchIngredientsQuery } from '@/gql/graphql'
 
 export default function Home() {
-  // gql
-  // const { loading, error, data } = useFetchUser()
-  // const { data, loading, error } = useFetchIngredientsQuery()
-  // console.log('data', data)
-
-  // ユーザー情報
+  // ユーザー情報をセット
   const { getUser } = useCheckLogin()
-  const [user, setUser] = useUserContext()
+  const [, setUser] = useUserContext()
 
   useEffect(() => {
     setUser(getUser)

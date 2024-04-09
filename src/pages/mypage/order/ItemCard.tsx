@@ -12,20 +12,20 @@ type Props = {
 }
 
 export const ItemCard: FC<Props> = ({ item }) => {
-  console.log("item",item);
-  
+  // console.log('item', item)
+
   return (
     <SBox key={item.id}>
-      <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
+      <Image w='80px' src={`/menu/${item.item.image}`} alt={item.item.name} />
       <SBoxIn spacing={0.5}>
         <Text size='sm' fontWeight='500'>
-          {item.name}
+          {item.item.name}
         </Text>
         <HStack gap={0} flexWrap='wrap'>
-          {item.ingredients && Array.isArray(item.ingredients) && (
+          {item.item.ingredients && Array.isArray(item.item.ingredients) && (
             <>
-              {Array.isArray(item.ingredients) &&
-                item.ingredients.map((ingredient, index) => (
+              {Array.isArray(item.item.ingredients) &&
+                item.item.ingredients.map((ingredient, index) => (
                   <Text as='span' fontSize='xs' key={index}>
                     {index > 0 && <>・</>}
                     {ingredient.name}
