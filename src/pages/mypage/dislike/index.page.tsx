@@ -9,6 +9,7 @@ import {
   Dislike,
   Ingredient,
   useAddDislikeMutation,
+  useAddDislikesMutation,
   useFetchDislikeByEmailQuery,
   useFetchIngredientsQuery,
   User,
@@ -27,13 +28,23 @@ export default function PageDislike() {
 
   // 全てのネタ情報を取得
   const { data: fetchIngs, loading, error } = useFetchIngredientsQuery()
-  // console.log('ネタ情報', fetchIngs.ingredients)
 
   // チェックが入っているネタを管理
   const [isChecked, setIsChecked] = useState<number[]>([])
 
   // addDislikeMutation と data を抽出
-  const [addDislikeMutation, { data }] = useAddDislikeMutation()
+  const [addDislikeMutation, { data }] = useAddDislikesMutation()
+
+  // const onSubmit = async () => {
+  //   try {
+  //     const result = await addDislikeMutation({
+  //       variables: { ingredientId: '8', email: "msipod3394@gmail.com" },
+  //     })
+  //     console.log(result)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   // チェックボックスの更新
   const handleCheckbox = useCallback((id: number) => {

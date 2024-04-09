@@ -1,29 +1,17 @@
 import { AddDislikeMutationVariables } from '@/gql/graphql'
 
 export async function handleUpdate(
-  isChecked: number[],
+  isChecked: string[],
   user: { email: string },
   registeredDislikes: number[],
-  addDislikeMutation: (variables: AddDislikeMutationVariables) => void,
+  addDislikeMutation: (variables: AddDislikeMutationVariables) => Promise<any>,
 ) {
-  console.log('registeredDislikes', registeredDislikes)
-  console.log('isChecked', isChecked)
-  console.log('user', user.email)
-
-  const addRegisterItems = isChecked.filter((item) => !registeredDislikes.includes(item))
-  console.log('addRegisterItems', addRegisterItems)
-
-  // const mutationVariablesList: AddDislikeMutationVariables[] = addRegisterItems.map(
-  //   (ingredientId) => {
-  //     return {
-  //       ingredientId: ingredientId,
-  //       email: user.email,
-  //     }
-  //   },
-  // )
-
-  // // ミューテーションの呼び出し
-  // mutationVariablesList.forEach((variables) => {
-  //   addDislikeMutation(variables)
-  // })
+  try {
+    const result = await addDislikeMutation({
+      variables: { ingredientIds: isChecked, email: 'msipod3394@gmail.com' },
+    })
+    console.log(result)
+  } catch (error) {
+    console.error(error)
+  }
 }
