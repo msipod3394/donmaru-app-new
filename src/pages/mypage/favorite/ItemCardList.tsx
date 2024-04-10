@@ -1,6 +1,6 @@
-import { ItemCard } from '@/components/molecules/ItemCard'
-import { ItemCardConvert } from '@/hooks/ItemCardConvert'
 import { Item, User } from '@/gql/graphql'
+import { ItemCard } from '../components/ItemCard'
+import { ItemCardConvert } from '../components/ItemCardConvert'
 
 type Props = {
   id: string
@@ -11,9 +11,8 @@ type Props = {
 }
 
 export function ItemCardList({ items }: { items: Item[] }) {
-  // console.log('items', items)
   const selectItems = ItemCardConvert(items)
-  // console.log('selectItems', selectItems)
+  console.log('selectItems', selectItems)
   return (
     <>
       {selectItems.map((item: Props) => (

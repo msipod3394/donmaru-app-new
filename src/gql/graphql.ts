@@ -180,7 +180,7 @@ export type FetchFavoriteByEmailQueryVariables = Exact<{
 }>;
 
 
-export type FetchFavoriteByEmailQuery = { __typename?: 'Query', favorites: Array<{ __typename?: 'Favorite', id: string, item: { __typename?: 'Item', id: string, name: string, image: string, updatedAt: any } }> };
+export type FetchFavoriteByEmailQuery = { __typename?: 'Query', favorites: Array<{ __typename?: 'Favorite', id: string, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, updatedAt: any } }> };
 
 export type FetchIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -303,6 +303,7 @@ export const FetchFavoriteByEmailDocument = gql`
       image
       updatedAt
     }
+    updatedAt
   }
 }
     `;

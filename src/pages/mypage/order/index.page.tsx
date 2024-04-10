@@ -2,7 +2,7 @@
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useFetchOrders } from './usefetchOrder'
-import { ItemCardList } from './ItemCardList'
+import { ItemCardList } from '../components/ItemCardList'
 
 export default function PageOrder() {
   // 注文情報の取得
