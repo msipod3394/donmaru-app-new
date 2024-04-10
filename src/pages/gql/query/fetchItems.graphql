@@ -1,0 +1,13 @@
+# 全ての丼アイテムを取得
+query fetchItems {
+  items {
+    id
+    name
+    image
+    ingredients {
+      id
+      name
+    }
+    updatedAt
+  }
+}

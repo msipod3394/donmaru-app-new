@@ -1,44 +1,99 @@
-import { useFetchFavorites } from '@/hooks/fetch/useFetchFavorites'
-import { useFetchOrdersData } from './useFetchOrdersData'
-import { useFilterItems } from './useFilterItems'
-import { ItemCard } from './ItemCard'
-import { formattedData } from '@/types/formattedData'
-import { useCallback, useEffect, useState } from 'react'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
-import { VStack } from '@chakra-ui/react'
 import styled from 'styled-components'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
-import { DBUser } from '@/types/global_db.types'
+import { useFilterItems } from './useFilterItems'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { VStack } from '@chakra-ui/react'
 import { useUpdateFavorite } from '../handleUpdate'
 import { useRouter } from 'next/router'
+import {
+  Favorite,
+  Item,
+  Order,
+  useFetchFavoriteByEmailQuery,
+  User,
+  useSearchOrderByUserEmailQuery,
+} from '@/gql/graphql'
+import { useUserContext } from '@/contexts/UserContext'
+import { convertFormattedDate } from '@/hooks/convertFormattedDate'
+import { ItemCard } from './ItemCard'
+import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 
-export function ItemCardList({ items }: { items: formattedData[] }) {
+export function ItemCardList({ items }: { items: Item[] }) {
   const router = useRouter()
 
   // ユーザー情報を取得
-  const { getUser } = useCheckLogin()
-  const [user, setUser] = useState<DBUser>()
+  const [user, setUser] = useUserContext()
 
   // お気に入り更新のステート管理
-  const [FavoritesIdArray, setFavoritesIdArray] = useState<number[] | undefined>()
+  const [favoritesIdArray, setFavoritesIdArray] = useState<string[] | undefined>()
 
-  // お気に入りを取得
-  const { fetchFavorites } = useFetchFavorites()
+  // 取得したお気に入りデータ
+  const [favorites, setFavorites] = useState<Favorite[]>()
+
+  // 注文履歴のステート管理
+  const [orders, setOrders] = useState<Order[]>()
+
+  // お気に入りの取得
+  useFetchFavoriteByEmailQuery({
+    variables: { email: user && user.email ? user.email : null },
+    skip: !user,
+    onCompleted: (data) => {
+      if (data && data.favorites) {
+        setFavorites(data.favorites)
+      }
+    },
+  })
 
   // 注文履歴を取得
-  const order = useFetchOrdersData()
+  useSearchOrderByUserEmailQuery({
+    variables: { email: user && user.email ? user.email : null },
+    skip: !user,
+    onCompleted: (data) => {
+      if (data && data.order) {
+        setOrders(data.order)
+      }
+    },
+  })
 
-  // ItemCard に送る形に整形
-  const getEndItems = useFilterItems(items, order, fetchFavorites)
+  // 注文履歴とお気に入りデータが取得された後に、データを処理
   const [endItems, setEndItems] = useState([])
 
   useEffect(() => {
-    if (fetchFavorites) {
-      const FavoritesIdArray = fetchFavorites.map((item) => item.don_id)
-      setFavoritesIdArray(FavoritesIdArray)
+    if (favorites) {
+      const favoriteIdArray = favorites.map((favorite) => favorite.item.id)
+      setFavoritesIdArray(favoriteIdArray)
     }
-    setEndItems([...getEndItems])
-  }, [fetchFavorites])
+  }, [favorites])
+
+  const getEndItems = useMemo(() => {
+    if (!orders || !favorites) return []
+
+    return items.map((item) => {
+      const orderIdArray = orders.map((order) => order.item.id)
+      const favoriteIdArray = favoritesIdArray || []
+
+      let order_latest = ''
+      let count = 0
+
+      const favorite = favoriteIdArray.includes(item.id)
+      const targetIdIndex = orderIdArray.indexOf(item.id)
+
+      orderIdArray.forEach((orderId) => {
+        if (orderId === item.id) {
+          count++
+        }
+      })
+
+      if (targetIdIndex !== -1) {
+        const targetItem = orders[targetIdIndex]
+        order_latest = convertFormattedDate(targetItem.updatedAt)
+      }
+      return { ...item, order_latest, count, favorite }
+    })
+  }, [orders, favorites, items, favoritesIdArray])
+
+  // useEffect(() => {
+  //   console.log(getEndItems)
+  // }, [getEndItems])
 
   // 「お気に入りに追加する」クリック時の処理
   const clickAddFavorite = useCallback(
@@ -85,52 +140,31 @@ export function ItemCardList({ items }: { items: formattedData[] }) {
   )
 
   useEffect(() => {
-    console.log('FavoritesIdArray', FavoritesIdArray)
-  }, [FavoritesIdArray])
-
-  // ユーザー情報を取得実行
-  useEffect(() => {
-    setUser(getUser)
-  }, [getUser])
-
-  const { loading, error, handleUpdate } = useUpdateFavorite()
-
-  // お気に入りの更新
-  const onSubmit = useCallback(async () => {
-    if (user) {
-      await handleUpdate(FavoritesIdArray, user)
-    }
-  }, [FavoritesIdArray])
-
-  useEffect(() => {
-    if (!loading) {
-      alert('更新に成功しました')
-      router.push('/mypage/favorite')
-    }
-  }, [loading, handleUpdate])
+    console.log('favoritesIdArray', favoritesIdArray)
+  }, [favoritesIdArray])
 
   return (
     <SBox>
       <p>
         選択中:
-        {FavoritesIdArray?.map((item) => <span>{item},</span>)}
+        {favoritesIdArray?.map((item) => <span>{item},</span>)}
       </p>
-      {endItems && (
+      {getEndItems && (
         <>
-          {endItems.map((item) => (
+          {getEndItems.map((item) => (
             <ItemCard
               key={item.id}
               item={item}
-              FavoritesIds={FavoritesIdArray}
+              FavoritesIds={favoritesIdArray}
               clickAddFavorite={clickAddFavorite}
               clickRemoveFavorite={clickRemoveFavorite}
             />
           ))}
         </>
       )}
-      <ButtonRounded onClick={onSubmit} className='isDark isFixed'>
+      {/* <ButtonRounded onClick={onSubmit} className='isDark isFixed'>
         更新する
-      </ButtonRounded>
+      </ButtonRounded> */}
     </SBox>
   )
 }

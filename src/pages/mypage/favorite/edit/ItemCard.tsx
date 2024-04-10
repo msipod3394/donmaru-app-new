@@ -4,12 +4,13 @@ import { Text, VStack, HStack, Image, Button, Link } from '@chakra-ui/react'
 import { StarIcon, TimeIcon } from '@chakra-ui/icons'
 import { DBNetas } from '@/types/global_db.types'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { Ingredient } from '@/gql/graphql'
 
 export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) => {
   return (
     <>
-      <SBox key={item.id} className={item.favorite ? '_isFavorite' : ''}>
-        <Image w='80px' src={`/menu/${item.image}`} alt={item.title} />
+      <SBox spacing={4} key={item.id} className={item.favorite ? '_isFavorite' : ''}>
+        <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
         <SBoxIn spacing={1}>
           {item.favorite && (
             <HStack gap={1}>
@@ -18,17 +19,16 @@ export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) =
             </HStack>
           )}
           <Text size='sm' fontWeight='500'>
-            {item.title}
+            {item.name}
           </Text>
           <HStack gap={0} flexWrap='wrap'>
-            {item.dons_netas &&
-              Array.isArray(item.dons_netas) &&
-              item.dons_netas.map((neta: { netas: { name: string } }, index: number) => {
-                const netaName = neta.netas && neta.netas.name
+            {item.ingredients &&
+              Array.isArray(item.ingredients) &&
+              item.ingredients.map((ingredient: Ingredient, index: number) => {
                 return (
                   <Text as='span' fontSize='xs' key={index}>
                     {index > 0 && <>・</>}
-                    {netaName}
+                    {ingredient.name}
                   </Text>
                 )
               })}

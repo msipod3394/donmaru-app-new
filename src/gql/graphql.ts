@@ -187,6 +187,11 @@ export type FetchIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FetchIngredientsQuery = { __typename?: 'Query', ingredients: Array<{ __typename?: 'Ingredient', id: string, name: string }> };
 
+export type FetchItemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+
 export type FetchOrderByEmailQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -406,6 +411,65 @@ export type FetchIngredientsQueryHookResult = ReturnType<typeof useFetchIngredie
 export type FetchIngredientsLazyQueryHookResult = ReturnType<typeof useFetchIngredientsLazyQuery>;
 export type FetchIngredientsSuspenseQueryHookResult = ReturnType<typeof useFetchIngredientsSuspenseQuery>;
 export type FetchIngredientsQueryResult = Apollo.QueryResult<FetchIngredientsQuery, FetchIngredientsQueryVariables>;
+export const FetchItemsDocument = gql`
+    query fetchItems {
+  items {
+    id
+    name
+    image
+    ingredients {
+      id
+      name
+    }
+    updatedAt
+  }
+}
+    `;
+export type FetchItemsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<FetchItemsQuery, FetchItemsQueryVariables>
+    } & TChildProps;
+export function withFetchItems<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  FetchItemsQuery,
+  FetchItemsQueryVariables,
+  FetchItemsProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, FetchItemsQuery, FetchItemsQueryVariables, FetchItemsProps<TChildProps, TDataName>>(FetchItemsDocument, {
+      alias: 'fetchItems',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useFetchItemsQuery__
+ *
+ * To run a query within a React component, call `useFetchItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchItemsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchItemsQuery(baseOptions?: Apollo.QueryHookOptions<FetchItemsQuery, FetchItemsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchItemsQuery, FetchItemsQueryVariables>(FetchItemsDocument, options);
+      }
+export function useFetchItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchItemsQuery, FetchItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchItemsQuery, FetchItemsQueryVariables>(FetchItemsDocument, options);
+        }
+export function useFetchItemsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FetchItemsQuery, FetchItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchItemsQuery, FetchItemsQueryVariables>(FetchItemsDocument, options);
+        }
+export type FetchItemsQueryHookResult = ReturnType<typeof useFetchItemsQuery>;
+export type FetchItemsLazyQueryHookResult = ReturnType<typeof useFetchItemsLazyQuery>;
+export type FetchItemsSuspenseQueryHookResult = ReturnType<typeof useFetchItemsSuspenseQuery>;
+export type FetchItemsQueryResult = Apollo.QueryResult<FetchItemsQuery, FetchItemsQueryVariables>;
 export const FetchOrderByEmailDocument = gql`
     query fetchOrderByEmail($email: String) {
   order(email: $email) {
