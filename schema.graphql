@@ -46,8 +46,7 @@ type Mutation {
   createFavorite(itemId: String!, userId: String!): Favorite!
   createOrder(itemId: String!, userId: String!): Order!
   createUser(email: String!, password: String!): User!
-  deleteDislike(email: String!, ingredientId: String!): Dislike!
-  success: Boolean!
+  deleteDislikes(email: String!, ingredientIds: [String!]!): Boolean!
 }
 
 type Order {

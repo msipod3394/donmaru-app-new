@@ -69,8 +69,7 @@ export type Mutation = {
   createFavorite: Favorite;
   createOrder: Order;
   createUser: User;
-  deleteDislike: Dislike;
-  success: Scalars['Boolean']['output'];
+  deleteDislikes: Scalars['Boolean']['output'];
 };
 
 
@@ -98,9 +97,9 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationDeleteDislikeArgs = {
+export type MutationDeleteDislikesArgs = {
   email: Scalars['String']['input'];
-  ingredientId: Scalars['String']['input'];
+  ingredientIds: Array<Scalars['String']['input']>;
 };
 
 export type Order = {
@@ -209,12 +208,12 @@ export type AddDislikesMutationVariables = Exact<{
 export type AddDislikesMutation = { __typename?: 'Mutation', createDislikes: Array<{ __typename?: 'Dislike', id: string, createdAt: any, updatedAt: any, ingredient: { __typename?: 'Ingredient', id: string }, user: { __typename?: 'User', id: string } }> };
 
 export type DeleteDislikeMutationVariables = Exact<{
-  ingredientId: Scalars['String']['input'];
+  ingredientIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
   email: Scalars['String']['input'];
 }>;
 
 
-export type DeleteDislikeMutation = { __typename?: 'Mutation', deleteDislike: { __typename?: 'Dislike', success?: boolean | null } };
+export type DeleteDislikeMutation = { __typename?: 'Mutation', deleteDislikes: boolean };
 
 export type SearchOrderByUserEmailQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
@@ -580,10 +579,8 @@ export type AddDislikesMutationHookResult = ReturnType<typeof useAddDislikesMuta
 export type AddDislikesMutationResult = Apollo.MutationResult<AddDislikesMutation>;
 export type AddDislikesMutationOptions = Apollo.BaseMutationOptions<AddDislikesMutation, AddDislikesMutationVariables>;
 export const DeleteDislikeDocument = gql`
-    mutation deleteDislike($ingredientId: String!, $email: String!) {
-  deleteDislike(ingredientId: $ingredientId, email: $email) {
-    success
-  }
+    mutation deleteDislike($ingredientIds: [String!]!, $email: String!) {
+  deleteDislikes(ingredientIds: $ingredientIds, email: $email)
 }
     `;
 export type DeleteDislikeMutationFn = Apollo.MutationFunction<DeleteDislikeMutation, DeleteDislikeMutationVariables>;
@@ -614,7 +611,7 @@ export function withDeleteDislike<TProps, TChildProps = {}, TDataName extends st
  * @example
  * const [deleteDislikeMutation, { data, loading, error }] = useDeleteDislikeMutation({
  *   variables: {
- *      ingredientId: // value for 'ingredientId'
+ *      ingredientIds: // value for 'ingredientIds'
  *      email: // value for 'email'
  *   },
  * });

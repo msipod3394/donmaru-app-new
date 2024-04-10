@@ -1,50 +1,67 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
-import { useFetchDislikes } from '@/hooks/fetch/useFetchDislikes'
+import {
+  Ingredient,
+  useAddDislikesMutation,
+  useDeleteDislikeMutation,
+  useFetchDislikeByEmailQuery,
+  useFetchIngredientsQuery,
+} from '@/gql/graphql'
+import { useUserContext } from '@/contexts/UserContext'
 import { PageTitle } from '@/components/atoms/Texts/PageTitle'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { NetaCheckbox } from '@/components/atoms/Checkbox/NetaCheckbox'
 import { handleUpdate } from './handleUpdate'
-import {
-  Dislike,
-  Ingredient,
-  useAddDislikeMutation,
-  useAddDislikesMutation,
-  useFetchDislikeByEmailQuery,
-  useFetchIngredientsQuery,
-  User,
-} from '@/gql/graphql'
+import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 
 export default function PageDislike() {
   // ユーザー情報を取得
-  const { getUser } = useCheckLogin()
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useUserContext()
 
   // 苦手ネタをステート管理
   const [registeredDislikes, setRegisteredDislikes] = useState<string[]>([])
 
-  // 苦手ネタの取得
-  const { fetchDislikes, dislikeLoading, dislikeError } = useFetchDislikes()
-
   // 全てのネタ情報を取得
-  const { data: fetchIngs, loading, error } = useFetchIngredientsQuery()
+  const { data: ingredients, loading, error } = useFetchIngredientsQuery()
 
   // チェックが入っているネタを管理
-  const [isChecked, setIsChecked] = useState<number[]>([])
+  const [isChecked, setIsChecked] = useState<string[]>([])
 
-  // addDislikeMutation と data を抽出
-  const [addDislikeMutation, { data }] = useAddDislikesMutation()
+  // GQLから苦手ネタを取得
+  const { data: dislikes, refetch: refetchDislikesByUserEmail } =
+    useFetchDislikeByEmailQuery({
+      variables: { email: user && user.email ? user.email : null },
+      skip: !user,
+    })
 
-  // const onSubmit = async () => {
-  //   try {
-  //     const result = await addDislikeMutation({
-  //       variables: { ingredientId: '8', email: "msipod3394@gmail.com" },
-  //     })
-  //     console.log(result)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+  // 苦手ネタ追加
+  const [addDislikeMutation] = useAddDislikesMutation()
+
+  // 苦手ネタ削除
+  const [addDeleteMutation] = useDeleteDislikeMutation()
+
+  // 削除する配列
+  const [deleteIds, setDeleteIds] = useState<string[]>([])
+
+  // 登録する配列
+  const [addIds, setAddIds] = useState<string[]>([])
+
+  // 苦手ネタをisCheckedにセット（既存チェック）
+  useEffect(() => {
+    if (dislikes) {
+      const registeredDislike: string[] = dislikes.dislikes.map((item) => {
+        return item.ingredient.id
+      })
+      setIsChecked(registeredDislike)
+
+      // ステートにセット（Update時に使用）
+      const filterDislikes: string[] = dislikes.dislikes.map((item) => {
+        return item.ingredient.id
+      })
+
+      // 苦手ネタのステート更新
+      setRegisteredDislikes(filterDislikes)
+    }
+  }, [dislikes])
 
   // チェックボックスの更新
   const handleCheckbox = useCallback((id: number) => {
@@ -56,51 +73,47 @@ export default function PageDislike() {
     })
   }, [])
 
-  // GQLから苦手ネタを取得
-  const { data: dislikeData, refetch: refetchDislikesByUserEmail } =
-    useFetchDislikeByEmailQuery({
-      variables: { email: user && user.email ? user.email : null },
-      skip: !user,
-    })
+  useEffect(() => {
+    // チェックがついている・登録されていないIDを抽出（苦手ネタ追加）
+    let removedDislikes = registeredDislikes.filter((item) => !isChecked.includes(item))
+    setDeleteIds(removedDislikes)
+
+    // チェックがない・登録されているIDを抽出（苦手ネタ削除）
+    let uniqueDislikes = isChecked.filter((item) => !registeredDislikes.includes(item))
+    setAddIds(uniqueDislikes)
+  }, [isChecked, registeredDislikes])
 
   // 苦手ネタ更新
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (user) {
-      handleUpdate(isChecked, user, registeredDislikes, addDislikeMutation)
+      // 苦手ネタの更新処理を実行
+      await handleUpdate(
+        user,
+        addIds,
+        deleteIds,
+        addDislikeMutation,
+        addDeleteMutation,
+        refetchDislikesByUserEmail,
+      )
     }
-  }, [isChecked])
-
-  // ユーザー情報を取得実行
-  useEffect(() => {
-    setUser(getUser)
-  }, [getUser])
-
-  useEffect(() => {
-    console.log('isChecked', isChecked)
-  }, [isChecked])
-
-  // 苦手ネタをisCheckedにセット（既存チェック）
-  useEffect(() => {
-    if (fetchDislikes) {
-      const registeredDislike: string[] = fetchDislikes.map((item) => {
-        return item.ingredient.id
-      })
-      setIsChecked(registeredDislike)
-    }
-
-    // ステートにセット（Update時に使用）
-    const filterDislikes: string[] = Array.from(fetchDislikes).map((item) => {
-      return item.ingredient.id
-    })
-    setRegisteredDislikes(filterDislikes)
-  }, [fetchDislikes])
+  }, [
+    user,
+    addIds,
+    deleteIds,
+    addDislikeMutation,
+    addDeleteMutation,
+    refetchDislikesByUserEmail,
+  ])
 
   return (
     <>
       <PageTitle title='苦手ネタ管理' />
-      {fetchIngs &&
-        Object.values(fetchIngs).map((fetchIng: Ingredient[]) => {
-          return Object.values(fetchIng).map((item: Ingredient) => {
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        ingredients &&
+        Object.values(ingredients).map((ingredient: Ingredient[] | undefined) => {
+          return Object.values(ingredient).map((item: Ingredient) => {
             return (
               <NetaCheckbox
                 key={item.id}
@@ -111,7 +124,8 @@ export default function PageDislike() {
               />
             )
           })
-        })}
+        })
+      )}
       <ButtonRounded onClick={onSubmit} className='isDark'>
         更新
       </ButtonRounded>
