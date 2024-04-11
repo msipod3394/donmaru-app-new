@@ -9,8 +9,9 @@ type Dislike {
 
 type Favorite {
   createdAt: ISO8601DateTime!
-  id: ID!
+  id: String!
   item: Item!
+  success: Boolean
   updatedAt: ISO8601DateTime!
   user: User!
 }
@@ -44,9 +45,11 @@ type Item {
 type Mutation {
   createDislikes(email: String!, ingredientIds: [String!]!): [Dislike!]!
   createFavorite(itemId: String!, userId: String!): Favorite!
+  createFavorites(email: String!, itemIds: [String!]!): [Favorite!]!
   createOrder(itemId: String!, userId: String!): Order!
   createUser(email: String!, password: String!): User!
   deleteDislikes(email: String!, ingredientIds: [String!]!): Boolean!
+  deleteFavorites(email: String!, itemIds: [String!]!): Boolean!
 }
 
 type Order {

@@ -33,8 +33,9 @@ export type Dislike = {
 export type Favorite = {
   __typename?: 'Favorite';
   createdAt: Scalars['ISO8601DateTime']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['String']['output'];
   item: Item;
+  success?: Maybe<Scalars['Boolean']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user: User;
 };
@@ -67,9 +68,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   createDislikes: Array<Dislike>;
   createFavorite: Favorite;
+  createFavorites: Array<Favorite>;
   createOrder: Order;
   createUser: User;
   deleteDislikes: Scalars['Boolean']['output'];
+  deleteFavorites: Scalars['Boolean']['output'];
 };
 
 
@@ -82,6 +85,12 @@ export type MutationCreateDislikesArgs = {
 export type MutationCreateFavoriteArgs = {
   itemId: Scalars['String']['input'];
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateFavoritesArgs = {
+  email: Scalars['String']['input'];
+  itemIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -100,6 +109,12 @@ export type MutationCreateUserArgs = {
 export type MutationDeleteDislikesArgs = {
   email: Scalars['String']['input'];
   ingredientIds: Array<Scalars['String']['input']>;
+};
+
+
+export type MutationDeleteFavoritesArgs = {
+  email: Scalars['String']['input'];
+  itemIds: Array<Scalars['String']['input']>;
 };
 
 export type Order = {
@@ -168,6 +183,22 @@ export type User = {
   userName: Scalars['String']['output'];
 };
 
+export type AddFavoritesMutationVariables = Exact<{
+  itemIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  email: Scalars['String']['input'];
+}>;
+
+
+export type AddFavoritesMutation = { __typename?: 'Mutation', createFavorites: Array<{ __typename?: 'Favorite', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string }, user: { __typename?: 'User', id: string, email: string } }> };
+
+export type DeleteFavoritesMutationVariables = Exact<{
+  itemIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  email: Scalars['String']['input'];
+}>;
+
+
+export type DeleteFavoritesMutation = { __typename?: 'Mutation', deleteFavorites: boolean };
+
 export type FetchDislikeByEmailQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -180,7 +211,7 @@ export type FetchFavoriteByEmailQueryVariables = Exact<{
 }>;
 
 
-export type FetchFavoriteByEmailQuery = { __typename?: 'Query', favorites: Array<{ __typename?: 'Favorite', id: string, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, updatedAt: any } }> };
+export type FetchFavoriteByEmailQuery = { __typename?: 'Query', favorites: Array<{ __typename?: 'Favorite', id: string, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', name: string }> } }> };
 
 export type FetchIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -243,6 +274,108 @@ export type CreateOrderMutationVariables = Exact<{
 export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string }, user: { __typename?: 'User', id: string } } };
 
 
+export const AddFavoritesDocument = gql`
+    mutation addFavorites($itemIds: [String!]!, $email: String!) {
+  createFavorites(itemIds: $itemIds, email: $email) {
+    id
+    item {
+      id
+      name
+    }
+    user {
+      id
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type AddFavoritesMutationFn = Apollo.MutationFunction<AddFavoritesMutation, AddFavoritesMutationVariables>;
+export type AddFavoritesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: Apollo.MutationFunction<AddFavoritesMutation, AddFavoritesMutationVariables>
+    } & TChildProps;
+export function withAddFavorites<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  AddFavoritesMutation,
+  AddFavoritesMutationVariables,
+  AddFavoritesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, AddFavoritesMutation, AddFavoritesMutationVariables, AddFavoritesProps<TChildProps, TDataName>>(AddFavoritesDocument, {
+      alias: 'addFavorites',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useAddFavoritesMutation__
+ *
+ * To run a mutation, you first call `useAddFavoritesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddFavoritesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addFavoritesMutation, { data, loading, error }] = useAddFavoritesMutation({
+ *   variables: {
+ *      itemIds: // value for 'itemIds'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useAddFavoritesMutation(baseOptions?: Apollo.MutationHookOptions<AddFavoritesMutation, AddFavoritesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddFavoritesMutation, AddFavoritesMutationVariables>(AddFavoritesDocument, options);
+      }
+export type AddFavoritesMutationHookResult = ReturnType<typeof useAddFavoritesMutation>;
+export type AddFavoritesMutationResult = Apollo.MutationResult<AddFavoritesMutation>;
+export type AddFavoritesMutationOptions = Apollo.BaseMutationOptions<AddFavoritesMutation, AddFavoritesMutationVariables>;
+export const DeleteFavoritesDocument = gql`
+    mutation deleteFavorites($itemIds: [String!]!, $email: String!) {
+  deleteFavorites(itemIds: $itemIds, email: $email)
+}
+    `;
+export type DeleteFavoritesMutationFn = Apollo.MutationFunction<DeleteFavoritesMutation, DeleteFavoritesMutationVariables>;
+export type DeleteFavoritesProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+      [key in TDataName]: Apollo.MutationFunction<DeleteFavoritesMutation, DeleteFavoritesMutationVariables>
+    } & TChildProps;
+export function withDeleteFavorites<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  DeleteFavoritesMutation,
+  DeleteFavoritesMutationVariables,
+  DeleteFavoritesProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withMutation<TProps, DeleteFavoritesMutation, DeleteFavoritesMutationVariables, DeleteFavoritesProps<TChildProps, TDataName>>(DeleteFavoritesDocument, {
+      alias: 'deleteFavorites',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useDeleteFavoritesMutation__
+ *
+ * To run a mutation, you first call `useDeleteFavoritesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFavoritesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFavoritesMutation, { data, loading, error }] = useDeleteFavoritesMutation({
+ *   variables: {
+ *      itemIds: // value for 'itemIds'
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useDeleteFavoritesMutation(baseOptions?: Apollo.MutationHookOptions<DeleteFavoritesMutation, DeleteFavoritesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteFavoritesMutation, DeleteFavoritesMutationVariables>(DeleteFavoritesDocument, options);
+      }
+export type DeleteFavoritesMutationHookResult = ReturnType<typeof useDeleteFavoritesMutation>;
+export type DeleteFavoritesMutationResult = Apollo.MutationResult<DeleteFavoritesMutation>;
+export type DeleteFavoritesMutationOptions = Apollo.BaseMutationOptions<DeleteFavoritesMutation, DeleteFavoritesMutationVariables>;
 export const FetchDislikeByEmailDocument = gql`
     query fetchDislikeByEmail($email: String) {
   dislikes(email: $email) {
@@ -307,6 +440,9 @@ export const FetchFavoriteByEmailDocument = gql`
       name
       image
       updatedAt
+      ingredients {
+        name
+      }
     }
     updatedAt
   }

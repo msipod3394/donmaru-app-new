@@ -1,21 +1,21 @@
 import styled from 'styled-components'
-import { useFilterItems } from './useFilterItems'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { VStack } from '@chakra-ui/react'
-import { useUpdateFavorite } from '../handleUpdate'
 import { useRouter } from 'next/router'
 import {
   Favorite,
   Item,
   Order,
+  useAddFavoritesMutation,
+  useDeleteFavoritesMutation,
   useFetchFavoriteByEmailQuery,
-  User,
   useSearchOrderByUserEmailQuery,
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 import { ItemCard } from './ItemCard'
 import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { handleUpdate } from './handleUpdate'
 
 export function ItemCardList({ items }: { items: Item[] }) {
   const router = useRouter()
@@ -23,17 +23,25 @@ export function ItemCardList({ items }: { items: Item[] }) {
   // ユーザー情報を取得
   const [user, setUser] = useUserContext()
 
-  // お気に入り更新のステート管理
-  const [favoritesIdArray, setFavoritesIdArray] = useState<string[] | undefined>()
+  // 登録する配列
+  const [selectedIds, setSelectedIds] = useState<string[] | undefined>()
+  const [addIds, setAddIds] = useState<string[] | undefined>()
+
+  // 削除する配列
+  const [deleteIds, setDeleteIds] = useState<string[] | undefined>([])
 
   // 取得したお気に入りデータ
   const [favorites, setFavorites] = useState<Favorite[]>()
+  const [favoritesIds, setFavoritesId] = useState<Favorite[]>()
 
   // 注文履歴のステート管理
   const [orders, setOrders] = useState<Order[]>()
 
+  // 注文履歴とお気に入りデータが取得された後に、データを処理
+  const [endItems, setGetItems] = useState([])
+
   // お気に入りの取得
-  useFetchFavoriteByEmailQuery({
+  const { refetch: refetchFavoritesByUserEmail } = useFetchFavoriteByEmailQuery({
     variables: { email: user && user.email ? user.email : null },
     skip: !user,
     onCompleted: (data) => {
@@ -54,22 +62,25 @@ export function ItemCardList({ items }: { items: Item[] }) {
     },
   })
 
-  // 注文履歴とお気に入りデータが取得された後に、データを処理
-  const [endItems, setEndItems] = useState([])
+  // お気に入りの更新関数
+  const [addFavoritesMutation] = useAddFavoritesMutation()
+  const [deleteFavoritesMutation] = useDeleteFavoritesMutation()
 
+  // 選択中のお気に入り丼のIDを抽出
   useEffect(() => {
     if (favorites) {
       const favoriteIdArray = favorites.map((favorite) => favorite.item.id)
-      setFavoritesIdArray(favoriteIdArray)
+      setSelectedIds(favoriteIdArray)
+      setFavoritesId(favoriteIdArray)
     }
   }, [favorites])
 
-  const getEndItems = useMemo(() => {
+  // 注文履歴と注文回数を追加して、ItemCardに送る形に整形
+  const getItems = useMemo(() => {
     if (!orders || !favorites) return []
-
     return items.map((item) => {
       const orderIdArray = orders.map((order) => order.item.id)
-      const favoriteIdArray = favoritesIdArray || []
+      const favoriteIdArray = selectedIds || []
 
       let order_latest = ''
       let count = 0
@@ -89,82 +100,110 @@ export function ItemCardList({ items }: { items: Item[] }) {
       }
       return { ...item, order_latest, count, favorite }
     })
-  }, [orders, favorites, items, favoritesIdArray])
-
-  // useEffect(() => {
-  //   console.log(getEndItems)
-  // }, [getEndItems])
+  }, [orders, favorites, items, selectedIds])
 
   // 「お気に入りに追加する」クリック時の処理
   const clickAddFavorite = useCallback(
     (id: number) => {
-      setFavoritesIdArray((prevstate) => {
+      setSelectedIds((prevstate) => {
         if (prevstate && !prevstate.includes(id)) {
-          setEndItems((prevItems) => {
-            return prevItems.map((item) => {
-              if (item.id === id) {
-                return { ...item, favorite: true }
-              }
-              return item
-            })
-          })
+          // id が prevstate に含まれていない場合は、その id を追加した新しい配列を返す
           return [...prevstate, id]
         } else {
+          // id が prevstate に含まれている場合は、そのままの配列を返す
           return [...prevstate]
         }
       })
     },
-    [endItems],
+    [setSelectedIds],
   )
+
+  useEffect(() => {
+    if (selectedIds && favoritesIds) {
+      const addFavoriteIds = selectedIds.filter((id) => !favoritesIds.includes(id))
+      setAddIds(addFavoriteIds)
+    }
+  }, [selectedIds, favoritesIds])
 
   // 「お気に入りから削除する」クリック時の処理
   const clickRemoveFavorite = useCallback(
     (id: number) => {
-      setFavoritesIdArray((prevstate) => {
+      setSelectedIds((prevstate) => {
         if (prevstate && prevstate.includes(id)) {
-          setEndItems((prevItems) => {
-            return prevItems.map((item) => {
-              if (item.id === id) {
-                return { ...item, favorite: false }
-              }
-              return item
-            })
-          })
-          return prevstate.filter((itemId) => itemId !== id) // id を削除した新しい配列を返す
+          return prevstate.filter((itemId) => itemId !== id)
         } else {
-          return [...prevstate]
+          return prevstate ? [...prevstate, id] : [id]
         }
       })
     },
-    [endItems],
+    [setSelectedIds],
   )
 
   useEffect(() => {
-    console.log('favoritesIdArray', favoritesIdArray)
-  }, [favoritesIdArray])
+    if (favorites && selectedIds) {
+      // チェックがついている・登録されていないIDを抽出（苦手ネタ追加）
+      let deleteFavorite = favorites.filter((item) => !selectedIds.includes(item.item.id))
+      const deleteFavoriteArray: string[] = deleteFavorite.map((item) => {
+        return item.item.id
+      })
+      setDeleteIds(deleteFavoriteArray)
+    }
+  }, [selectedIds])
+
+  // お気に入り更新
+  const onSubmit = useCallback(async () => {
+    if (user) {
+      try {
+        const success = await handleUpdate(
+          user,
+          selectedIds,
+          deleteIds,
+          addFavoritesMutation,
+          deleteFavoritesMutation,
+          refetchFavoritesByUserEmail,
+        )
+        if (success) {
+          console.log('更新成功')
+          router.push('/mypage/favorite/')
+        } else {
+          console.log('error')
+        }
+      } catch (error) {
+        console.error('エラー:', error)
+      }
+    }
+  }, [
+    user,
+    selectedIds,
+    deleteIds,
+    addFavoritesMutation,
+    deleteFavoritesMutation,
+    refetchFavoritesByUserEmail,
+    router,
+  ])
 
   return (
     <SBox>
       <p>
         選択中:
-        {favoritesIdArray?.map((item) => <span>{item},</span>)}
+        {selectedIds?.map((item) => <span>{item},</span>)}
       </p>
-      {getEndItems && (
+      {getItems && (
         <>
-          {getEndItems.map((item) => (
+          {getItems.map((item) => (
             <ItemCard
               key={item.id}
               item={item}
-              FavoritesIds={favoritesIdArray}
+              FavoritesIds={selectedIds}
               clickAddFavorite={clickAddFavorite}
               clickRemoveFavorite={clickRemoveFavorite}
             />
           ))}
         </>
       )}
-      {/* <ButtonRounded onClick={onSubmit} className='isDark isFixed'>
+      <ButtonRounded onClick={onSubmit} className='isDark isFixed'>
         更新する
-      </ButtonRounded> */}
+      </ButtonRounded>
     </SBox>
   )
 }

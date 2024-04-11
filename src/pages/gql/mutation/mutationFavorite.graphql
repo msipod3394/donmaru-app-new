@@ -1,0 +1,21 @@
+# お気に入り登録（配列）
+mutation addFavorites($itemIds: [String!]!, $email: String!) {
+  createFavorites(itemIds: $itemIds, email: $email) {
+    id
+    item {
+      id
+      name
+    }
+    user {
+      id
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+# お気に入り削除（配列）
+mutation deleteFavorites($itemIds: [String!]!, $email: String!) {
+  deleteFavorites(itemIds: $itemIds, email: $email)
+}

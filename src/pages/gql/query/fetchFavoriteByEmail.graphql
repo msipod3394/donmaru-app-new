@@ -7,6 +7,9 @@ query fetchFavoriteByEmail($email: String) {
       name
       image
       updatedAt
+      ingredients {
+        name
+      }
     }
     updatedAt
   }
