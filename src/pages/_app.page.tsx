@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from '@/theme/theme'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
-import { AppProvider } from '@/contexts/AppContext'
 import { UserProvider } from '@/contexts/UserContext'
 import { DefaultLayout } from '@/components/templates/DefaultLayout'
 import '@/styles/reset.min.css'
@@ -25,17 +24,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <ApolloProvider client={client}>
-        <AppProvider>
-          <UserProvider>
-            {useDefaultLayout ? (
-              <DefaultLayout>
-                <Component {...pageProps} />
-              </DefaultLayout>
-            ) : (
+        <UserProvider>
+          {useDefaultLayout ? (
+            <DefaultLayout>
               <Component {...pageProps} />
-            )}
-          </UserProvider>
-        </AppProvider>
+            </DefaultLayout>
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </UserProvider>
       </ApolloProvider>
     </ChakraProvider>
   )

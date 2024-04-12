@@ -1,41 +1,28 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useUserContext } from '@/contexts/UserContext'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ActionButtons } from '@/components/molecules/ActionButtons'
 import { DisplayResultItem } from './DisplayResultItem'
-import {
-  Exact,
-  InputMaybe,
-  Item,
-  SearchItemsByIdQuery,
-  useCreateOrderMutation,
-  useSearchItemsByIdQuery,
-} from '@/gql/graphql'
-import { QueryHookOptions } from '@apollo/client'
+import { Item, useCreateOrderMutation, useSearchItemsByIdQuery } from '@/gql/graphql'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
+import { useUserContext } from '@/contexts/UserContext'
 
 export default function PageResult() {
   const router = useRouter()
 
-  // ！！ここの型指定 謎なので質問する
-  const resultID: InputMaybe<string> = router.query.id as InputMaybe<string>
-
-  const queryOptions: QueryHookOptions<
-    SearchItemsByIdQuery,
-    Exact<{ id?: InputMaybe<string> | undefined }>
-  > = {
-    variables: { id: resultID },
-  }
+  // ユーザー情報取得
+  const [user] = useUserContext()
 
   // ステートで管理するもの
   const [result, setResult] = useState<Item | undefined>()
 
-  // ユーザー情報取得
-  const [user] = useUserContext()
+  // クエリパラメーターから結果IDを取得
+  const resultID = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id
 
-  // 丼データ取得
-  const { data, loading } = useSearchItemsByIdQuery(queryOptions)
+  // 結果データ取得
+  const { data, loading } = useSearchItemsByIdQuery({
+    variables: { id: resultID },
+  })
 
   // 結果の丼を取得
   useEffect(() => {
@@ -48,12 +35,11 @@ export default function PageResult() {
 
   // 注文履歴に追加ボタン
   const handleAddOrder = () => {
-    if (result) {
+    if (result && user) {
       createOrderMutation({
         variables: {
           itemId: result.id,
-          // userId: user.email,
-          userId: '1', // 一旦
+          email: user.email,
         },
       })
         .then((order_result) => {

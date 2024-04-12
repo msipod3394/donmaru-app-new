@@ -46,7 +46,7 @@ type Mutation {
   createDislikes(email: String!, ingredientIds: [String!]!): [Dislike!]!
   createFavorite(itemId: String!, userId: String!): Favorite!
   createFavorites(email: String!, itemIds: [String!]!): [Favorite!]!
-  createOrder(itemId: String!, userId: String!): Order!
+  createOrder(email: String!, itemId: String!): Order!
   createUser(email: String!, password: String!): User!
   deleteDislikes(email: String!, ingredientIds: [String!]!): Boolean!
   deleteFavorites(email: String!, itemIds: [String!]!): Boolean!

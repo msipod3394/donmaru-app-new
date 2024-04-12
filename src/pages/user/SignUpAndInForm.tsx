@@ -1,6 +1,6 @@
 import React from 'react'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
-import { BaseInput } from '@/components/atoms/Input/BaseInput'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
+import { BaseInput } from '@/components/atoms/input/BaseInput'
 import { SignUpFormInput } from '@/types/SignUpFormInput'
 
 // フォーム関連

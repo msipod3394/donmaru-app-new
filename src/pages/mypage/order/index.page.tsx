@@ -1,5 +1,5 @@
 // import { useFetchOrders } from '@/hooks/fetch/useFetchOrders'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useFetchOrders } from './usefetchOrder'
 import { ItemCardList } from '../components/ItemCardList'

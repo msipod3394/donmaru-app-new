@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Text } from '@chakra-ui/react'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { useUserContext } from '@/contexts/UserContext'
 import { Favorite, useFetchFavoriteByEmailQuery } from '@/gql/graphql'
 import { ItemCardList } from '../components/ItemCardList'
@@ -18,7 +18,7 @@ export default function PageFavorite() {
   const [favorites, setFavorites] = useState<Favorite[]>([])
   const [isSelected, setIsSelected] = useState<string[]>([])
 
-  // GQLからお気に入り情報の取得
+  // お気に入り情報の取得
   const {
     data: dataFavorites,
     loading,
@@ -36,6 +36,9 @@ export default function PageFavorite() {
         },
       )
       setIsSelected(registeredFavorite)
+
+      console.log('dataFavorites.favorites', dataFavorites.favorites)
+
       setFavorites(dataFavorites.favorites)
     }
   }, [dataFavorites])

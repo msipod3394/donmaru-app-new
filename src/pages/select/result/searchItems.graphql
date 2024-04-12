@@ -12,18 +12,14 @@ query SearchItemsById($id: ID) {
 }
 
 # 注文履歴に追加
-mutation CreateOrder($itemId: String!, $userId: String!) {
-  createOrder(itemId: $itemId, userId: $userId) {
+mutation CreateOrder($itemId: String!, $email: String!) {
+  createOrder(itemId: $itemId, email: $email) {
     id
     item {
       id
-      name
-      image
     }
     user {
       id
     }
-    createdAt
-    updatedAt
   }
 }

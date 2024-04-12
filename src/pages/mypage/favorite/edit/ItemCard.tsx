@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Text, VStack, HStack, Image, Button, Link } from '@chakra-ui/react'
 import { StarIcon, TimeIcon } from '@chakra-ui/icons'
 import { DBNetas } from '@/types/global_db.types'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { Ingredient } from '@/gql/graphql'
 
 export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) => {

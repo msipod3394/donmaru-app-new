@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react'
 import { useRouter } from 'next/router'
 import { Stack } from '@chakra-ui/react'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 
 type Props = {
   links: { text: string; href: string }[]

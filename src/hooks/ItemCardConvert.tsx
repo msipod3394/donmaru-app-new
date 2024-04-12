@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 import { Item, Scalars, useFetchOrderByEmailQuery, User } from '@/gql/graphql'
 import { useCheckLogin } from './useLoginCheck'
+import { useUserContext } from '@/contexts/UserContext'
 
 type Props = {
   id: string
@@ -14,6 +15,8 @@ type Props = {
 }
 
 export const ItemCardConvert = (items: Item[]) => {
+  // ユーザー情報を取得
+  const [user, setUser] = useUserContext()
 
   // お気に入り丼ステート
   const [favorites, setFavorites] = useState<Props[]>([])
@@ -22,13 +25,13 @@ export const ItemCardConvert = (items: Item[]) => {
   const [returnDons, setReturnDons] = useState<Props[]>([])
 
   // ユーザー情報を取得
-  const { getUser } = useCheckLogin()
-  const [user, setUser] = useState<User>()
+  // const { getUser } = useCheckLogin()
+  // const [user, setUser] = useState<User>()
 
   // ユーザー情報を取得実行
-  useEffect(() => {
-    setUser(getUser)
-  }, [getUser])
+  // useEffect(() => {
+  //   setUser(getUser)
+  // }, [getUser])
 
   // 注文履歴を取得
   const {

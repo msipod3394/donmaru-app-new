@@ -6,19 +6,19 @@ export default function PageSelectOmakase() {
   const router = useRouter()
 
   // 全ての丼データ取得
-  const { data, loading, error } = useGetItemsQuery()
+  const { data } = useGetItemsQuery()
 
   // データが取得された後に実行
   useEffect(() => {
     if (data) {
-      console.log('data', data.items)
+      // 全ての丼データ取得
       const itemsAll = data.items
 
+      // ランダムに1つ選択する
       const shuffleID = Math.floor(Math.random() * itemsAll.length)
-      console.log('shuffle', shuffleID)
 
+      // アイテムのIDを取得
       const resultID = itemsAll[shuffleID].id
-      console.log('丼ID', resultID)
 
       // 結果画面へ遷移
       router.push(`/select/result/${resultID}`)

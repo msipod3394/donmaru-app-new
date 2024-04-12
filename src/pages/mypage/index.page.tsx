@@ -1,4 +1,4 @@
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ButtonLinkList } from '@/pages/home/ButtonLinkList'
 import { MypageLinks } from '@/components/SettingLink'
 

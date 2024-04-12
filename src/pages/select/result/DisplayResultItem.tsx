@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react'
 import { Image, Text } from '@chakra-ui/react'
-import { PageDescription } from '@/components/atoms/Texts/PageDescription'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageDescription } from '@/components/atoms/texts/PageDescription'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { Item } from '@/gql/graphql'
 
 export const DisplayResultItem: FC<{ item: Item }> = memo(({ item }) => {

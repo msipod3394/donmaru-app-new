@@ -1,16 +1,24 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react'
-import { DBUser } from '@/types/global_db.types'
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react'
+import { User } from '@/gql/graphql'
 
-const UserContext = createContext<
-  [DBUser | undefined, React.Dispatch<React.SetStateAction<DBUser | undefined>>]
->([undefined, () => undefined])
+const userContext = createContext<
+  [User | undefined, Dispatch<SetStateAction<User | undefined>> | undefined]
+>([undefined, undefined])
 
-const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<DBUser>()
+const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | undefined>(undefined)
 
-  return <UserContext.Provider value={[user, setUser]}>{children}</UserContext.Provider>
+  // console.log('user', user)
+
+  return <userContext.Provider value={[user, setUser]}>{children}</userContext.Provider>
 }
 
 // コンテキストを利用するためのカスタムフック
-const useUserContext = () => useContext(UserContext)
+const useUserContext = () => useContext(userContext)
 export { UserProvider, useUserContext }

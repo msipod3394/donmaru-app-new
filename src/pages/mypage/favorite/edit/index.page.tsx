@@ -1,4 +1,4 @@
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useFetchItemsQuery } from '@/gql/graphql'
 import { ItemCardList } from './ItemCardList'

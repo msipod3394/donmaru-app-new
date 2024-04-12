@@ -14,7 +14,7 @@ import {
 import { useUserContext } from '@/contexts/UserContext'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 import { ItemCard } from './ItemCard'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { handleUpdate } from './handleUpdate'
 
 export function ItemCardList({ items }: { items: Item[] }) {

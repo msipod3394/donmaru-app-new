@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { VStack } from '@chakra-ui/react'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { NetaCheckbox } from '@/components/atoms/Checkbox/NetaCheckbox'
-import { PageDescription } from '@/components/atoms/Texts/PageDescription'
+import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
+import { PageDescription } from '@/components/atoms/texts/PageDescription'
 import { DBDons } from '@/types/global_db.types'
 import {
   useFetchIngredientsQuery,

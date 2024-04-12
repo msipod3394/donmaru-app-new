@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
-import { PageDescription } from '@/components/atoms/Texts/PageDescription'
-import { ButtonLinkList } from '@/pages/home/ButtonLinkList'
 import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { useUserContext } from '@/contexts/UserContext'
 import { SelectLinks } from '@/components/SettingLink'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
+import { PageDescription } from '@/components/atoms/texts/PageDescription'
+import { ButtonLinkList } from '@/pages/home/ButtonLinkList'
 
 export default function Home() {
   // ユーザー情報をセット
-  const { getUser } = useCheckLogin()
   const [, setUser] = useUserContext()
+  const getUser = useCheckLogin()
 
   useEffect(() => {
-    setUser(getUser)
-  }, [getUser])
+    if (getUser && setUser) {
+      setUser(getUser)
+    }
+  }, [getUser, setUser])
 
   return (
     <>

@@ -95,8 +95,8 @@ export type MutationCreateFavoritesArgs = {
 
 
 export type MutationCreateOrderArgs = {
+  email: Scalars['String']['input'];
   itemId: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
 };
 
 
@@ -266,11 +266,11 @@ export type SearchItemsByIdQuery = { __typename?: 'Query', items: Array<{ __type
 
 export type CreateOrderMutationVariables = Exact<{
   itemId: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
+  email: Scalars['String']['input'];
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string }, user: { __typename?: 'User', id: string } } };
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: string, item: { __typename?: 'Item', id: string }, user: { __typename?: 'User', id: string } } };
 
 export type FetchGetUserQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -956,19 +956,15 @@ export type SearchItemsByIdLazyQueryHookResult = ReturnType<typeof useSearchItem
 export type SearchItemsByIdSuspenseQueryHookResult = ReturnType<typeof useSearchItemsByIdSuspenseQuery>;
 export type SearchItemsByIdQueryResult = Apollo.QueryResult<SearchItemsByIdQuery, SearchItemsByIdQueryVariables>;
 export const CreateOrderDocument = gql`
-    mutation CreateOrder($itemId: String!, $userId: String!) {
-  createOrder(itemId: $itemId, userId: $userId) {
+    mutation CreateOrder($itemId: String!, $email: String!) {
+  createOrder(itemId: $itemId, email: $email) {
     id
     item {
       id
-      name
-      image
     }
     user {
       id
     }
-    createdAt
-    updatedAt
   }
 }
     `;
@@ -1001,7 +997,7 @@ export function withCreateOrder<TProps, TChildProps = {}, TDataName extends stri
  * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
  *   variables: {
  *      itemId: // value for 'itemId'
- *      userId: // value for 'userId'
+ *      email: // value for 'email'
  *   },
  * });
  */

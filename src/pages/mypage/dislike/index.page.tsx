@@ -7,9 +7,9 @@ import {
   useFetchIngredientsQuery,
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
-import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
-import { NetaCheckbox } from '@/components/atoms/Checkbox/NetaCheckbox'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
+import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
 import { handleUpdate } from './handleUpdate'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 
@@ -26,7 +26,7 @@ export default function PageDislike() {
   // チェックが入っているネタを管理
   const [isChecked, setIsChecked] = useState<string[]>([])
 
-  // GQLから苦手ネタを取得
+  // 苦手ネタを取得
   const { data: dislikes, refetch: refetchDislikesByUserEmail } =
     useFetchDislikeByEmailQuery({
       variables: { email: user && user.email ? user.email : null },

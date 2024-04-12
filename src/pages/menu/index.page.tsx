@@ -1,4 +1,4 @@
-import { PageTitle } from '@/components/atoms/Texts/PageTitle'
+import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useGetItemsQuery } from '@/gql/graphql'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
