@@ -7,8 +7,6 @@ import { ButtonRounded } from '@/components/atoms/Buttons/ButtonRounded'
 import { Ingredient } from '@/gql/graphql'
 
 export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) => {
-  console.log(item)
-
   return (
     <>
       <SBox spacing={4} key={item.id} className={item.favorite ? '_isFavorite' : ''}>

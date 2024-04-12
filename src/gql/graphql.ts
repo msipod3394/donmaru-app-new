@@ -131,11 +131,11 @@ export type Query = {
   /** emailを指定して検索、emailの指定がなければ全件取得 */
   dislikes: Array<Dislike>;
   favorites: Array<Favorite>;
+  getUser?: Maybe<User>;
   ingredients: Array<Ingredient>;
   items: Array<Item>;
   /** emailを指定して検索、emailの指定がなければ全件取得 */
   order: Array<Order>;
-  users: Array<User>;
 };
 
 
@@ -147,6 +147,11 @@ export type QueryDislikesArgs = {
 export type QueryFavoritesArgs = {
   email?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryGetUserArgs = {
+  email: Scalars['String']['input'];
 };
 
 
@@ -165,12 +170,6 @@ export type QueryItemsArgs = {
 
 export type QueryOrderArgs = {
   email?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryUsersArgs = {
-  fieldName?: InputMaybe<Scalars['String']['input']>;
-  fieldValue?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
@@ -272,6 +271,13 @@ export type CreateOrderMutationVariables = Exact<{
 
 
 export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string }, user: { __typename?: 'User', id: string } } };
+
+export type FetchGetUserQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type FetchGetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', id: string, userName: string, email: string } | null };
 
 
 export const AddFavoritesDocument = gql`
@@ -1006,3 +1012,58 @@ export function useCreateOrderMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
 export type CreateOrderMutationResult = Apollo.MutationResult<CreateOrderMutation>;
 export type CreateOrderMutationOptions = Apollo.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;
+export const FetchGetUserDocument = gql`
+    query fetchGetUser($email: String!) {
+  getUser(email: $email) {
+    id
+    userName
+    email
+  }
+}
+    `;
+export type FetchGetUserProps<TChildProps = {}, TDataName extends string = 'data'> = {
+      [key in TDataName]: ApolloReactHoc.DataValue<FetchGetUserQuery, FetchGetUserQueryVariables>
+    } & TChildProps;
+export function withFetchGetUser<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
+  TProps,
+  FetchGetUserQuery,
+  FetchGetUserQueryVariables,
+  FetchGetUserProps<TChildProps, TDataName>>) {
+    return ApolloReactHoc.withQuery<TProps, FetchGetUserQuery, FetchGetUserQueryVariables, FetchGetUserProps<TChildProps, TDataName>>(FetchGetUserDocument, {
+      alias: 'fetchGetUser',
+      ...operationOptions
+    });
+};
+
+/**
+ * __useFetchGetUserQuery__
+ *
+ * To run a query within a React component, call `useFetchGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchGetUserQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useFetchGetUserQuery(baseOptions: Apollo.QueryHookOptions<FetchGetUserQuery, FetchGetUserQueryVariables> & ({ variables: FetchGetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchGetUserQuery, FetchGetUserQueryVariables>(FetchGetUserDocument, options);
+      }
+export function useFetchGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchGetUserQuery, FetchGetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchGetUserQuery, FetchGetUserQueryVariables>(FetchGetUserDocument, options);
+        }
+export function useFetchGetUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FetchGetUserQuery, FetchGetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchGetUserQuery, FetchGetUserQueryVariables>(FetchGetUserDocument, options);
+        }
+export type FetchGetUserQueryHookResult = ReturnType<typeof useFetchGetUserQuery>;
+export type FetchGetUserLazyQueryHookResult = ReturnType<typeof useFetchGetUserLazyQuery>;
+export type FetchGetUserSuspenseQueryHookResult = ReturnType<typeof useFetchGetUserSuspenseQuery>;
+export type FetchGetUserQueryResult = Apollo.QueryResult<FetchGetUserQuery, FetchGetUserQueryVariables>;
