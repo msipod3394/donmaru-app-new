@@ -11,14 +11,9 @@ type Props = {
 }
 
 export function ItemCardList({ items }: { items: Item[] }) {
-  console.log('items', items)
-
-  const selectItems = ItemCardConvert(items)
-  // console.log('selectItems', selectItems)
-
   return (
     <>
-      {selectItems.map((item: Props) => (
+      {items.map((item: Props) => (
         <ItemCard key={item.id} item={item} />
       ))}
     </>

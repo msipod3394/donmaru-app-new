@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image } from '@chakra-ui/react'
 import { Item, User } from '@/gql/graphql'
+import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 
 type Props = {
   id: string
@@ -12,8 +13,6 @@ type Props = {
 }
 
 export const ItemCard: FC<Props> = ({ item }) => {
-  // console.log(item)
-
   return (
     <SBox key={item.id}>
       <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
@@ -38,7 +37,7 @@ export const ItemCard: FC<Props> = ({ item }) => {
           {item.updatedAt && (
             <HStack gap='.25rem'>
               <Text fontSize='xs' color='gray.500'>
-                注文日 {item.updatedAt}
+                注文日 {convertFormattedDate(item.updatedAt)}
               </Text>
             </HStack>
           )}

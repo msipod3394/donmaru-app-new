@@ -5,14 +5,16 @@ import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { Text } from '@chakra-ui/react'
 import {
-  Favorite,
   Item,
   useFetchFavoriteByEmailQuery,
-  User,
   useSearchOrderByUserEmailQuery,
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { ItemCardList } from './ItemCardList'
+
+type ItemAddCount = Item & {
+  count: string
+}
 
 export default function PageSelectFavorite() {
   const router = useRouter()
@@ -21,13 +23,16 @@ export default function PageSelectFavorite() {
   const [user, setUser] = useUserContext()
 
   // 取得したお気に入りデータ
-  const [favorites, setFavorites] = useState<Item[]>([])
+  const [favorites, setFavorites] = useState<ItemAddCount[]>([])
 
   // 結果をステート管理
   const [result, setResult] = useState('')
 
   // 注文履歴カウント
-  const [count, setCount] = useState([])
+  const [count, setCount] = useState<{ id: string; count: number }[]>([])
+
+  // loading状態を管理
+  const [loading, setLoading] = useState(false)
 
   // お気に入り情報の取得
   const { data } = useFetchFavoriteByEmailQuery({
@@ -42,53 +47,52 @@ export default function PageSelectFavorite() {
     skip: !user,
   })
 
-  // loading状態を管理
-  const [loading, setLoading] = useState(true)
-
+  // 注文履歴取得後、注文回数の配列を作成
   useEffect(() => {
     if (orderData) {
-      console.log('orderData', orderData.order)
-
       const itemIds = orderData.order.map((order) => order.item.id)
+      const counts: { [key: string]: number } = {}
 
-      const counts = {}
+      // 丼IDとカウント数のみの配列を作成
       itemIds.forEach((itemId) => {
         counts[itemId] = (counts[itemId] || 0) + 1
       })
 
       // カウントされた結果を配列にマップ
-      const result = Object.keys(counts).map((id) => ({ id, count: counts[id] }))
-      console.log(result)
-
-      setCount(result)
+      const countArray = Object.keys(counts).map((id) => ({ id, count: counts[id] }))
+      setCount(countArray)
     }
   }, [orderData])
 
-  // データが取得された後に実行
+  // データとカウントが取得された後に実行
   useEffect(() => {
     if (data && count) {
+      setLoading(true)
       const filterItems = data.favorites.map((favorite) => favorite.item)
 
-      const countMap = count.reduce((map, obj) => {
-        map[obj.id] = obj.count
-        return map
-      }, {})
-
-      const result = filterItems.map((obj) => {
-        if (obj.id && countMap[obj.id]) {
-          return {
-            ...obj,
-            count: countMap[obj.id],
+      // 注文回数をオブジェクトにマッピング
+      const countMap = count.reduce(
+        (map, obj) => {
+          // 注文回数を格納
+          if (obj.id) {
+            map[obj.id] = obj.count
           }
-        } else {
-          return obj
-        }
-      })
+          return map
+        },
+        {} as { [key: string]: number },
+      )
+
+      // 注文回数を含めた配列を作成
+      const result = filterItems.map((obj) => ({
+        ...obj,
+        count: countMap[obj.id] || 0,
+      }))
 
       setFavorites(result)
     }
-  }, [data, count, setCount])
+  }, [data, count, setFavorites])
 
+  // 結果をセット
   useEffect(() => {
     if (favorites.length !== 0) {
       const shuffleID = favorites[Math.floor(Math.random() * favorites.length)]
