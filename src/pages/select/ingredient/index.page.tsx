@@ -6,7 +6,6 @@ import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
 import { PageDescription } from '@/components/atoms/texts/PageDescription'
-import { DBDons } from '@/types/global_db.types'
 import {
   useFetchIngredientsQuery,
   useGetItemsQuery,
@@ -17,50 +16,45 @@ import {
 export default function PageSelectIngredient() {
   const router = useRouter()
 
-  // ネタ情報
-  const [ingredients, setIngredients] = useState<Ingredient[]>()
-  const [items, setItems] = useState<Item[]>()
+  const [ingredients, setIngredients] = useState<Ingredient[] | undefined>()
+  const [items, setItems] = useState<Item[] | undefined>()
+  const [selectNetas, setSelectNetas] = useState<Item[]>()
 
-  // チェックが入っているネタを管理
-  const [selectNetas, setSelectNetas] = useState<DBDons[]>()
-
-  // チェックが入っているネタを管理
+  // チェックされたネタID
   const [isChecked, setIsChecked] = useState<number[]>([])
 
-  // ヒットした数の状態とその更新関数を追加
-  const [hitCount, setHitCount] = useState<number>(0)
+  // ヒットした丼数
+  const [hitCount, setHitCount] = useState<number>()
 
   // 全てのネタ情報を取得
-  const {
-    data: data_ingredients,
-    loading: ingredientLoading,
-    error: ingredientError,
-  } = useFetchIngredientsQuery()
+  const { data: ingredientData, loading: ingredientLoading } = useFetchIngredientsQuery()
 
   // 全ての丼情報取得
   const { data: data_items, loading: itemLoading, error: itemError } = useGetItemsQuery()
-  // console.log('丼情報', data_items)
 
+  // ページ読み込み時にネタ情報と丼情報をセット
   useEffect(() => {
-    if (data_ingredients) {
-      setIngredients(data_ingredients.ingredients)
+    if (ingredientData) {
+      setIngredients(ingredientData.ingredients)
     }
     if (data_items) {
       setItems(data_items.items)
     }
-  }, [ingredientLoading, itemLoading])
+  }, [ingredientData, data_items])
 
   // チェックボックスの更新
-  const handleCheckbox = useCallback((id: number) => {
-    setIsChecked((prevArray) => {
-      const newArray = prevArray.includes(id)
-        ? prevArray.filter((item) => item !== id)
-        : [...prevArray, id]
-      return newArray
-    })
-  }, [])
+  const handleCheckbox = useCallback(
+    (id: number) => {
+      // チェックが入っているかどうかを判定
+      const newIsChecked = isChecked.includes(id)
+        ? isChecked.filter((item) => item !== id)
+        : [...isChecked, id]
+      setIsChecked(newIsChecked)
+    },
+    [isChecked],
+  )
 
-  // 結果画面へ遷移
+  // ガチャボタンクリック時の処理
   const clickShowResult = () => {
     if (selectNetas && selectNetas.length !== 0) {
       const randomIndex = Math.floor(Math.random() * selectNetas.length)
@@ -71,29 +65,28 @@ export default function PageSelectIngredient() {
 
   // チェックボックスが更新されたら、該当する丼を都度検索
   useEffect(() => {
-    console.log(ingredients)
-    console.log(items)
-    console.log(isChecked)
-
     if (items && isChecked.length > 0) {
       const filteredData = items.filter((item) => {
         const filteredIds = isChecked.filter((id) => {
           return item.ingredients.some((netaItem) => netaItem.id === id)
         })
-        console.log(filteredIds)
         return filteredIds.length === isChecked.length
       })
       if (filteredData.length === 0) {
         console.log('要素がありません')
+        setSelectNetas(filteredData)
         setHitCount(filteredData.length)
       } else {
-        console.log(filteredData)
         console.log('ヒットした丼数', filteredData.length)
         setSelectNetas(filteredData)
         setHitCount(filteredData.length)
       }
+    } else {
+      if (items) {
+        setHitCount(items.length)
+      }
     }
-  }, [isChecked])
+  }, [isChecked, items])
 
   // Hit数の初期値を設定
   useEffect(() => {
@@ -112,11 +105,11 @@ export default function PageSelectIngredient() {
           <PageDescription>
             {hitCount === 0
               ? '該当する丼がないよ😖'
-              : `該当 ${hitCount}個、ガチャしよう✊`}
+              : `該当 ${hitCount}個、ガチャしよう!`}
           </PageDescription>
           <VStack mb='2rem' alignItems='flex-start'>
             {ingredients &&
-              Object.values(ingredients).map((item) => {
+              ingredients.map((item) => {
                 return (
                   <NetaCheckbox
                     key={item.id}
