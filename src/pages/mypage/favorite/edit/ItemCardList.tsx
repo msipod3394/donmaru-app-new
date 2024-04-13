@@ -13,9 +13,9 @@ import {
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
-import { ItemCard } from './ItemCard'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { handleUpdate } from './handleUpdate'
+import { ItemCard } from './ItemCard'
 
 export function ItemCardList({ items }: { items: Item[] }) {
   const router = useRouter()
@@ -24,25 +24,20 @@ export function ItemCardList({ items }: { items: Item[] }) {
   const [user, setUser] = useUserContext()
 
   // 登録する配列
-  const [selectedIds, setSelectedIds] = useState<string[] | undefined>()
-  const [addIds, setAddIds] = useState<string[] | undefined>()
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   // 削除する配列
-  const [deleteIds, setDeleteIds] = useState<string[] | undefined>([])
+  const [deleteIds, setDeleteIds] = useState<string[]>([])
 
   // 取得したお気に入りデータ
   const [favorites, setFavorites] = useState<Favorite[]>()
-  const [favoritesIds, setFavoritesId] = useState<Favorite[]>()
 
   // 注文履歴のステート管理
   const [orders, setOrders] = useState<Order[]>()
 
-  // 注文履歴とお気に入りデータが取得された後に、データを処理
-  const [endItems, setGetItems] = useState([])
-
   // お気に入りの取得
   const { refetch: refetchFavoritesByUserEmail } = useFetchFavoriteByEmailQuery({
-    variables: { email: user && user.email ? user.email : null },
+    variables: { email: user?.email || null },
     skip: !user,
     onCompleted: (data) => {
       if (data && data.favorites) {
@@ -53,7 +48,7 @@ export function ItemCardList({ items }: { items: Item[] }) {
 
   // 注文履歴を取得
   useSearchOrderByUserEmailQuery({
-    variables: { email: user && user.email ? user.email : null },
+    variables: { email: user?.email || null },
     skip: !user,
     onCompleted: (data) => {
       if (data && data.order) {
@@ -71,7 +66,6 @@ export function ItemCardList({ items }: { items: Item[] }) {
     if (favorites) {
       const favoriteIdArray = favorites.map((favorite) => favorite.item.id)
       setSelectedIds(favoriteIdArray)
-      setFavoritesId(favoriteIdArray)
     }
   }, [favorites])
 
@@ -79,69 +73,34 @@ export function ItemCardList({ items }: { items: Item[] }) {
   const getItems = useMemo(() => {
     if (!orders || !favorites) return []
     return items.map((item) => {
-      const orderIdArray = orders.map((order) => order.item.id)
-      const favoriteIdArray = selectedIds || []
-
-      let order_latest = ''
-      let count = 0
-
-      const favorite = favoriteIdArray.includes(item.id)
-      const targetIdIndex = orderIdArray.indexOf(item.id)
-
-      orderIdArray.forEach((orderId) => {
-        if (orderId === item.id) {
-          count++
-        }
-      })
-
-      if (targetIdIndex !== -1) {
-        const targetItem = orders[targetIdIndex]
-        order_latest = convertFormattedDate(targetItem.updatedAt)
-      }
-      return { ...item, order_latest, count, favorite }
+      const count = orders.filter((order) => order.item.id === item.id).length
+      const latestOrder = orders.find((order) => order.item.id === item.id)
+      const order_latest = latestOrder ? convertFormattedDate(latestOrder.updatedAt) : ''
+      const favorite = selectedIds.includes(item.id)
+      return { ...item, count, order_latest, favorite }
     })
   }, [orders, favorites, items, selectedIds])
 
   // 「お気に入りに追加する」クリック時の処理
-  const clickAddFavorite = useCallback(
-    (id: number) => {
-      setSelectedIds((prevstate) => {
-        if (prevstate && !prevstate.includes(id)) {
-          // id が prevstate に含まれていない場合は、その id を追加した新しい配列を返す
-          return [...prevstate, id]
+  const clickToggleFavorite = useCallback(
+    (id: string) => {
+      setSelectedIds((prevIds) => {
+        if (prevIds.includes(id)) {
+          // IDが既に含まれている場合は、そのIDを削除して返す
+          return prevIds.filter((itemId) => itemId !== id)
         } else {
-          // id が prevstate に含まれている場合は、そのままの配列を返す
-          return [...prevstate]
+          // IDが含まれていない場合は、そのIDを追加して返す
+          return [...prevIds, id]
         }
       })
     },
     [setSelectedIds],
   )
 
+  // チェックがついている・登録されていないIDを抽出（苦手ネタ追加）
   useEffect(() => {
-    if (selectedIds && favoritesIds) {
-      const addFavoriteIds = selectedIds.filter((id) => !favoritesIds.includes(id))
-      setAddIds(addFavoriteIds)
-    }
-  }, [selectedIds, favoritesIds])
-
-  // 「お気に入りから削除する」クリック時の処理
-  const clickRemoveFavorite = useCallback(
-    (id: number) => {
-      setSelectedIds((prevstate) => {
-        if (prevstate && prevstate.includes(id)) {
-          return prevstate.filter((itemId) => itemId !== id)
-        } else {
-          return prevstate ? [...prevstate, id] : [id]
-        }
-      })
-    },
-    [setSelectedIds],
-  )
-
-  useEffect(() => {
+    console.log(selectedIds)
     if (favorites && selectedIds) {
-      // チェックがついている・登録されていないIDを抽出（苦手ネタ追加）
       let deleteFavorite = favorites.filter((item) => !selectedIds.includes(item.item.id))
       const deleteFavoriteArray: string[] = deleteFavorite.map((item) => {
         return item.item.id
@@ -184,10 +143,10 @@ export function ItemCardList({ items }: { items: Item[] }) {
 
   return (
     <SBox>
-      <p>
+      {/* <p>
         選択中:
         {selectedIds?.map((item) => <span>{item},</span>)}
-      </p>
+      </p> */}
       {getItems && (
         <>
           {getItems.map((item) => (
@@ -195,8 +154,7 @@ export function ItemCardList({ items }: { items: Item[] }) {
               key={item.id}
               item={item}
               FavoritesIds={selectedIds}
-              clickAddFavorite={clickAddFavorite}
-              clickRemoveFavorite={clickRemoveFavorite}
+              clickAddFavorite={clickToggleFavorite}
             />
           ))}
         </>

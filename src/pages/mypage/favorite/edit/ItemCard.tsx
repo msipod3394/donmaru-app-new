@@ -1,12 +1,10 @@
-import React, { FC, memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image, Button, Link } from '@chakra-ui/react'
 import { StarIcon, TimeIcon } from '@chakra-ui/icons'
-import { DBNetas } from '@/types/global_db.types'
-import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { Ingredient } from '@/gql/graphql'
 
-export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) => {
+export const ItemCard = memo(({ item, clickAddFavorite }) => {
   return (
     <>
       <SBox spacing={4} key={item.id} className={item.favorite ? '_isFavorite' : ''}>
@@ -56,7 +54,7 @@ export const ItemCard = memo(({ item, clickAddFavorite, clickRemoveFavorite }) =
           </HStack>
           <HStack>
             {item.favorite ? (
-              <SRemoveFavButton onClick={() => clickRemoveFavorite(item.id)}>
+              <SRemoveFavButton onClick={() => clickAddFavorite(item.id)}>
                 お気に入りから削除する
               </SRemoveFavButton>
             ) : (

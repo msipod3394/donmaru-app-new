@@ -65,9 +65,9 @@ export async function handleUpdate(
     // ユーザーのお気に入りを再取得
     await refetchFavoritesByUserEmail({ email: user.email })
 
-    return true // 成功したので true を返す
+    return true // 成功したら true を返す
   } catch (error) {
     console.error('エラー:', error)
-    return false // エラーが発生したので false を返す
+    return false // エラーがあれば false を返す
   }
 }
