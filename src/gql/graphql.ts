@@ -210,7 +210,7 @@ export type FetchFavoriteByEmailQueryVariables = Exact<{
 }>;
 
 
-export type FetchFavoriteByEmailQuery = { __typename?: 'Query', favorites: Array<{ __typename?: 'Favorite', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', name: string }> } }> };
+export type FetchFavoriteByEmailQuery = { __typename?: 'Query', favorites: Array<{ __typename?: 'Favorite', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, createdAt: any, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> } }> };
 
 export type FetchIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -220,19 +220,14 @@ export type FetchIngredientsQuery = { __typename?: 'Query', ingredients: Array<{
 export type FetchItemsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+export type FetchItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, createdAt: any, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
 
 export type FetchOrderByEmailQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type FetchOrderByEmailQuery = { __typename?: 'Query', order: Array<{ __typename?: 'Order', id: string, item: { __typename?: 'Item', id: string, name: string, image: string, updatedAt: any } }> };
-
-export type GetItemsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', id: string, name: string, image: string, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }> };
+export type FetchOrderByEmailQuery = { __typename?: 'Query', order: Array<{ __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, createdAt: any, updatedAt: any } }> };
 
 export type AddDislikesMutationVariables = Exact<{
   ingredientIds: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -445,8 +440,10 @@ export const FetchFavoriteByEmailDocument = gql`
       id
       name
       image
+      createdAt
       updatedAt
       ingredients {
+        id
         name
       }
     }
@@ -564,6 +561,7 @@ export const FetchItemsDocument = gql`
       id
       name
     }
+    createdAt
     updatedAt
   }
 }
@@ -621,8 +619,11 @@ export const FetchOrderByEmailDocument = gql`
       id
       name
       image
+      createdAt
       updatedAt
     }
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -672,65 +673,6 @@ export type FetchOrderByEmailQueryHookResult = ReturnType<typeof useFetchOrderBy
 export type FetchOrderByEmailLazyQueryHookResult = ReturnType<typeof useFetchOrderByEmailLazyQuery>;
 export type FetchOrderByEmailSuspenseQueryHookResult = ReturnType<typeof useFetchOrderByEmailSuspenseQuery>;
 export type FetchOrderByEmailQueryResult = Apollo.QueryResult<FetchOrderByEmailQuery, FetchOrderByEmailQueryVariables>;
-export const GetItemsDocument = gql`
-    query GetItems {
-  items {
-    id
-    name
-    image
-    updatedAt
-    ingredients {
-      id
-      name
-    }
-  }
-}
-    `;
-export type GetItemsProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<GetItemsQuery, GetItemsQueryVariables>
-    } & TChildProps;
-export function withGetItems<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  GetItemsQuery,
-  GetItemsQueryVariables,
-  GetItemsProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, GetItemsQuery, GetItemsQueryVariables, GetItemsProps<TChildProps, TDataName>>(GetItemsDocument, {
-      alias: 'getItems',
-      ...operationOptions
-    });
-};
-
-/**
- * __useGetItemsQuery__
- *
- * To run a query within a React component, call `useGetItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetItemsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetItemsQuery(baseOptions?: Apollo.QueryHookOptions<GetItemsQuery, GetItemsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetItemsQuery, GetItemsQueryVariables>(GetItemsDocument, options);
-      }
-export function useGetItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetItemsQuery, GetItemsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetItemsQuery, GetItemsQueryVariables>(GetItemsDocument, options);
-        }
-export function useGetItemsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetItemsQuery, GetItemsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetItemsQuery, GetItemsQueryVariables>(GetItemsDocument, options);
-        }
-export type GetItemsQueryHookResult = ReturnType<typeof useGetItemsQuery>;
-export type GetItemsLazyQueryHookResult = ReturnType<typeof useGetItemsLazyQuery>;
-export type GetItemsSuspenseQueryHookResult = ReturnType<typeof useGetItemsSuspenseQuery>;
-export type GetItemsQueryResult = Apollo.QueryResult<GetItemsQuery, GetItemsQueryVariables>;
 export const AddDislikesDocument = gql`
     mutation addDislikes($ingredientIds: [String!]!, $email: String!) {
   createDislikes(ingredientIds: $ingredientIds, email: $email) {

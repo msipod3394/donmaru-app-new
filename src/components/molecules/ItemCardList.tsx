@@ -1,24 +1,7 @@
-import { ItemCard } from '@/components/molecules/ItemCard'
-import { ItemCardConvert } from '@/hooks/ItemCardConvert'
-import { Item, User } from '@/gql/graphql'
+import { memo } from 'react'
+import { ItemCard } from './ItemCard'
+import { ItemWithCount } from '@/types/ItemWithCount'
 
-type Props = {
-  id: string
-  item: Item
-  user: User
-  count: number
-  updatedAt: string
-}
-
-export function ItemCardList({ items }: { items: Item[] }) {
-  // console.log('items', items)
-  const selectItems = ItemCardConvert(items)
-  // console.log('selectItems', selectItems)
-  return (
-    <>
-      {selectItems.map((item: Props) => (
-        <ItemCard key={item.id} item={item} />
-      ))}
-    </>
-  )
-}
+export const ItemCardList = memo(({ items }: { items: ItemWithCount[] }) => {
+  return items.map((item: ItemWithCount) => <ItemCard key={item.id} item={item} />)
+})

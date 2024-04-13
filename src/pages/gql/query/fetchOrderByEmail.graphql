@@ -2,11 +2,14 @@
 query fetchOrderByEmail($email: String) {
   order(email: $email) {
     id
-    item{
+    item {
       id
       name
       image
+      createdAt
       updatedAt
     }
+    createdAt
+    updatedAt
   }
 }

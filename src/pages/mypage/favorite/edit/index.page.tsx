@@ -5,12 +5,12 @@ import { ItemCardList } from './ItemCardList'
 
 export default function PageFavoriteEdit() {
   // 全ての丼を取得
-  const { data: fetchItems, loading } = useFetchItemsQuery()
+  const { data, loading } = useFetchItemsQuery()
 
   return (
     <>
       <PageTitle title='お気に入りの編集' />
-      {loading ? <LoadingIndicator /> : <ItemCardList items={fetchItems.items} />}
+      {loading ? <LoadingIndicator /> : <ItemCardList items={data.items} />}
     </>
   )
 }
