@@ -1,5 +1,7 @@
-export const getStoredAuthToken = () => localStorage.getItem('authToken')
+const  key = "authToken"
 
-export const storeAuthToken = (token: string) => localStorage.setItem('authToken', token)
+export const getStoredAuthToken = () => localStorage.getItem(key)
 
-export const removeStoredAuthToken = () => localStorage.removeItem('authToken')
+export const storeAuthToken = (token: string) => localStorage.setItem(key, token)
+
+export const removeStoredAuthToken = () => localStorage.removeItem(key)

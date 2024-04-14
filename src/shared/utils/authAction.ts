@@ -9,8 +9,7 @@ export type SignUpAuthType = AuthType & {
   passwordConfirmation: string
 }
 
-const authUrl = (path?: string) =>
-  `${process.env.REACT_APP_BACKEND_URL || ''}/users/${path || ''}`
+const authUrl = (path?: string) => `http://localhost:3001/users/${path || ''}`
 
 // SignIn
 export const onSignIn = async ({ email, password }: AuthType) =>
@@ -49,6 +48,11 @@ export const onSignUp = ({ email, password }: AuthType) =>
     }),
   }).then((res) => {
     if (res.ok) {
+      const token = res.headers.get('Authorization') 
+      if (res.ok && token) {
+        storeAuthToken(token)
+        return res.json()
+      }
       return res.json()
     }
     throw new Error(res.toString())

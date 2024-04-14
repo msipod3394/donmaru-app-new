@@ -1,48 +1,42 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, Navigate, useNavigate, useOutletContext } from 'react-router-dom'
 import { onSignIn, AuthType } from '@/shared/utils/authAction'
 import { validation } from '@/shared/utils/validation'
+import { useRouter } from 'next/router'
+import { useCallback, useState } from 'react'
 
 const SignIn = () => {
-  const navigate = useNavigate()
-  const [isAuthorized] = useOutletContext<[boolean]>()
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm<AuthType>({ criteriaMode: 'all' })
+  const router = useRouter()
 
-  const onSubmit: SubmitHandler<AuthType> = (data) => {
-    void onSignIn(data).then(() => {
-      navigate('/project')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const onSubmit = useCallback(async () => {
+    await onSignIn({
+      email,
+      password,
+    }).then(() => {
+      router.push('/home')
     })
-  }
-
-  if (isAuthorized) return <Navigate to={'/project'} />
+  }, [router, email, password])
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <p>Sign In</p>
         <label htmlFor='email'>メールアドレス</label>
-        <input
-          {...register('email', {
-            required: validation.required,
-            pattern: validation.pattern.email,
-          })}
-          errors={errors}
-        />
+        <input placeholder="メアド" onChange={(e) => setEmail(e.target.value)} />
         <label htmlFor='password'>パスワード</label>
         <input
-          label='パスワード'
+          placeholder='パスワード'
           type='password'
-          {...register('password', {
-            required: validation.required,
-            pattern: validation.pattern.password,
-          })}
-          errors={errors}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <button type='submit'>Sign In</button>
+        <button onClick={onSubmit}>Sign In</button>
       </form>
     </>
   )

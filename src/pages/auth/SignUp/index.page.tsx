@@ -1,61 +1,42 @@
-import React from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, Navigate, useNavigate, useOutletContext } from 'react-router-dom'
-// import Input from '../../../shared/components/Input'
-import { onSignUp, SignUpAuthType } from '@/shared/utils/authAction'
+import { onSignUp, AuthType } from '@/shared/utils/authAction'
 import { validation } from '@/shared/utils/validation'
+import { useRouter } from 'next/router'
+import { useCallback, useState } from 'react'
 
 const SignUp = () => {
-  const navigate = useNavigate()
-  const [isAuthorized] = useOutletContext<[boolean]>()
   const {
     register,
     formState: { errors },
     handleSubmit,
-    watch,
-  } = useForm<SignUpAuthType>({ criteriaMode: 'all' })
-  const password = watch('password', '')
+  } = useForm<AuthType>({ criteriaMode: 'all' })
+  const router = useRouter()
 
-  const onSubmit: SubmitHandler<SignUpAuthType> = (data) => {
-    void onSignUp(data).then(() => {
-      navigate('/auth/signin')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const onSubmit = useCallback(async () => {
+    await onSignUp({
+      email,
+      password,
+    }).then(() => {
+      router.push('/home')
     })
-  }
-
-  if (isAuthorized) return <Navigate to='/project' />
+  }, [router, email, password])
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <p>Sign Up</p>
-        <label htmlFor='email' />
+        <p>Sign In</p>
+        <label htmlFor='email'>メールアドレス</label>
+        <input placeholder="メアド" onChange={(e) => setEmail(e.target.value)} />
+        <label htmlFor='password'>パスワード</label>
         <input
-          {...register('email', {
-            required: validation.required,
-            pattern: validation.pattern.email,
-          })}
-          errors={errors}
-        />
-        <label htmlFor='password' />
-        <input
+          placeholder='パスワード'
           type='password'
-          {...register('password', {
-            required: validation.required,
-            pattern: validation.pattern.password,
-          })}
-          errors={errors}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <label htmlFor='passwordConfirmation' />
-        <input
-          label='パスワード確認'
-          type='password'
-          {...register('passwordConfirmation', {
-            required: validation.required,
-            validate: (value) => validation.validate.confirm(password, value),
-          })}
-          errors={errors}
-        />
-        <button type='submit'>Sign Up</button>
+        <button onClick={onSubmit}>Sign Un</button>
       </form>
     </>
   )
