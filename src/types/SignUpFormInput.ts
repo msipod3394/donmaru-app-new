@@ -1,5 +1,5 @@
 // ログイン・サインアップ時のフォームの型
-export type SignUpFormInput = {
+export type AuthFormInput = {
   email: string
   password: string
 }

@@ -1,7 +1,7 @@
-import { SignUpFormInput } from '@/types/SignUpFormInput'
+import { AuthFormInput } from '@/types/AuthFormInput'
 
 // 送信処理
-export const handleSubmit = async (data: SignUpFormInput, func: Function) => {
+export const handleSubmit = async (data: AuthFormInput, func: Function) => {
   try {
     await func(data.email, data.password)
   } catch (error: any) {

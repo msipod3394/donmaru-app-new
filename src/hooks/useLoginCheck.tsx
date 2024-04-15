@@ -19,7 +19,7 @@ export const useCheckLogin = () => {
         } else {
           // ログインしていない場合は、ログインページにリダイレクト
           console.log('ログイン画面へ')
-          router.push('/user/login')
+          // router.push('/user/login')
         }
       } else {
         console.error('ローカルストレージが利用できません')

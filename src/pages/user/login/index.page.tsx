@@ -2,8 +2,8 @@ import React, { useCallback, useEffect } from 'react'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ErrorText } from '@/components/atoms/texts/TextError'
 import { TextLink } from '@/components/atoms/texts/TextLink'
-import { SignUpFormInput } from '@/types/SignUpFormInput'
-import SignInForm from '@/pages/user/SignUpAndInForm'
+import { AuthFormInput } from '@/types/AuthFormInput'
+import SignInForm from '@/pages/user/AuthForm'
 import { useFetchGetUserLazyQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { useRouter } from 'next/router'
@@ -20,7 +20,7 @@ export default function SignIn() {
 
   // 送信処理
   const handleSignIn = useCallback(
-    async (data: SignUpFormInput) => {
+    async (data: AuthFormInput) => {
       await fetchGetUser({ variables: { email: data.email } })
     },
     [fetchGetUser],

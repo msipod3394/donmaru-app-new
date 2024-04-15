@@ -3,8 +3,8 @@ import useAuth from '@/hooks/useAuth'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ErrorText } from '@/components/atoms/texts/TextError'
 import { TextLink } from '@/components/atoms/texts/TextLink'
-import { SignUpFormInput } from '@/types/SignUpFormInput'
-import SignUpForm from '@/pages/user/SignUpAndInForm'
+import { AuthFormInput } from '@/types/AuthFormInput'
+import AuthForm from '@/pages/user/AuthForm'
 import { handleSubmit } from '../HandleSubmit'
 
 export default function SignUp() {
@@ -12,7 +12,7 @@ export default function SignUp() {
 
   // 送信処理
   const handleSignUp = useCallback(
-    async (data: SignUpFormInput) => {
+    async (data: AuthFormInput) => {
       await handleSubmit(data, onSignUp)
     },
     [onSignUp],
@@ -22,7 +22,7 @@ export default function SignUp() {
     <>
       <PageTitle title='新規ユーザー登録' />
 
-      <SignUpForm onSubmit={handleSignUp} submitMessage='登録' />
+      <AuthForm onSubmit={handleSignUp} submitMessage='登録' />
 
       {/* エラー */}
       {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
