@@ -1,6 +1,6 @@
 # お気に入り登録（配列）
-mutation addFavorites($itemIds: [String!]!, $email: String!) {
-  createFavorites(itemIds: $itemIds, email: $email) {
+mutation addFavorites($itemIds: [String!]!, $userId: String!) {
+  createFavorites(itemIds: $itemIds, userId: $userId) {
     id
     item {
       id
@@ -8,7 +8,6 @@ mutation addFavorites($itemIds: [String!]!, $email: String!) {
     }
     user {
       id
-      email
     }
     createdAt
     updatedAt
@@ -16,6 +15,6 @@ mutation addFavorites($itemIds: [String!]!, $email: String!) {
 }
 
 # お気に入り削除（配列）
-mutation deleteFavorites($itemIds: [String!]!, $email: String!) {
-  deleteFavorites(itemIds: $itemIds, email: $email)
+mutation deleteFavorites($itemIds: [String!]!, $userId: String!) {
+  deleteFavorites(itemIds: $itemIds, userId: $userId)
 }

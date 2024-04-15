@@ -1,6 +1,6 @@
 # お気に入り丼を取得
-query fetchFavoriteByEmail($email: String) {
-  favorites(email: $email) {
+query fetchFavoriteById($id: String) {
+  favorites(userId: $id) {
     id
     item {
       id
@@ -12,6 +12,9 @@ query fetchFavoriteByEmail($email: String) {
         id
         name
       }
+    }
+    user {
+      id
     }
     createdAt
     updatedAt

@@ -8,20 +8,20 @@ import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
 import { PageDescription } from '@/components/atoms/texts/PageDescription'
 import {
   useFetchIngredientsQuery,
-  useGetItemsQuery,
   Ingredient,
   Item,
+  useFetchItemsQuery,
 } from '@/gql/graphql'
 
 export default function PageSelectIngredient() {
   const router = useRouter()
 
-  const [ingredients, setIngredients] = useState<Ingredient[] | undefined>()
+  const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [items, setItems] = useState<Item[] | undefined>()
   const [selectNetas, setSelectNetas] = useState<Item[]>()
 
   // チェックされたネタID
-  const [isChecked, setIsChecked] = useState<number[]>([])
+  const [isChecked, setIsChecked] = useState<string[]>([])
 
   // ヒットした丼数
   const [hitCount, setHitCount] = useState<number>()
@@ -30,25 +30,25 @@ export default function PageSelectIngredient() {
   const { data: ingredientData, loading: ingredientLoading } = useFetchIngredientsQuery()
 
   // 全ての丼情報取得
-  const { data: data_items, loading: itemLoading, error: itemError } = useGetItemsQuery()
+  const { data: itemData, loading: itemLoading, error: itemError } = useFetchItemsQuery()
 
   // ページ読み込み時にネタ情報と丼情報をセット
   useEffect(() => {
     if (ingredientData) {
       setIngredients(ingredientData.ingredients)
     }
-    if (data_items) {
-      setItems(data_items.items)
+    if (itemData) {
+      setItems(itemData.items)
     }
-  }, [ingredientData, data_items])
+  }, [ingredientData, itemData])
 
   // チェックボックスの更新
   const handleCheckbox = useCallback(
     (id: number) => {
       // チェックが入っているかどうかを判定
-      const newIsChecked = isChecked.includes(id)
-        ? isChecked.filter((item) => item !== id)
-        : [...isChecked, id]
+      const newIsChecked = isChecked.includes(id.toString())
+        ? isChecked.filter((item) => item !== id.toString())
+        : [...isChecked, id.toString()]
       setIsChecked(newIsChecked)
     },
     [isChecked],
@@ -68,22 +68,19 @@ export default function PageSelectIngredient() {
     if (items && isChecked.length > 0) {
       const filteredData = items.filter((item) => {
         const filteredIds = isChecked.filter((id) => {
-          return item.ingredients.some((netaItem) => netaItem.id === id)
+          return item.ingredients.some((netaItem) => netaItem.id === id.toString())
         })
         return filteredIds.length === isChecked.length
       })
       if (filteredData.length === 0) {
-        console.log('要素がありません')
+        console.log('該当なし')
         setSelectNetas(filteredData)
         setHitCount(filteredData.length)
       } else {
+        console.log(filteredData)
         console.log('ヒットした丼数', filteredData.length)
         setSelectNetas(filteredData)
         setHitCount(filteredData.length)
-      }
-    } else {
-      if (items) {
-        setHitCount(items.length)
       }
     }
   }, [isChecked, items])

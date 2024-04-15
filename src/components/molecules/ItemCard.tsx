@@ -25,10 +25,10 @@ export const ItemCard = memo(({ item }: ItemObjWithCount) => (
         )}
       </HStack>
       <HStack gap='.5rem'>
-        {item.updatedAt && (
+        {item.latest && (
           <HStack gap='.25rem'>
             <Text fontSize='xs' color='gray.500'>
-              注文日 {convertFormattedDate(item.updatedAt)}
+              注文日 {convertFormattedDate(item.latest)}
             </Text>
           </HStack>
         )}

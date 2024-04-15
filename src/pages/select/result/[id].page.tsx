@@ -6,12 +6,21 @@ import { DisplayResultItem } from './DisplayResultItem'
 import { Item, useCreateOrderMutation, useSearchItemsByIdQuery } from '@/gql/graphql'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useUserContext } from '@/contexts/UserContext'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageResult() {
   const router = useRouter()
 
-  // ユーザー情報取得
-  const [user] = useUserContext()
+  // ユーザー情報をセット
+  const [user, setUser] = useUserContext()
+  const checkLogin = useCheckLogin()
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
+      setUser(checkLogin)
+    }
+  }, [user, checkLogin])
+
 
   // ステートで管理するもの
   const [result, setResult] = useState<Item | undefined>()
@@ -36,10 +45,12 @@ export default function PageResult() {
   // 注文履歴に追加ボタン
   const handleAddOrder = () => {
     if (result && user) {
+      const userId = user.id.toString()
+
       createOrderMutation({
         variables: {
           itemId: result.id,
-          email: user.email,
+          userId: userId,
         },
       })
         .then((order_result) => {

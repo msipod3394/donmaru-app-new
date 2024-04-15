@@ -1,8 +1,0 @@
-# 苦手ネタを取得
-query fetchDislikeByEmail($email: String) {
-  dislikes(email: $email) {
-    ingredient {
-      id
-    }
-  }
-}

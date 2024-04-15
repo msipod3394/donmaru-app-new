@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useGetItemsQuery } from '@/gql/graphql'
+import { useFetchItemsQuery } from '@/gql/graphql'
 
 export default function PageSelectOmakase() {
   const router = useRouter()
 
   // 全ての丼データ取得
-  const { data } = useGetItemsQuery()
+  const { data } = useFetchItemsQuery()
 
   // データが取得された後に実行
   useEffect(() => {

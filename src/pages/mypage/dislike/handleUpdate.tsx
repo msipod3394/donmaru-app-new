@@ -2,7 +2,7 @@ import {
   AddDislikesMutation,
   DeleteDislikeMutation,
   Exact,
-  FetchDislikeByEmailQuery,
+  FetchDislikeByIdQuery,
   InputMaybe,
 } from '@/gql/graphql'
 import {
@@ -14,7 +14,7 @@ import {
 } from '@apollo/client'
 
 export function handleUpdate(
-  user: { email: string },
+  user: { id: string },
   addIds: string[],
   deleteIds: string[],
   addDislikeMutation: {
@@ -22,44 +22,53 @@ export function handleUpdate(
       options?:
         | MutationFunctionOptions<
             AddDislikesMutation,
-            Exact<{ ingredientIds: string | string[]; email: string }>,
+            Exact<{ ingredientIds: string | string[]; id: string }>,
             DefaultContext,
             ApolloCache<any>
           >
         | undefined,
     ): Promise<FetchResult<AddDislikesMutation>>
-    (arg0: { variables: { ingredientIds: string[]; email: string } }): any
+    (arg0: { variables: { ingredientIds: string[]; userId: any } }): any
   },
-  addDeleteMutation: {
+  deleteDislikeMutation: {
     (
       options?:
         | MutationFunctionOptions<
             DeleteDislikeMutation,
-            Exact<{ ingredientIds: string | string[]; email: string }>,
+            Exact<{ ingredientIds: string | string[]; id: string }>,
             DefaultContext,
             ApolloCache<any>
           >
         | undefined,
     ): Promise<FetchResult<DeleteDislikeMutation>>
-    (arg0: { variables: { ingredientIds: string[]; email: string } }): any
+    (arg0: { variables: { ingredientIds: string[]; userId: any } }): any
   },
-  refetchDislikesByUserEmail: {
+  refetchDislikesByUserId: {
     (
-      variables?: Partial<Exact<{ email?: InputMaybe<string> | undefined }>> | undefined,
-    ): Promise<ApolloQueryResult<FetchDislikeByEmailQuery>>
-    (arg0: { email: string }): void
+      variables?: Partial<Exact<{ id?: InputMaybe<string> | undefined }>> | undefined,
+    ): Promise<ApolloQueryResult<FetchDislikeByIdQuery>>
+    (arg0: { userId: any }): void
   },
 ) {
+  const userId = user.id.toString()
+  console.log('userId', userId)
+  console.log('addIds', typeof addIds)
+  console.log('deleteIds', deleteIds)
+
   Promise.all([
-    addDislikeMutation({ variables: { ingredientIds: addIds, email: user.email } }),
-    addDeleteMutation({ variables: { ingredientIds: deleteIds, email: user.email } }),
+    addDislikeMutation({
+      variables: { ingredientIds: addIds, id: userId },
+    }),
+    deleteDislikeMutation({
+      variables: { ingredientIds: deleteIds, id: userId },
+    }),
   ])
     .then(() => {
       console.log('更新成功')
       alert('苦手ネタを更新しました！')
 
       // ユーザーの苦手ネタを再取得
-      refetchDislikesByUserEmail({ email: user.email })
+      refetchDislikesByUserId({ id: userId })
     })
     .catch((error) => {
       console.error('エラー:', error)

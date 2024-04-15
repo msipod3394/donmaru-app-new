@@ -4,22 +4,26 @@ import { User } from '@/gql/graphql'
 
 export const useCheckLogin = () => {
   const router = useRouter()
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useState<User | undefined>()
 
   useEffect(() => {
     const checkLogin = async () => {
+      // ローカルストレージが利用可能か
       const isLocalStorageAvailable = typeof window !== 'undefined' && window.localStorage
 
-      // ローカルストレージにログインユーザーのデータがあるかどうか
+      // ローカルストレージにauthTokenがあるか
       if (isLocalStorageAvailable) {
-        const isSetUser = window.localStorage.getItem('loginUser')
-        if (isSetUser) {
-          const jsonObject = JSON.parse(isSetUser)
-          setUser(jsonObject)
+        const authToken = window.localStorage.getItem('authToken')
+        const authUser = window.localStorage.getItem('user')
+
+        if (authToken && authUser) {
+          const convertJsonObj = JSON.parse(authUser)
+          // console.log(convertJsonObj)
+          setUser(convertJsonObj)
         } else {
-          // ログインしていない場合は、ログインページにリダイレクト
+          // ログインしていなければ、ログインページにリダイレクト
           console.log('ログイン画面へ')
-          // router.push('/user/login')
+          router.push('/auth/SignIn')
         }
       } else {
         console.error('ローカルストレージが利用できません')

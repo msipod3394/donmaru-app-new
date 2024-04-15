@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react'
+import { Item, useFetchOrderByIdQuery } from '@/gql/graphql'
+import { useUserContext } from '@/contexts/UserContext'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { useUserContext } from '@/contexts/UserContext'
-import { Item, useSearchOrderByUserEmailQuery } from '@/gql/graphql'
-import { useEffect, useState } from 'react'
 import { ItemCardList } from './ItemCardList'
 
 type ItemAddCount = Item & {
@@ -10,8 +11,15 @@ type ItemAddCount = Item & {
 }
 
 export default function PageOrder() {
-  // ユーザー情報を取得
+  // ユーザー情報をセット
   const [user, setUser] = useUserContext()
+  const checkLogin = useCheckLogin()
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
+      setUser(checkLogin)
+    }
+  }, [user, checkLogin])
 
   // 取得したお気に入りデータ
   const [orders, setOrders] = useState<ItemAddCount[]>([])
@@ -23,9 +31,14 @@ export default function PageOrder() {
   const [loading, setLoading] = useState(false)
 
   // 注文履歴の取得
-  const { data: orderData } = useSearchOrderByUserEmailQuery({
-    variables: { email: user && user.email ? user.email : null },
+  const { data: orderData } = useFetchOrderByIdQuery({
+    variables: { userId: user && user.id ? String(user.id) : '' },
     skip: !user,
+    onCompleted: (orderData) => {
+      if (orderData) {
+        console.log('orderData', orderData)
+      }
+    },
   })
 
   // 注文履歴取得後、注文回数の配列を作成
@@ -50,7 +63,6 @@ export default function PageOrder() {
       setLoading(true)
 
       const filterItems = orderData.order.map((order) => order)
-
 
       // 注文回数をオブジェクトにマッピング
       const countMap = count.reduce(

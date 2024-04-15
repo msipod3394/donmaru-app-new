@@ -8,14 +8,15 @@ import { ButtonLinkList } from '@/pages/home/ButtonLinkList'
 
 export default function Home() {
   // ユーザー情報をセット
-  const [, setUser] = useUserContext()
-  const getUser = useCheckLogin()
+  const [user, setUser] = useUserContext()
+  const checkLogin = useCheckLogin()
 
   useEffect(() => {
-    if (getUser && setUser) {
-      setUser(getUser)
+    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
+      setUser(checkLogin)
     }
-  }, [getUser, setUser])
+  }, [user, checkLogin])
+
 
   return (
     <>

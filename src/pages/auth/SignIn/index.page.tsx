@@ -33,7 +33,7 @@ const SignIn = () => {
         alert('ログインに成功しました!')
         router.push('/home')
       } catch (error) {
-        setErrorMessage(`エラーが発生しました:${error}`)
+        setErrorMessage(`エラーが発生しました:${JSON.stringify(error)}`)
       }
     },
     [router],

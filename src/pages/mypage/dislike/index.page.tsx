@@ -3,7 +3,7 @@ import {
   Ingredient,
   useAddDislikesMutation,
   useDeleteDislikeMutation,
-  useFetchDislikeByEmailQuery,
+  useFetchDislikeByIdQuery,
   useFetchIngredientsQuery,
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
@@ -12,10 +12,18 @@ import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
 import { handleUpdate } from './handleUpdate'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageDislike() {
-  // ユーザー情報を取得
+  // ユーザー情報をセット
   const [user, setUser] = useUserContext()
+  const checkLogin = useCheckLogin()
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
+      setUser(checkLogin)
+    }
+  }, [user, checkLogin])
 
   // 苦手ネタをステート管理
   const [registeredDislikes, setRegisteredDislikes] = useState<string[]>([])
@@ -27,14 +35,14 @@ export default function PageDislike() {
   const [isChecked, setIsChecked] = useState<string[]>([])
 
   // 苦手ネタを取得
-  const { data: dislikes, refetch: refetchDislikesByUserEmail } =
-    useFetchDislikeByEmailQuery({
-      variables: { email: user && user.email ? user.email : null },
-      skip: !user,
-    })
+  const { data: dislikes, refetch: refetchDislikesByUserId } =
+  useFetchDislikeByIdQuery({
+    variables: { id: user && user.id ? user.id.toString() : undefined },
+    skip: !user,
+  })
 
   // 苦手ネタ追加
-  const [addDislikeMutation] = useAddDislikesMutation()
+  const [deleteDislikeMutation] = useAddDislikesMutation()
 
   // 苦手ネタ削除
   const [addDeleteMutation] = useDeleteDislikeMutation()
@@ -91,18 +99,18 @@ export default function PageDislike() {
         user,
         addIds,
         deleteIds,
-        addDislikeMutation,
+        deleteDislikeMutation,
         addDeleteMutation,
-        refetchDislikesByUserEmail,
+        refetchDislikesByUserId,
       )
     }
   }, [
     user,
     addIds,
     deleteIds,
-    addDislikeMutation,
+    deleteDislikeMutation,
     addDeleteMutation,
-    refetchDislikesByUserEmail,
+    refetchDislikesByUserId,
   ])
 
   return (

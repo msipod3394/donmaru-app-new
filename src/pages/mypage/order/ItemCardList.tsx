@@ -1,17 +1,7 @@
 import { memo } from 'react'
-import { Item } from '@/gql/graphql'
 import { ItemCard } from './ItemCard'
+import { ItemWithCount } from '@/types/ItemWithCount'
 
-type Props = Item & {
-  count: string
-}
-
-export const ItemCardList = memo(({ items }: { items: Props[] }) => {
-  console.log(items)
-
-  return items.map((item: Props) => (
-    <>
-      <ItemCard key={item.id} item={item} />
-    </>
-  ))
+export const ItemCardList = memo(({ items }: { items: ItemWithCount[] }) => {
+  return items.map((item: ItemWithCount) => <ItemCard key={item.id} item={item} />)
 })

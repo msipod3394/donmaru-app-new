@@ -1,0 +1,8 @@
+# 苦手ネタを取得
+query fetchDislikeById($id: String) {
+  dislikes(userId: $id) {
+    ingredient {
+      id
+    }
+  }
+}

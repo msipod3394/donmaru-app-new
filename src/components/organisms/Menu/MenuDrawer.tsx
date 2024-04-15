@@ -1,5 +1,4 @@
-import React from 'react'
-import { FC, ReactNode, memo } from 'react'
+import { FC, memo, useRef } from 'react'
 import NextLink from 'next/link'
 import {
   Drawer,
@@ -15,12 +14,12 @@ import {
   Box,
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
-import { useUserContext } from '@/contexts/UserContext'
 import { MypageLinks, SelectLinks, UserLinks } from '../../SettingLink'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export const MenuDrawer = memo(() => {
   // 閉じ・開きの管理
-  const btnRef = React.useRef()
+  const btnRef = useRef()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   // HoverLink コンポーネント
@@ -35,8 +34,19 @@ export const MenuDrawer = memo(() => {
   )
 
   // ログイン状況の呼び出し
-  const [user] = useUserContext()
-  const checkLoginUser = user ? `loginUser ${user}` : null
+  const user = useCheckLogin()
+
+  // ログイン時、メールアドレスを表示
+  const loggedInUserEmail = user ? `こんにちは！${user.email} さん` : null
+
+  // 未ログイン時、ログイン・サインインへのリンクを表示
+  const userLinks = user ? null : (
+    <Stack>
+      {UserLinks.map((link, index) => (
+        <HoverLink key={index} text={link.text} href={link.href} />
+      ))}
+    </Stack>
+  )
 
   return (
     <>
@@ -52,20 +62,15 @@ export const MenuDrawer = memo(() => {
             <DrawerBody>
               <Stack as='nav' pt='40px'>
                 <Stack as='ul' mb='24px'>
-                  {/* 会員登録セクション */}
-                  {checkLoginUser && user ? (
+                  {loggedInUserEmail ? (
                     <>
-                      <Text as='b'>こんにちは！{user.email} さん</Text>
+                      <Text as='b'>{loggedInUserEmail}</Text>
                       <Stack mt='24px'>
                         <HoverLink text='ホーム' href='/home' />
                       </Stack>
                     </>
                   ) : (
-                    <Stack>
-                      {UserLinks.map((link, index) => (
-                        <HoverLink key={index} text={link.text} href={link.href} />
-                      ))}
-                    </Stack>
+                    userLinks
                   )}
                 </Stack>
 

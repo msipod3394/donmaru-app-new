@@ -43,13 +43,13 @@ type Item {
 }
 
 type Mutation {
-  createDislikes(email: String!, ingredientIds: [String!]!): [Dislike!]!
+  createDislikes(ingredientIds: [String!]!, userId: String!): [Dislike!]!
   createFavorite(itemId: String!, userId: String!): Favorite!
-  createFavorites(email: String!, itemIds: [String!]!): [Favorite!]!
-  createOrder(email: String!, itemId: String!): Order!
+  createFavorites(itemIds: [String!]!, userId: String!): [Favorite!]!
+  createOrder(itemId: String!, userId: String!): Order!
   createUser(email: String!, password: String!): User!
-  deleteDislikes(email: String!, ingredientIds: [String!]!): Boolean!
-  deleteFavorites(email: String!, itemIds: [String!]!): Boolean!
+  deleteDislikes(ingredientIds: [String!]!, userId: String!): Boolean!
+  deleteFavorites(itemIds: [String!]!, userId: String!): Boolean!
 }
 
 type Order {
@@ -62,18 +62,18 @@ type Order {
 
 type Query {
   """
-  emailを指定して検索、emailの指定がなければ全件取得
+  emailを指定して検索
   """
-  dislikes(email: String): [Dislike!]!
-  favorites(email: String, userId: ID): [Favorite!]!
+  dislikes(userId: String): [Dislike!]!
+  favorites(itemId: String, userId: String): [Favorite!]!
   getUser(email: String!): User
   ingredients(fieldName: String, fieldValue: String): [Ingredient!]!
   items(fieldName: String, fieldValue: String, id: ID): [Item!]!
 
   """
-  emailを指定して検索、emailの指定がなければ全件取得
+  ユーザーIDを指定して検索
   """
-  order(email: String): [Order!]!
+  order(userId: String!): [Order!]!
 }
 
 type User {

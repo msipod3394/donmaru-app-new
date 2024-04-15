@@ -1,52 +1,72 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Text } from '@chakra-ui/react'
-import {
-  useFetchFavoriteByEmailQuery,
-  useSearchOrderByUserEmailQuery,
-} from '@/gql/graphql'
+import { Order, useFetchFavoriteByIdQuery, useFetchOrderByIdQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ItemWithCount } from '@/types/ItemWithCount'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageSelectFavorite() {
   const router = useRouter()
-
-  // ユーザー情報を取得
-  const [user, setUser] = useUserContext()
 
   // 取得したお気に入りデータ
   const [favorites, setFavorites] = useState<ItemWithCount[]>([])
 
   // 結果をステート管理
-  const [result, setResult] = useState('')
+  const [result, setResult] = useState<string>()
 
   // 注文履歴カウント
+  const [orders, setOrders] = useState<Order[]>([])
   const [count, setCount] = useState<{ id: string; count: number }[]>([])
 
   // loading状態を管理
   const [loading, setLoading] = useState(false)
 
-  // お気に入り情報の取得
-  const { data } = useFetchFavoriteByEmailQuery({
-    variables: { email: user && user.email ? user.email : null },
-    skip: !user,
-    // onCompleted: () => setLoading(false),
-  })
+  // ユーザー情報をセット
+  const [user, setUser] = useUserContext()
+  const checkLogin = useCheckLogin()
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
+      setUser(checkLogin)
+    }
+    // console.log('user', user)
+  }, [user, checkLogin])
+
+  // お気に入りの取得
+  const { data: favoriteData, refetch: refetchFavoritesByUserId } =
+    useFetchFavoriteByIdQuery({
+      variables: { id: user && user.id ? String(user.id) : null },
+      skip: !user,
+      // onCompleted: (favoriteData) => {
+      //   if (favoriteData) {
+      //     console.log('favoriteData', favoriteData)
+      //     setFavorites(favoriteData.favorites)
+      //   }
+      // },
+    })
 
   // 注文履歴の取得
-  const { data: orderData } = useSearchOrderByUserEmailQuery({
-    variables: { email: user && user.email ? user.email : null },
+  const { data: orderData } = useFetchOrderByIdQuery({
+    variables: { userId: user && user.id ? String(user.id) : '' },
     skip: !user,
+    onCompleted: (orderData) => {
+      if (orderData) {
+        console.log('orderData', orderData)
+      }
+    },
   })
 
   // 注文履歴取得後、注文回数の配列を作成
   useEffect(() => {
-    if (orderData) {
-      const itemIds = orderData.order.map((order) => order.item.id)
+    if (orders.length !== 0) {
+      console.log('orders', orders)
+
+      const itemIds = orders.map((order) => order.item.id)
       const counts: { [key: string]: number } = {}
 
       // 丼IDとカウント数のみの配列を作成
@@ -56,15 +76,21 @@ export default function PageSelectFavorite() {
 
       // カウントされた結果を配列にマップ
       const countArray = Object.keys(counts).map((id) => ({ id, count: counts[id] }))
+      // console.log('countArray', countArray)
+
       setCount(countArray)
     }
-  }, [orderData])
+  }, [orders])
 
   // データとカウントが取得された後に実行
   useEffect(() => {
-    if (data && count) {
+    // console.log('favoriteData', favoriteData)
+    // console.log('count', count)
+
+    if (favoriteData && count) {
       setLoading(true)
-      const filterItems = data.favorites.map((favorite) => favorite.item)
+      const filterItems = favoriteData.favorites.map((favorite) => favorite.item)
+      // console.log('filterItems', filterItems)
 
       // 注文回数をオブジェクトにマッピング
       const countMap = count.reduce(
@@ -79,15 +105,17 @@ export default function PageSelectFavorite() {
       )
 
       // 注文回数を含めた配列を作成
-      const result = filterItems.map((obj) => ({
-        ...obj,
-        count: countMap[obj.id] || 0,
+      const result = filterItems.map((favorite) => ({
+        ...favorite,
+        count: countMap[favorite.id] || 0,
       }))
+
+      // console.log('result', result)
 
       setFavorites(result)
       setLoading(false)
     }
-  }, [data, count, setFavorites])
+  }, [count, setCount, favoriteData])
 
   // 結果をセット
   useEffect(() => {

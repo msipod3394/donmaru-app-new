@@ -2,7 +2,7 @@ import {
   AddFavoritesMutation,
   DeleteFavoritesMutation,
   Exact,
-  FetchFavoriteByEmailQuery,
+  FetchFavoriteByIdQuery,
   InputMaybe,
 } from '@/gql/graphql'
 import {
@@ -15,7 +15,7 @@ import {
 import { useRouter } from 'next/router'
 
 export async function handleUpdate(
-  user: { email: string },
+  user: { id: string },
   addIds: string[] | undefined,
   deleteIds: string[] | undefined,
   addFavoritesMutation: {
@@ -23,47 +23,50 @@ export async function handleUpdate(
       options?:
         | MutationFunctionOptions<
             AddFavoritesMutation,
-            Exact<{ itemIds: string | string[]; email: string }>,
+            Exact<{ itemIds: string | string[]; userId: string }>,
             DefaultContext,
             ApolloCache<any>
           >
         | undefined,
     ): Promise<FetchResult<AddFavoritesMutation>>
-    (arg0: { variables: { itemIds: string[] | undefined; email: string } }): any
+    (arg0: { variables: { itemIds: string[] | undefined; userId: string } }): any
   },
   deleteFavoritesMutation: {
     (
       options?:
         | MutationFunctionOptions<
             DeleteFavoritesMutation,
-            Exact<{ itemIds: string | string[]; email: string }>,
+            Exact<{ itemIds: string | string[]; userId: string }>,
             DefaultContext,
             ApolloCache<any>
           >
         | undefined,
     ): Promise<FetchResult<DeleteFavoritesMutation>>
-    (arg0: { variables: { itemIds: string[] | undefined; email: string } }): any
+    (arg0: { variables: { itemIds: string[] | undefined; userId: string } }): any
   },
-  refetchFavoritesByUserEmail: {
+  refetchFavoritesByUserId: {
     (
-      variables?: Partial<Exact<{ email?: InputMaybe<string> | undefined }>> | undefined,
-    ): Promise<ApolloQueryResult<FetchFavoriteByEmailQuery>>
-    (arg0: { email: string }): void
+      variables?: Partial<Exact<{ id?: InputMaybe<string> | undefined }>> | undefined,
+    ): Promise<ApolloQueryResult<FetchFavoriteByIdQuery>>
+    (arg0: { userId: string }): any
   },
 ): Promise<boolean> {
+  
+  const userId = user.id.toString()
+  console.log('userId', typeof userId)
   console.log('addIds', addIds)
   console.log('deleteIds', deleteIds)
 
   try {
     await Promise.all([
-      addFavoritesMutation({ variables: { itemIds: addIds, email: user.email } }),
-      deleteFavoritesMutation({ variables: { itemIds: deleteIds, email: user.email } }),
+      addFavoritesMutation({ variables: { itemIds: addIds, userId: userId } }),
+      deleteFavoritesMutation({ variables: { itemIds: deleteIds, userId: userId } }),
     ])
 
     alert('お気に入りを更新しました！')
 
     // ユーザーのお気に入りを再取得
-    await refetchFavoritesByUserEmail({ email: user.email })
+    await refetchFavoritesByUserId({ userId: userId })
 
     return true // 成功したら true を返す
   } catch (error) {
