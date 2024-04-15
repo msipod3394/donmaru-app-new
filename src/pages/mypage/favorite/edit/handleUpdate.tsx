@@ -12,7 +12,6 @@ import {
   FetchResult,
   MutationFunctionOptions,
 } from '@apollo/client'
-import { useRouter } from 'next/router'
 
 export async function handleUpdate(
   user: { id: string },
@@ -51,11 +50,7 @@ export async function handleUpdate(
     (arg0: { userId: string }): any
   },
 ): Promise<boolean> {
-  
   const userId = user.id.toString()
-  console.log('userId', typeof userId)
-  console.log('addIds', addIds)
-  console.log('deleteIds', deleteIds)
 
   try {
     await Promise.all([

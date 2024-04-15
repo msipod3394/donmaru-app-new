@@ -243,7 +243,7 @@ export type FetchOrderByIdQueryVariables = Exact<{
 }>;
 
 
-export type FetchOrderByIdQuery = { __typename?: 'Query', order: Array<{ __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, createdAt: any, updatedAt: any }, user: { __typename?: 'User', id: string, email: string } }> };
+export type FetchOrderByIdQuery = { __typename?: 'Query', order: Array<{ __typename?: 'Order', id: string, createdAt: any, updatedAt: any, item: { __typename?: 'Item', id: string, name: string, image: string, createdAt: any, updatedAt: any, ingredients: Array<{ __typename?: 'IngredientItem', id: string, name: string }> }, user: { __typename?: 'User', id: string, email: string } }> };
 
 export type SearchItemsByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -711,6 +711,10 @@ export const FetchOrderByIdDocument = gql`
       image
       createdAt
       updatedAt
+      ingredients {
+        id
+        name
+      }
     }
     user {
       id

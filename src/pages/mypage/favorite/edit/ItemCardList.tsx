@@ -1,24 +1,22 @@
-import styled from 'styled-components'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
+import { VStack } from '@chakra-ui/react'
 import {
   Favorite,
   Item,
   Order,
   useAddFavoritesMutation,
   useDeleteFavoritesMutation,
-  useFetchItemsQuery,
   useFetchFavoriteByIdQuery,
-  useSearchOrderByUserIdQuery,
   useFetchOrderByIdQuery,
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { handleUpdate } from './handleUpdate'
 import { ItemCard } from './ItemCard'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export function ItemCardList({ items }: { items: Item[] }) {
   const router = useRouter()
@@ -28,8 +26,7 @@ export function ItemCardList({ items }: { items: Item[] }) {
   const checkLogin = useCheckLogin()
 
   useEffect(() => {
-    console.log('checkLogin', checkLogin)
-
+    // console.log('checkLogin', checkLogin)
     if (Object.keys(user).length === 0 && checkLogin !== undefined) {
       setUser(checkLogin)
     }
@@ -46,12 +43,6 @@ export function ItemCardList({ items }: { items: Item[] }) {
 
   // 取得した注文履歴データ
   const [orders, setOrders] = useState<Order[]>()
-
-  // 取得した注文履歴データ
-  const [allItems, setAllItems] = useState<Order[]>()
-
-  // 全ての丼を取得
-  const { data } = useFetchItemsQuery()
 
   // お気に入りの取得
   const { data: favoriteData, refetch: refetchFavoritesByUserId } =
@@ -128,16 +119,14 @@ export function ItemCardList({ items }: { items: Item[] }) {
       const deleteFavoriteArray: string[] = deleteFavorite.map((item) => {
         return item.item.id
       })
-      console.log('deleteFavoriteArray', deleteFavoriteArray)
-
+      // console.log('deleteFavoriteArray', deleteFavoriteArray)
       setDeleteIds(deleteFavoriteArray)
     }
   }, [favorites, selectedIds])
 
   // お気に入り更新
   const onSubmit = useCallback(async () => {
-    console.log(user)
-
+    // console.log(user)
     if (user) {
       try {
         const success = await handleUpdate(
@@ -170,10 +159,6 @@ export function ItemCardList({ items }: { items: Item[] }) {
 
   return (
     <SBox>
-      {/* <p>
-        選択中:
-        {selectedIds?.map((item) => <span>{item},</span>)}
-      </p> */}
       {getItems && (
         <>
           {getItems.map((item) => (

@@ -16,12 +16,14 @@ export const ItemCard = memo(({ item }: ItemObjWithCount[]) => {
           {item.item.ingredients && Array.isArray(item.item.ingredients) && (
             <>
               {Array.isArray(item.item.ingredients) &&
-                item.item.ingredients.map((ingredient, index) => (
+                item.item.ingredients.map((ingredient, index) => 
+                  (
                   <Text as='span' fontSize='xs' key={index}>
                     {index > 0 && <>・</>}
                     {ingredient.name}
                   </Text>
-                ))}
+                )
+                )}
             </>
           )}
         </HStack>

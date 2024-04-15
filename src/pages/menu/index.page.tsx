@@ -45,8 +45,6 @@ export default function PageAllMenu() {
   // 注文履歴取得後、注文回数の配列を作成
   useEffect(() => {
     if (orders) {
-      console.log(orders)
-
       const counts: { [key: string]: { count: number; createdAt: string } } = {}
 
       // 各注文ごとに処理
@@ -77,8 +75,6 @@ export default function PageAllMenu() {
       setLoading(true)
 
       // 注文回数をオブジェクトにマッピング
-      const filterItems = data.items.map((item) => item)
-
       const countMap = count.reduce(
         (map, obj) => {
           if (obj.id) {
@@ -99,7 +95,7 @@ export default function PageAllMenu() {
         latest: countMap[item.id] ? countMap[item.id].latest : '',
       }))
 
-      console.log('result', result)
+      // console.log('result', result)
 
       // データをセット
       setItems(result)
