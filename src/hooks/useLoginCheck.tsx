@@ -18,7 +18,6 @@ export const useCheckLogin = () => {
 
         if (authToken && authUser) {
           const convertJsonObj = JSON.parse(authUser)
-          // console.log(convertJsonObj)
           setUser(convertJsonObj)
         } else {
           // ログインしていなければ、ログインページにリダイレクト

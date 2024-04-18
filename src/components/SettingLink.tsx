@@ -18,6 +18,5 @@ export const MypageLinks = [
   { text: '注文履歴', href: '/mypage/order' },
   { text: 'お気に入り管理', href: '/mypage/favorite' },
   { text: '苦手ネタ管理', href: '/mypage/dislike' },
-  // { text: 'ユーザー情報管理', href: '/mypage/setting' },
-  { text: 'ログアウト', href: '' },
+  { text: 'ログアウト', href: '/auth/SignOut' },
 ]

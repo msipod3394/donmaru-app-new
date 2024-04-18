@@ -24,11 +24,12 @@ export const onSignIn = async ({ email, password }: AuthType) =>
         password,
       },
     }),
-  }).then((res) => {
+  }).then(async (res) => {
     const token = res.headers.get('Authorization')
     if (res.ok && token) {
       storeAuthToken(token)
-      return res.json()
+      const user = await res.json();
+      return user;
     }
     throw new Error(res.toString())
   })
@@ -46,12 +47,13 @@ export const onSignUp = ({ email, password }: AuthType) =>
         password,
       },
     }),
-  }).then((res) => {
+  }).then(async (res) => {
     if (res.ok) {
-      const token = res.headers.get('Authorization') 
+      const token = res.headers.get('Authorization')
       if (res.ok && token) {
         storeAuthToken(token)
-        return res.json()
+        const user = await res.json();
+        return user
       }
       return res.json()
     }

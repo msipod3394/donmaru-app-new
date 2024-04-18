@@ -24,7 +24,7 @@ const SignIn = () => {
     async (data: AuthType) => {
       try {
         const res = await onSignIn(data)
-        // console.log('res:', res.user)
+        console.log('res:', res.user)
 
         // ローカルストレージにセット
         localStorage.setItem('user', JSON.stringify(res.user))
