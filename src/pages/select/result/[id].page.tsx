@@ -3,7 +3,12 @@ import { useRouter } from 'next/router'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ActionButtons } from '@/components/molecules/ActionButtons'
 import { DisplayResultItem } from './DisplayResultItem'
-import { Item, useCreateOrderMutation, useSearchItemsByIdQuery } from '@/gql/graphql'
+import {
+  Item,
+  useCreateOrderMutation,
+  useFetchOrderByIdQuery,
+  useSearchItemsByIdQuery,
+} from '@/gql/graphql'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useUserContext } from '@/contexts/UserContext'
 import { useCheckLogin } from '@/hooks/useLoginCheck'
@@ -20,7 +25,6 @@ export default function PageResult() {
       setUser(checkLogin)
     }
   }, [user, checkLogin])
-
 
   // ステートで管理するもの
   const [result, setResult] = useState<Item | undefined>()
@@ -42,6 +46,12 @@ export default function PageResult() {
 
   const [createOrderMutation] = useCreateOrderMutation()
 
+  // 注文履歴の取得
+  const { refetch: refetchOrderData } = useFetchOrderByIdQuery({
+    variables: { userId: user && user.id ? String(user.id) : '' },
+    skip: !user,
+  })
+
   // 注文履歴に追加ボタン
   const handleAddOrder = () => {
     if (result && user) {
@@ -56,6 +66,9 @@ export default function PageResult() {
         .then((order_result) => {
           console.log('注文履歴登録成功:', order_result.data?.createOrder)
           alert('注文履歴に登録しました！')
+
+          // 注文履歴の更新
+          refetchOrderData()
         })
         .catch((error) => {
           console.error('注文履歴登録エラー:', error)
