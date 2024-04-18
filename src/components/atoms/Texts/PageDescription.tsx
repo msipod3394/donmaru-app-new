@@ -11,7 +11,7 @@ type Props = {
 
 // style
 const SText = styled(Text)`
-  padding: 2rem;
+  padding: 2rem 1rem;
   margin-bottom: 2rem;
   text-align: center;
   font-size: var(--size-18);

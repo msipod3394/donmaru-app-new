@@ -13,6 +13,8 @@ import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
 import { handleUpdate } from './handleUpdate'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useCheckLogin } from '@/hooks/useLoginCheck'
+import { Text } from '@chakra-ui/react'
+import { PageDescription } from '@/components/atoms/texts/PageDescription'
 
 export default function PageDislike() {
   // ユーザー情報をセット
@@ -35,8 +37,7 @@ export default function PageDislike() {
   const [isChecked, setIsChecked] = useState<string[]>([])
 
   // 苦手ネタを取得
-  const { data: dislikes, refetch: refetchDislikesByUserId } =
-  useFetchDislikeByIdQuery({
+  const { data: dislikes, refetch: refetchDislikesByUserId } = useFetchDislikeByIdQuery({
     variables: { id: user && user.id ? user.id.toString() : undefined },
     skip: !user,
   })
@@ -119,20 +120,26 @@ export default function PageDislike() {
       {loading ? (
         <LoadingIndicator />
       ) : (
-        ingredients &&
-        Object.values(ingredients).map((ingredient: Ingredient[] | undefined) => {
-          return Object.values(ingredient).map((item: Ingredient) => {
-            return (
-              <NetaCheckbox
-                key={item.id}
-                id={item.id}
-                label={item.name}
-                isChecked={isChecked.includes(item.id)}
-                onChange={handleCheckbox}
-              />
-            )
-          })
-        })
+        <>
+          <PageDescription>
+            苦手ネタを登録すると、<br />
+            おまかせガチャで苦手ネタを除いた丼で<br />ガチャするよ！
+          </PageDescription>
+          {ingredients &&
+            Object.values(ingredients).map((ingredient: Ingredient[] | undefined) => {
+              return Object.values(ingredient).map((item: Ingredient) => {
+                return (
+                  <NetaCheckbox
+                    key={item.id}
+                    id={item.id}
+                    label={item.name}
+                    isChecked={isChecked.includes(item.id)}
+                    onChange={handleCheckbox}
+                  />
+                )
+              })
+            })}
+        </>
       )}
       <ButtonRounded onClick={onSubmit} className='isDark'>
         更新

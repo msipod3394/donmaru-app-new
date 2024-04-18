@@ -28,7 +28,7 @@ export function handleUpdate(
           >
         | undefined,
     ): Promise<FetchResult<AddDislikesMutation>>
-    (arg0: { variables: { ingredientIds: string[]; userId: any } }): any
+    (arg0: { variables: { ingredientIds: string[]; userId: string } }): any
   },
   deleteDislikeMutation: {
     (
@@ -41,7 +41,7 @@ export function handleUpdate(
           >
         | undefined,
     ): Promise<FetchResult<DeleteDislikeMutation>>
-    (arg0: { variables: { ingredientIds: string[]; userId: any } }): any
+    (arg0: { variables: { ingredientIds: string[]; id: string } }): any
   },
   refetchDislikesByUserId: {
     (
