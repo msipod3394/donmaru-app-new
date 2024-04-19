@@ -4,5 +4,5 @@ query fetchDislikeById($id: String) {
     ingredient {
       id
     }
-  }
+  } 
 }

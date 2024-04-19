@@ -4,7 +4,9 @@ import { Text, VStack, HStack, Image } from '@chakra-ui/react'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
 import { ItemObjWithCount } from '@/types/ItemWithCount'
 
-export const ItemCard = memo(({ item }: ItemObjWithCount[]) => {
+export const ItemCard: FC<{ item: ItemObjWithCount }> = memo(({ item }) => {
+  console.log(item)
+
   return (
     <SBox key={item.id}>
       <Image w='80px' src={`/menu/${item.item.image}`} alt={item.item.name} />
@@ -16,14 +18,12 @@ export const ItemCard = memo(({ item }: ItemObjWithCount[]) => {
           {item.item.ingredients && Array.isArray(item.item.ingredients) && (
             <>
               {Array.isArray(item.item.ingredients) &&
-                item.item.ingredients.map((ingredient, index) => 
-                  (
+                item.item.ingredients.map((ingredient, index) => (
                   <Text as='span' fontSize='xs' key={index}>
                     {index > 0 && <>・</>}
                     {ingredient.name}
                   </Text>
-                )
-                )}
+                ))}
             </>
           )}
         </HStack>

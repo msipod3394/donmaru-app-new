@@ -5,7 +5,7 @@ type Props = {
   id: string
   label: string
   isChecked: boolean
-  onChange: (arg0: number) => void
+  onChange: (arg0: string) => void
 }
 
 export const NetaCheckbox: FC<Props> = memo(({ id, label, isChecked, onChange }) => {

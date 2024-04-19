@@ -54,6 +54,7 @@ export const MenuDrawer = memo(() => {
       <Button onClick={onOpen}>
         <HamburgerIcon />
       </Button>
+      
       {/* Drawer部分 */}
       <Drawer isOpen={isOpen} onClose={onClose} placement='right'>
         <DrawerOverlay>
@@ -73,13 +74,11 @@ export const MenuDrawer = memo(() => {
                     userLinks
                   )}
                 </Stack>
-
                 <Stack as='ul'>
                   {SelectLinks.map((link, index) => (
                     <HoverLink key={index} text={link.text} href={link.href} />
                   ))}
                 </Stack>
-
                 <Stack as='ul' mt='24px'>
                   {MypageLinks.map((link, index) => (
                     <HoverLink key={index} text={link.text} href={link.href} />

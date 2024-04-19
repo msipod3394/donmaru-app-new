@@ -50,7 +50,7 @@ export function ItemCardList({ items }: { items: Item[] }) {
       variables: { id: user && user.id ? String(user.id) : null },
       skip: !user,
       onCompleted: (favoriteData) => {
-        if (favoriteData) {
+        if (favoriteData.favorites) {
           console.log('favoriteData', favoriteData)
           setFavorites(favoriteData.favorites)
         }
@@ -61,9 +61,8 @@ export function ItemCardList({ items }: { items: Item[] }) {
   const { data: orderData } = useFetchOrderByIdQuery({
     variables: { userId: user && user.id ? String(user.id) : '' },
     skip: !user,
-    onCompleted: () => {
-      if (orderData && orderData.order) {
-        console.log('orderData', orderData.order)
+    onCompleted: (orderData) => {
+      if (orderData.order) {
         setOrders(orderData.order)
       }
     },
@@ -126,7 +125,6 @@ export function ItemCardList({ items }: { items: Item[] }) {
 
   // お気に入り更新
   const onSubmit = useCallback(async () => {
-    // console.log(user)
     if (user) {
       try {
         const success = await handleUpdate(
@@ -135,10 +133,17 @@ export function ItemCardList({ items }: { items: Item[] }) {
           deleteIds,
           addFavoritesMutation,
           deleteFavoritesMutation,
-          refetchFavoritesByUserId,
         )
+
+        // 成功したら
         if (success) {
           console.log('更新成功')
+          alert('お気に入りを更新しました！')
+
+          // お気に入り情報の再取得
+          refetchFavoritesByUserId(user.id)
+
+          // お気に入り一覧にリダイレクト
           router.push('/mypage/favorite/')
         } else {
           console.log('error')

@@ -10,7 +10,7 @@ export default function PageFavoriteEdit() {
   return (
     <>
       <PageTitle title='お気に入りの編集' />
-      {loading ? <LoadingIndicator /> : <ItemCardList items={data.items} />}
+      {loading ? <LoadingIndicator /> : data && <ItemCardList items={data.items} />}
     </>
   )
 }

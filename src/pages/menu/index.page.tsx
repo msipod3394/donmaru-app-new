@@ -25,8 +25,14 @@ export default function PageAllMenu() {
   }, [user, checkLogin])
 
   // 注文履歴カウント
-  const [count, setCount] = useState<{ id: string; count: number }[]>([])
-  const [orders, setOrders] = useState<Order[]>()
+  const [count, setCount] = useState<
+    {
+      id: string
+      count: number
+      createdAt: string
+    }[]
+  >([])
+  const [orders, setOrders] = useState<Order[]>([])
 
   // loading状態を管理
   const [loading, setLoading] = useState(false)

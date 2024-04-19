@@ -6,15 +6,14 @@ import {
   useFetchDislikeByIdQuery,
   useFetchIngredientsQuery,
 } from '@/gql/graphql'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { useUserContext } from '@/contexts/UserContext'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
-import { handleUpdate } from './handleUpdate'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
-import { Text } from '@chakra-ui/react'
 import { PageDescription } from '@/components/atoms/texts/PageDescription'
+import { handleUpdate } from './handleUpdate'
 
 export default function PageDislike() {
   // ユーザー情報をセット
@@ -58,13 +57,13 @@ export default function PageDislike() {
   useEffect(() => {
     if (dislikes) {
       const registeredDislike: string[] = dislikes.dislikes.map((item) => {
-        return item.ingredient.id
+        return item.ingredient.id.toString()
       })
       setIsChecked(registeredDislike)
 
       // ステートにセット（Update時に使用）
       const filterDislikes: string[] = dislikes.dislikes.map((item) => {
-        return item.ingredient.id
+        return item.ingredient.id.toString()
       })
 
       // 苦手ネタのステート更新
@@ -73,7 +72,7 @@ export default function PageDislike() {
   }, [dislikes])
 
   // チェックボックスの更新
-  const handleCheckbox = useCallback((id: number) => {
+  const handleCheckbox = useCallback((id: string) => {
     setIsChecked((prevArray) => {
       const newArray = prevArray.includes(id)
         ? prevArray.filter((item) => item !== id)
@@ -95,24 +94,31 @@ export default function PageDislike() {
   // 苦手ネタ更新
   const onSubmit = useCallback(async () => {
     if (user) {
-      // 苦手ネタの更新処理を実行
-      await handleUpdate(
-        user,
-        addIds,
-        deleteIds,
-        deleteDislikeMutation,
-        addDeleteMutation,
-        refetchDislikesByUserId,
-      )
+      try {
+        // 苦手ネタの更新処理を実行
+        const success = await handleUpdate(
+          user,
+          addIds,
+          deleteIds,
+          deleteDislikeMutation,
+          addDeleteMutation,
+        )
+
+        // 成功したら
+        if (success) {
+          console.log('更新成功')
+          alert('苦手ネタを更新しました！')
+
+          // 苦手ネタを再取得
+          refetchDislikesByUserId(user.id)
+        } else {
+          console.log('error')
+        }
+      } catch (error) {
+        console.error('エラー:', error)
+      }
     }
-  }, [
-    user,
-    addIds,
-    deleteIds,
-    deleteDislikeMutation,
-    addDeleteMutation,
-    refetchDislikesByUserId,
-  ])
+  }, [user, addIds, deleteIds, deleteDislikeMutation, addDeleteMutation])
 
   return (
     <>
@@ -122,11 +128,14 @@ export default function PageDislike() {
       ) : (
         <>
           <PageDescription>
-            苦手ネタを登録すると、<br />
-            おまかせガチャで苦手ネタを除いた丼で<br />ガチャするよ！
+            苦手ネタを登録すると、
+            <br />
+            おまかせガチャで苦手ネタを除いた丼で
+            <br />
+            ガチャするよ！
           </PageDescription>
           {ingredients &&
-            Object.values(ingredients).map((ingredient: Ingredient[] | undefined) => {
+            Object.values(ingredients).map((ingredient) => {
               return Object.values(ingredient).map((item: Ingredient) => {
                 return (
                   <NetaCheckbox

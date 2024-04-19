@@ -20,9 +20,5 @@ const SText = styled(Text)`
 `
 
 export const PageDescription: FC<Props> = memo(({ children, color }) => {
-  return (
-    <>
-      <SText color={color}>{children}</SText>
-    </>
-  )
+  return <SText color={color}>{children}</SText>
 })
