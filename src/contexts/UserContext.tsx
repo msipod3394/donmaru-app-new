@@ -3,8 +3,10 @@ import React, {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from 'react'
+import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { User } from '@/gql/graphql'
 
 const userContext = createContext<[User, Dispatch<SetStateAction<User>>]>([
@@ -14,6 +16,13 @@ const userContext = createContext<[User, Dispatch<SetStateAction<User>>]>([
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>({} as User)
+  const checkLogin = useCheckLogin()
+  
+  useEffect (() => {
+    if(!checkLogin) return
+    setUser(checkLogin)
+  }, [checkLogin])
+    
 
   return <userContext.Provider value={[user, setUser]}>{children}</userContext.Provider>
 }
