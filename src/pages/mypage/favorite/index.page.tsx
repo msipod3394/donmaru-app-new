@@ -33,6 +33,8 @@ export default function PageFavorite() {
   // loading状態を管理
   const [loading, setLoading] = useState(false)
 
+
+  // Review: ここもバックエンドでデータを整形してフロントに返すようにすればuseEffectは必要なくなりそう、ただフロント完結されるならこのしかなさそうです！
   // お気に入り情報の取得
   const { data } = useFetchFavoriteByIdQuery({
     variables: { id: user && user.id ? user.id.toString() : null },
