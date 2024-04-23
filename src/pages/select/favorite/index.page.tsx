@@ -8,7 +8,6 @@ import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ItemWithCount } from '@/types/ItemWithCount'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageSelectFavorite() {
   const router = useRouter()
@@ -27,15 +26,7 @@ export default function PageSelectFavorite() {
   const [loading, setLoading] = useState(false)
 
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-    // console.log('user', user)
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // お気に入りの取得
   const { data: favoriteData, refetch: refetchFavoritesByUserId } =

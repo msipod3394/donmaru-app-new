@@ -8,20 +8,12 @@ import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ItemWithCount } from '@/types/ItemWithCount'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageFavorite() {
   const router = useRouter()
 
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // 取得したお気に入りデータ
   const [favorites, setFavorites] = useState<ItemWithCount[]>([])
@@ -32,7 +24,6 @@ export default function PageFavorite() {
 
   // loading状態を管理
   const [loading, setLoading] = useState(false)
-
 
   // Review: ここもバックエンドでデータを整形してフロントに返すようにすればuseEffectは必要なくなりそう、ただフロント完結されるならこのしかなさそうです！
   // お気に入り情報の取得

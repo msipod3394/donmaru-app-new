@@ -6,7 +6,6 @@ import {
   useFetchDislikeByIdQuery,
   useFetchIngredientsQuery,
 } from '@/gql/graphql'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { useUserContext } from '@/contexts/UserContext'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
@@ -17,14 +16,7 @@ import { handleUpdate } from './handleUpdate'
 
 export default function PageDislike() {
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // 苦手ネタをステート管理
   const [registeredDislikes, setRegisteredDislikes] = useState<string[]>([])
@@ -82,7 +74,7 @@ export default function PageDislike() {
   }, [])
 
   //Review: supabaseだとこの方法しかなかったが、railsの場合はチェックがついたものと外されたもののidをバックエンドに渡してバックエンド上でロジックを組んで更新するのが良いです！
-  
+
   useEffect(() => {
     // チェックがついている・登録されていないIDを抽出（苦手ネタ追加）
     let removedDislikes = registeredDislikes.filter((item) => !isChecked.includes(item))

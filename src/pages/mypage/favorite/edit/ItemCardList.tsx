@@ -13,7 +13,6 @@ import {
 } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { handleUpdate } from './handleUpdate'
 import { ItemCard } from './ItemCard'
@@ -22,15 +21,7 @@ export function ItemCardList({ items }: { items: Item[] }) {
   const router = useRouter()
 
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    // console.log('checkLogin', checkLogin)
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, setUser, checkLogin])
+  const [user] = useUserContext()
 
   // 登録する配列
   const [selectedIds, setSelectedIds] = useState<string[]>([])

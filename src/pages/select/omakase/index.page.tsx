@@ -2,20 +2,12 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Dislike, useFetchDislikeByIdQuery, useFetchItemsQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageSelectOmakase() {
   const router = useRouter()
 
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // 苦手ネタをステート管理
   const [dislikes, setDislikes] = useState<Dislike[]>([])

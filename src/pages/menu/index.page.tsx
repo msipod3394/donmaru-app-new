@@ -5,7 +5,6 @@ import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ItemWithCount } from '@/types/ItemWithCount'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageAllMenu() {
   // 全ての丼を取得
@@ -15,14 +14,7 @@ export default function PageAllMenu() {
   const [items, setItems] = useState<ItemWithCount[]>([])
 
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // 注文履歴カウント
   const [count, setCount] = useState<

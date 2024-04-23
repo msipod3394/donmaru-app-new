@@ -11,20 +11,12 @@ import {
 } from '@/gql/graphql'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { useUserContext } from '@/contexts/UserContext'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 
 export default function PageResult() {
   const router = useRouter()
 
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // ステートで管理するもの
   const [result, setResult] = useState<Item | undefined>()

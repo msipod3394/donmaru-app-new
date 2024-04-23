@@ -17,12 +17,11 @@ const userContext = createContext<[User, Dispatch<SetStateAction<User>>]>([
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>({} as User)
   const checkLogin = useCheckLogin()
-  
-  useEffect (() => {
-    if(!checkLogin) return
+
+  useEffect(() => {
+    if (!checkLogin) return
     setUser(checkLogin)
   }, [checkLogin])
-    
 
   return <userContext.Provider value={[user, setUser]}>{children}</userContext.Provider>
 }

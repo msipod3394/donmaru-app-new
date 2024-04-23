@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Item, useFetchOrderByIdQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
-import { useCheckLogin } from '@/hooks/useLoginCheck'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from './ItemCardList'
@@ -12,14 +11,7 @@ type ItemAddCount = Item & {
 
 export default function PageOrder() {
   // ユーザー情報をセット
-  const [user, setUser] = useUserContext()
-  const checkLogin = useCheckLogin()
-
-  useEffect(() => {
-    if (Object.keys(user).length === 0 && checkLogin !== undefined) {
-      setUser(checkLogin)
-    }
-  }, [user, checkLogin])
+  const [user] = useUserContext()
 
   // 取得したお気に入りデータ
   const [orders, setOrders] = useState<ItemAddCount[]>([])
