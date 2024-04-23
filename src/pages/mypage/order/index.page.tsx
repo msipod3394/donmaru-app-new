@@ -41,6 +41,9 @@ export default function PageOrder() {
     },
   })
 
+  // Review: フロント側で紐付けを行うのではなく、バックエンドで注文回数をCount文を使って取得してgqlで返すようにする
+  // そうすればしたのuseEffectは二つとも入らなくなりそうですし、その方がその方がパフォーマンスが圧倒的に良いです！！
+
   // 注文履歴取得後、注文回数の配列を作成
   useEffect(() => {
     if (orderData) {
