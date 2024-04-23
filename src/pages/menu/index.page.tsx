@@ -1,10 +1,35 @@
 import { useEffect, useState } from 'react'
 import { useUserContext } from '@/contexts/UserContext'
-import { Order, useFetchItemsQuery, useFetchOrderByIdQuery } from '@/gql/graphql'
+import { useFetchItemsQuery, useFetchOrderByIdQuery } from '@/gql/graphql'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ItemWithCount } from '@/types/ItemWithCount'
+
+type Order = {
+  __typename?: 'Order' | undefined
+  id: string
+  createdAt: string
+  updatedAt: string
+  item: {
+    __typename?: 'Item' | undefined
+    id: string
+    name: string
+    image: string
+    createdAt: string
+    updatedAt: string
+    ingredients: {
+      __typename?: 'IngredientItem' | undefined
+      id: string
+      name: string
+    }[]
+  }
+  user: {
+    __typename?: 'User' | undefined
+    id: string
+    email: string
+  }
+}
 
 export default function PageAllMenu() {
   // 全ての丼を取得
@@ -93,9 +118,8 @@ export default function PageAllMenu() {
         latest: countMap[item.id] ? countMap[item.id].latest : '',
       }))
 
-      // console.log('result', result)
-
       // データをセット
+      // console.log('result', result)
       setItems(result)
 
       // ローディング解除

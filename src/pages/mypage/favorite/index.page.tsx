@@ -1,13 +1,38 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Text } from '@chakra-ui/react'
-import { Order, useFetchFavoriteByIdQuery, useFetchOrderByIdQuery } from '@/gql/graphql'
+import { useFetchFavoriteByIdQuery, useFetchOrderByIdQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from '@/components/molecules/ItemCardList'
 import { ItemWithCount } from '@/types/ItemWithCount'
+
+type Order = {
+  __typename?: 'Order' | undefined
+  id: string
+  createdAt: string
+  updatedAt: string
+  item: {
+    __typename?: 'Item' | undefined
+    id: string
+    name: string
+    image: string
+    createdAt: string
+    updatedAt: string
+    ingredients: {
+      __typename?: 'IngredientItem' | undefined
+      id: string
+      name: string
+    }[]
+  }
+  user: {
+    __typename?: 'User' | undefined
+    id: string
+    email: string
+  }
+}
 
 export default function PageFavorite() {
   const router = useRouter()
@@ -19,7 +44,13 @@ export default function PageFavorite() {
   const [favorites, setFavorites] = useState<ItemWithCount[]>([])
 
   // 注文履歴カウント
-  const [count, setCount] = useState<{ id: string; count: number }[]>([])
+  const [count, setCount] = useState<
+    {
+      createdAt: string
+      id: string
+      count: number
+    }[]
+  >([])
   const [orders, setOrders] = useState<Order[]>()
 
   // loading状態を管理

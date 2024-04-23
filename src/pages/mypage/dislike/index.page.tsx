@@ -73,7 +73,7 @@ export default function PageDislike() {
     })
   }, [])
 
-  //Review: supabaseだとこの方法しかなかったが、railsの場合はチェックがついたものと外されたもののidをバックエンドに渡してバックエンド上でロジックを組んで更新するのが良いです！
+  // Review: supabaseだとこの方法しかなかったが、railsの場合はチェックがついたものと外されたもののidをバックエンドに渡してバックエンド上でロジックを組んで更新するのが良いです！
 
   useEffect(() => {
     // チェックがついている・登録されていないIDを抽出（苦手ネタ追加）
@@ -104,7 +104,7 @@ export default function PageDislike() {
           alert('苦手ネタを更新しました！')
 
           // 苦手ネタを再取得
-          refetchDislikesByUserId(user.id)
+          refetchDislikesByUserId({ id: user.id })
         } else {
           console.log('error')
         }

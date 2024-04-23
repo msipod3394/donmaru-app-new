@@ -2,47 +2,49 @@ import React, { memo } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image } from '@chakra-ui/react'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
-import { ItemObjWithCount } from '@/types/ItemWithCount'
+import { ItemWithCount } from '@/types/ItemWithCount'
 
-export const ItemCard = memo(({ item }: ItemObjWithCount) => (
-  <SBox key={item.id}>
-    <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
-    <SBoxIn spacing={0.5}>
-      <Text size='sm' fontWeight='500'>
-        {item.name}
-      </Text>
-      <HStack gap={0} flexWrap='wrap'>
-        {item.ingredients && Array.isArray(item.ingredients) && (
-          <>
-            {Array.isArray(item.ingredients) &&
-              item.ingredients.map((ingredient, index) => (
-                <Text as='span' fontSize='xs' key={index}>
-                  {index > 0 && <>・</>}
-                  {ingredient.name}
-                </Text>
-              ))}
-          </>
-        )}
-      </HStack>
-      <HStack gap='.5rem'>
-        {item.latest && (
-          <HStack gap='.25rem'>
-            <Text fontSize='xs' color='gray.500'>
-              注文日 {convertFormattedDate(item.latest)}
-            </Text>
-          </HStack>
-        )}
-        {item.count && (
-          <HStack gap='.25rem'>
-            <Text fontSize='xs' color='gray.500'>
-              過去{item.count}回注文
-            </Text>
-          </HStack>
-        )}
-      </HStack>
-    </SBoxIn>
-  </SBox>
-))
+export const ItemCard = memo(({ item }: { item: ItemWithCount }) => {
+  return (
+    <SBox key={item.id}>
+      <Image w='80px' src={`/menu/${item.image}`} alt={item.name} />
+      <SBoxIn spacing={0.5}>
+        <Text size='sm' fontWeight='500'>
+          {item.name}
+        </Text>
+        <HStack gap={0} flexWrap='wrap'>
+          {item.ingredients && Array.isArray(item.ingredients) && (
+            <>
+              {Array.isArray(item.ingredients) &&
+                item.ingredients.map((ingredient, index) => (
+                  <Text as='span' fontSize='xs' key={index}>
+                    {index > 0 && <>・</>}
+                    {ingredient.name}
+                  </Text>
+                ))}
+            </>
+          )}
+        </HStack>
+        <HStack gap='.5rem'>
+          {item.latest && (
+            <HStack gap='.25rem'>
+              <Text fontSize='xs' color='gray.500'>
+                注文日 {convertFormattedDate(item.latest)}
+              </Text>
+            </HStack>
+          )}
+          {item.count && (
+            <HStack gap='.25rem'>
+              <Text fontSize='xs' color='gray.500'>
+                過去{item.count}回注文
+              </Text>
+            </HStack>
+          )}
+        </HStack>
+      </SBoxIn>
+    </SBox>
+  )
+})
 
 // スタイル
 const SBox = styled(HStack)`

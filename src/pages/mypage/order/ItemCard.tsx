@@ -2,11 +2,22 @@ import React, { FC, memo } from 'react'
 import styled from 'styled-components'
 import { Text, VStack, HStack, Image } from '@chakra-ui/react'
 import { convertFormattedDate } from '@/hooks/convertFormattedDate'
-import { ItemObjWithCount } from '@/types/ItemWithCount'
+import { Item, User } from '@/gql/graphql'
 
-export const ItemCard: FC<{ item: ItemObjWithCount }> = memo(({ item }) => {
-  console.log(item)
+export type Items = {
+  __typename?: 'Item' | undefined
+  count: number | string
+  latest: string
+  id: string
+  name: string
+  image: string
+  createdAt: string
+  updatedAt: string
+  ingredients: { __typename?: 'IngredientItem' | undefined; id: string; name: string }[]
+  item: Item
+}
 
+export const ItemCard: FC<{ item: Items }> = memo(({ item }) => {
   return (
     <SBox key={item.id}>
       <Image w='80px' src={`/menu/${item.item.image}`} alt={item.item.name} />

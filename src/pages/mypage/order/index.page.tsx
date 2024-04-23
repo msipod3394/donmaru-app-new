@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react'
-import { Item, useFetchOrderByIdQuery } from '@/gql/graphql'
+import { Item, useFetchOrderByIdQuery, User } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { ItemCardList } from './ItemCardList'
 
-type ItemAddCount = Item & {
-  count: string
+type Order = {
+  count: number | string
+  latest: string
+  id: string
+  name: string
+  image: string
+  createdAt: string
+  updatedAt: string
+  ingredients: { __typename?: 'IngredientItem' | undefined; id: string; name: string }[]
+  item: Item
 }
 
 export default function PageOrder() {
@@ -14,7 +22,7 @@ export default function PageOrder() {
   const [user] = useUserContext()
 
   // 取得したお気に入りデータ
-  const [orders, setOrders] = useState<ItemAddCount[]>([])
+  const [orders, setOrders] = useState<Order[]>([])
 
   // 注文履歴カウント
   const [count, setCount] = useState<{ id: string; count: number }[]>([])
@@ -72,12 +80,14 @@ export default function PageOrder() {
       )
 
       // 注文回数を含めた配列を作成
-      const result = filterItems.map((obj) => ({
+      const result: Order[] = filterItems.map((obj) => ({
         ...obj,
-        count: countMap[obj.item.id] || 0,
+        count: String(countMap[obj.item.id] || 0), // 文字列に変換
+        latest: '',
+        name: '',
+        image: '',
+        ingredients: [],
       }))
-
-      console.log('result', result)
 
       setOrders(result)
       setLoading(false)

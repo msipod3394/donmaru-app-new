@@ -46,16 +46,16 @@ export default function PageSelectFavorite() {
     variables: { userId: user && user.id ? String(user.id) : '' },
     skip: !user,
     onCompleted: (orderData) => {
-      if (orderData) {
-        console.log('orderData', orderData)
-      }
+      // if (orderData) {
+      //   console.log('orderData', orderData)
+      // }
     },
   })
 
   // 注文履歴取得後、注文回数の配列を作成
   useEffect(() => {
     if (orders.length !== 0) {
-      console.log('orders', orders)
+      // console.log('orders', orders)
 
       const itemIds = orders.map((order) => order.item.id)
       const counts: { [key: string]: number } = {}
@@ -99,9 +99,8 @@ export default function PageSelectFavorite() {
       const result = filterItems.map((favorite) => ({
         ...favorite,
         count: countMap[favorite.id] || 0,
+        latest: '',
       }))
-
-      // console.log('result', result)
 
       setFavorites(result)
       setLoading(false)

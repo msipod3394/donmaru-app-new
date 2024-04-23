@@ -6,12 +6,12 @@ import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { LoadingIndicator } from '@/components/atoms/LoadingIndicator'
 import { NetaCheckbox } from '@/components/atoms/checkbox/NetaCheckbox'
 import { PageDescription } from '@/components/atoms/texts/PageDescription'
-import {
-  useFetchIngredientsQuery,
-  Ingredient,
-  Item,
-  useFetchItemsQuery,
-} from '@/gql/graphql'
+import { useFetchIngredientsQuery, Item, useFetchItemsQuery } from '@/gql/graphql'
+
+type Ingredient = {
+  id: string
+  name: string
+}
 
 export default function PageSelectIngredient() {
   const router = useRouter()
@@ -35,6 +35,8 @@ export default function PageSelectIngredient() {
   // ページ読み込み時にネタ情報と丼情報をセット
   useEffect(() => {
     if (ingredientData) {
+      console.log(ingredientData.ingredients)
+
       setIngredients(ingredientData.ingredients)
     }
     if (itemData) {
@@ -44,7 +46,7 @@ export default function PageSelectIngredient() {
 
   // チェックボックスの更新
   const handleCheckbox = useCallback(
-    (id: number) => {
+    (id: string) => {
       // チェックが入っているかどうかを判定
       const newIsChecked = isChecked.includes(id.toString())
         ? isChecked.filter((item) => item !== id.toString())

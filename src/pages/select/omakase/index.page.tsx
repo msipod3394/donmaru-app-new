@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Dislike, useFetchDislikeByIdQuery, useFetchItemsQuery } from '@/gql/graphql'
+import { Ingredient, useFetchDislikeByIdQuery, useFetchItemsQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
+
+type Dislike = {
+  ingredient: {
+    id: string
+  }
+}
 
 export default function PageSelectOmakase() {
   const router = useRouter()
@@ -31,7 +37,6 @@ export default function PageSelectOmakase() {
   useEffect(() => {
     if (data && dislikes) {
       const dislikeIds = dislikes.map((dislike) => dislike.ingredient.id)
-      // console.log('dislikeIds', dislikeIds)
 
       // 全ての丼データ取得
       const itemsAll = data.items
