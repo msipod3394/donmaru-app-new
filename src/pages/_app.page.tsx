@@ -16,7 +16,7 @@ import { setContext } from '@apollo/client/link/context'
 import { getStoredAuthToken } from '@/shared/utils/authToken'
 
 const httpLink = createHttpLink({
-  uri: `http://localhost:3001/graphql`,
+  uri: `https://donmaru-app-d7b389e39b39.herokuapp.com/graphql`,
   credentials: 'include',
 })
 
@@ -34,7 +34,7 @@ const authLink = setContext((_, { headers }) => {
 
 // Apollo Clientの初期化
 const client: ApolloClient<{}> = new ApolloClient({
-  uri: 'http://localhost:3001/graphql',
+  uri: 'https://donmaru-app-d7b389e39b39.herokuapp.com/graphql',
   cache: new InMemoryCache(),
   link: authLink.concat(httpLink),
 })
