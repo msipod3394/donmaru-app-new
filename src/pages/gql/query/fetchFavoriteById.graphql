@@ -1,0 +1,22 @@
+# お気に入り丼を取得
+query fetchFavoriteById($id: String) {
+  favorites(userId: $id) {
+    id
+    item {
+      id
+      name
+      image
+      createdAt
+      updatedAt
+      ingredients {
+        id
+        name
+      }
+    }
+    user {
+      id
+    }
+    createdAt
+    updatedAt
+  }
+}

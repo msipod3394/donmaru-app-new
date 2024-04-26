@@ -1,0 +1,19 @@
+# 苦手ネタ追加
+mutation addDislikes($ingredientIds: [String!]!, $id: String!) {
+  createDislikes(ingredientIds: $ingredientIds, userId: $id) {
+    id
+    ingredient {
+      id
+    }
+    user {
+      id
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+# 苦手ネタ削除
+mutation deleteDislike($ingredientIds: [String!]!, $id: String!) {
+  deleteDislikes(ingredientIds: $ingredientIds, userId: $id)
+}

@@ -1,0 +1,25 @@
+# 丼IDから結果取得
+query SearchItemsById($id: ID) {
+  items(id: $id) {
+    id
+    name
+    image
+    ingredients {
+      id
+      name
+    }
+  }
+}
+
+# 注文履歴に追加
+mutation CreateOrder($itemId: String!, $userId: String!) {
+  createOrder(itemId: $itemId, userId: $userId) {
+    id
+    item {
+      id
+    }
+    user {
+      id
+    }
+  }
+}
