@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react'
 import { Stack } from '@chakra-ui/react'
-import { ButtonRounded } from '../atoms/buttons/ButtonRounded'
+import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
 
 type ButtonData = {
   func: () => void
