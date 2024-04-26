@@ -83,7 +83,7 @@ export default function PageResult() {
       ) : (
         <>
           {result && <DisplayResultItem item={result} />}
-          {/* <ActionButtons data={ActionButtonsData} /> */}
+          <ActionButtons data={ActionButtonsData} />
         </>
       )}
     </>
