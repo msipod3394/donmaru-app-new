@@ -26,8 +26,11 @@ const SignIn = () => {
         const res = await onSignIn(data)
         console.log('res:', res.user)
 
-        // ローカルストレージにセット
-        localStorage.setItem('user', JSON.stringify(res.user))
+        // クライアントサイドでのみ localStorage を操作
+        if (typeof window !== 'undefined') {
+          // ローカルストレージにセット
+          localStorage.setItem('user', JSON.stringify(res.user))
+        }
 
         // homeへ遷移
         alert('ログインに成功しました!')

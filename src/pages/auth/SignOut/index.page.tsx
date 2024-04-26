@@ -20,22 +20,24 @@ export default function SignOut() {
     }
 
     try {
-      // 認証トークンを削除
-      localStorage.removeItem('authToken')
-      localStorage.removeItem('user')
+      // クライアントサイドでのみ localStorage を操作
+      if (typeof window !== 'undefined') {
+        // 認証トークンを削除
+        localStorage.removeItem('authToken')
+        localStorage.removeItem('user')
 
-      // サインアウト処理を実行
-      await onSignOut(token)
+        // サインアウト処理を実行
+        await onSignOut(token)
 
-      // Apolloクライアントのキャッシュをクリア
-      client.clearStore()
+        // Apolloクライアントのキャッシュをクリア
+        client.clearStore()
 
-      // アラートで削除に成功したことを表示
-      alert('サインアウトしました')
+        // アラートで削除に成功したことを表示
+        alert('サインアウトしました')
 
-      // ログアウト後にサインインページにリダイレクト
-      router.push('/auth/SignIn')
-      
+        // ログアウト後にサインインページにリダイレクト
+        router.push('/auth/SignIn')
+      }
     } catch (error) {
       // エラー処理
       console.error('エラー:', error)
