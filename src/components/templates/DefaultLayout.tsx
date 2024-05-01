@@ -41,17 +41,20 @@ const SLayoutWrap = styled(Container)`
 const SInner = styled(HStack)`
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: 100svh;
+
+  ${({ theme }) => theme.breakpoint.lg`
+    min-height: 100vh;
+  `}
 `
 
 const SLeftBox = styled(Box)`
   width: 50%;
+  display: none;
 
   > img {
     margin: 0 auto;
   }
-
-  display: none;
 
   ${({ theme }) => theme.breakpoint.lg`
     display:block;
