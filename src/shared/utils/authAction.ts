@@ -9,7 +9,7 @@ export type SignUpAuthType = AuthType & {
   passwordConfirmation: string
 }
 
-const authUrl = (path?: string) => `http://localhost:3001/users/${path || ''}`
+const authUrl = (path?: string) => `https://donmaru-app-d7b389e39b39.herokuapp.com/users/${path || ''}`
 
 // SignIn
 export const onSignIn = async ({ email, password }: AuthType) =>

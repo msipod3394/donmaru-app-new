@@ -17,7 +17,7 @@ import { getStoredAuthToken } from '@/shared/utils/authToken'
 import { ThemeProvider } from 'styled-components'
 
 const httpLink = createHttpLink({
-  uri: `http://localhost:3001/graphql`,
+  uri: `https://donmaru-app-d7b389e39b39.herokuapp.com/graphql`,
   credentials: 'include',
 })
 
