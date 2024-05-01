@@ -1,5 +1,5 @@
 import { ReactNode, memo } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Box, Container, Image, HStack, VStack, Stack } from '@chakra-ui/react'
 import { MenuDrawer } from '../organisms/Menu/MenuDrawer'
 
@@ -31,6 +31,7 @@ export const DefaultLayout = memo(({ children }: DefaultLayoutProps) => {
 
 // Layout
 const SLayoutWrap = styled(Container)`
+  background-color: ${({ theme }) => theme.colors.red};
   width: 100%;
   min-width: 100%;
   padding: 0;
@@ -49,10 +50,14 @@ const SLeftBox = styled(Box)`
   > img {
     margin: 0 auto;
   }
+
+  display: none;
+
+  ${({ theme }) => theme.breakpoint.lg`
+    display:block;
+  `}
 `
 const SRightBox = styled(Box)`
-  width: 50%;
-  max-width: 390px;
   height: 100vh;
   min-height: calc(100vh - 8rem);
   overflow: hidden;
@@ -62,6 +67,14 @@ const SRightBox = styled(Box)`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+
+  width: 96%;
+  margin: 0 auto;
+
+  ${({ theme }) => theme.breakpoint.lg`
+    max-width: 390px;
+    width: 50%;
+  `}
 
   > h1 {
     font-size: 2.5rem;

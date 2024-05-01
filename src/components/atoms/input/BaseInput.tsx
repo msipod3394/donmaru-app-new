@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Input } from '@chakra-ui/react';
+import styled from 'styled-components'
+import { Input } from '@chakra-ui/react'
 
 const SBaseInput = styled(Input)`
   border: 2px solid #000;
@@ -10,9 +10,9 @@ const SBaseInput = styled(Input)`
 
   &:hover,
   &:active {
-    border: 2px solid #f13b3a;
+    border: 2px solid ${({ theme }) => theme.colors.red};
     outline: none;
   }
-`;
+`
 
-export default SBaseInput;
+export default SBaseInput

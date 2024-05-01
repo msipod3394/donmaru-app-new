@@ -28,8 +28,8 @@ const SButtonRounded = styled(Button)`
   height: auto;
   margin: 0 auto;
   display: block;
-  border: 3px solid #000;
-  background-color: #fff;
+  border: 3px solid ${({ theme }) => theme.colors.black};
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 10rem;
 
   > span {
@@ -37,29 +37,33 @@ const SButtonRounded = styled(Button)`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-mincho);
     font-weight: 500;
-    font-size: var(--size-20);
+    font-family: ${({ theme }) => theme.fonts.family.heading};
+    font-size: ${({ theme }) => theme.fonts.size.xl};
+
+    ${({ theme }) => theme.breakpoint.lg`
+      font-size: ${theme.fonts.size.xl};
+    `}
   }
 
   &:hover {
-    background-color: #000;
-    color: #fff;
+    background-color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme }) => theme.colors.white};
   }
 
   /* isDark */
   &.isDark {
-    background-color: #000;
+    background-color: ${({ theme }) => theme.colors.black};
 
     > span {
-      color: #fff;
+      color: ${({ theme }) => theme.colors.white};
     }
 
     &:hover {
-      background-color: #fff;
+      background-color: ${({ theme }) => theme.colors.white};
 
       > span {
-        color: #000;
+        color: ${({ theme }) => theme.colors.black};
       }
     }
   }
@@ -74,12 +78,12 @@ const SButtonRounded = styled(Button)`
       mask-image: url(/common/icon/arrow.svg);
       mask-repeat: no-repeat;
       mask-position: center;
-      background-color: #000;
+      background-color: ${({ theme }) => theme.colors.black};
       margin-left: 0.5rem;
     }
 
     &:hover::after {
-      background-color: #fff;
+      background-color: ${({ theme }) => theme.colors.white};
     }
   }
 

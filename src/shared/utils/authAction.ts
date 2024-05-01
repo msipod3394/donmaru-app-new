@@ -9,7 +9,7 @@ export type SignUpAuthType = AuthType & {
   passwordConfirmation: string
 }
 
-const authUrl = (path?: string) => `https://donmaru-app-d7b389e39b39.herokuapp.com/users/${path || ''}`
+const authUrl = (path?: string) => `http://localhost:3001/users/${path || ''}`
 
 // SignIn
 export const onSignIn = async ({ email, password }: AuthType) =>
@@ -28,8 +28,8 @@ export const onSignIn = async ({ email, password }: AuthType) =>
     const token = res.headers.get('Authorization')
     if (res.ok && token) {
       storeAuthToken(token)
-      const user = await res.json();
-      return user;
+      const user = await res.json()
+      return user
     }
     throw new Error(res.toString())
   })
@@ -52,7 +52,7 @@ export const onSignUp = ({ email, password }: AuthType) =>
       const token = res.headers.get('Authorization')
       if (res.ok && token) {
         storeAuthToken(token)
-        const user = await res.json();
+        const user = await res.json()
         return user
       }
       return res.json()

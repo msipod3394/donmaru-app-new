@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
-import theme from '@/theme/theme'
+import { theme } from '@/theme/theme'
 import {
   ApolloClient,
   InMemoryCache,
@@ -14,9 +14,10 @@ import '@/styles/reset.min.css'
 import '@/styles/variables.css'
 import { setContext } from '@apollo/client/link/context'
 import { getStoredAuthToken } from '@/shared/utils/authToken'
+import { ThemeProvider } from 'styled-components'
 
 const httpLink = createHttpLink({
-  uri: `https://donmaru-app-d7b389e39b39.herokuapp.com/graphql`,
+  uri: `http://localhost:3001/graphql`,
   credentials: 'include',
 })
 
@@ -34,7 +35,7 @@ const authLink = setContext((_, { headers }) => {
 
 // Apollo Clientの初期化
 const client: ApolloClient<{}> = new ApolloClient({
-  uri: 'https://donmaru-app-d7b389e39b39.herokuapp.com/graphql',
+  uri: 'http://localhost:3001/graphql',
   cache: new InMemoryCache(),
   link: authLink.concat(httpLink),
 })
@@ -47,18 +48,20 @@ function MyApp({ Component, pageProps }: AppProps) {
   const useDefaultLayout: boolean = !pagesWithoutDefaultLayout.includes(router.pathname)
 
   return (
-    <ChakraProvider theme={theme}>
-      <ApolloProvider client={client}>
-        <UserProvider>
-          {useDefaultLayout ? (
-            <DefaultLayout>
+    <ChakraProvider>
+      <ThemeProvider theme={theme}>
+        <ApolloProvider client={client}>
+          <UserProvider>
+            {useDefaultLayout ? (
+              <DefaultLayout>
+                <Component {...pageProps} />
+              </DefaultLayout>
+            ) : (
               <Component {...pageProps} />
-            </DefaultLayout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </UserProvider>
-      </ApolloProvider>
+            )}
+          </UserProvider>
+        </ApolloProvider>
+      </ThemeProvider>
     </ChakraProvider>
   )
 }

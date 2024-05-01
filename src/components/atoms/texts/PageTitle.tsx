@@ -5,10 +5,14 @@ import styled from 'styled-components'
 // style
 const SHeading = styled(Heading)`
   margin-bottom: 1.6rem;
-  font-size: var(--size-32);
   font-weight: 500;
   text-align: center;
-  font-family: var(--font-mincho);
+  font-family: ${({ theme }) => theme.fonts.family.heading};
+  font-size: ${({ theme }) => theme.fonts.size.xl3};
+
+  ${({ theme }) => theme.breakpoint.lg`
+    font-size: ${theme.fonts.size.xl2};
+  `}
 `
 
 export const PageTitle: FC<{ title: string }> = memo(({ title }) => {
