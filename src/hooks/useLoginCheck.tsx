@@ -18,10 +18,11 @@ export const useCheckLogin = () => {
 
         if (authToken && authUser) {
           const convertJsonObj = JSON.parse(authUser)
-          setUser(convertJsonObj)
+          console.log('convertJsonObj', convertJsonObj)
+          // setUser(convertJsonObj)
         } else {
           // ログインしていなければ、ログインページにリダイレクト
-          console.log('ログイン画面へ')
+          // console.log('ログイン画面へ')
           router.push('/auth/SignIn')
         }
       } else {

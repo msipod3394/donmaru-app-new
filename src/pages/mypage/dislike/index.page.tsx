@@ -6,6 +6,7 @@ import {
   useFetchDislikeByIdQuery,
   useFetchIngredientsQuery,
 } from '@/gql/graphql'
+import { HStack, VStack } from '@chakra-ui/react'
 import { useUserContext } from '@/contexts/UserContext'
 import { PageTitle } from '@/components/atoms/texts/PageTitle'
 import { ButtonRounded } from '@/components/atoms/buttons/ButtonRounded'
@@ -51,6 +52,9 @@ export default function PageDislike() {
       const registeredDislike: string[] = dislikes.dislikes.map((item) => {
         return item.ingredient.id.toString()
       })
+
+      // console.log('registeredDislike', registeredDislike)
+
       setIsChecked(registeredDislike)
 
       // ステートにセット（Update時に使用）
@@ -82,6 +86,7 @@ export default function PageDislike() {
 
     // チェックがない・登録されているIDを抽出（苦手ネタ削除）
     let uniqueDislikes = isChecked.filter((item) => !registeredDislikes.includes(item))
+
     setAddIds(uniqueDislikes)
   }, [isChecked, registeredDislikes])
 
@@ -128,20 +133,22 @@ export default function PageDislike() {
             <br />
             ガチャするよ！
           </PageDescription>
-          {ingredients &&
-            Object.values(ingredients).map((ingredient) => {
-              return Object.values(ingredient).map((item: Ingredient) => {
-                return (
-                  <NetaCheckbox
-                    key={item.id}
-                    id={item.id}
-                    label={item.name}
-                    isChecked={isChecked.includes(item.id)}
-                    onChange={handleCheckbox}
-                  />
-                )
-              })
-            })}
+          <VStack mb={10} flexDirection='row' flexWrap='wrap' alignItems='flex-start'>
+            {ingredients &&
+              Object.values(ingredients).map((ingredient) => {
+                return Object.values(ingredient).map((item: Ingredient) => {
+                  return (
+                    <NetaCheckbox
+                      key={item.id}
+                      id={item.id}
+                      label={item.name}
+                      isChecked={isChecked.includes(item.id)}
+                      onChange={handleCheckbox}
+                    />
+                  )
+                })
+              })}
+          </VStack>
         </>
       )}
       <ButtonRounded onClick={onSubmit} className='isDark'>

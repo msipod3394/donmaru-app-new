@@ -10,7 +10,7 @@ type Props = {
 
 export const NetaCheckbox: FC<Props> = memo(({ id, label, isChecked, onChange }) => {
   return (
-    <Box key={id}>
+    <Box key={id} w='48%'>
       <Checkbox isChecked={isChecked} onChange={() => onChange(id)}>
         {label}
       </Checkbox>

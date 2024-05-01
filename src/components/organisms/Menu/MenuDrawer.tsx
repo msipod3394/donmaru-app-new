@@ -54,7 +54,7 @@ export const MenuDrawer = memo(() => {
       <Button onClick={onOpen}>
         <HamburgerIcon />
       </Button>
-      
+
       {/* Drawer部分 */}
       <Drawer isOpen={isOpen} onClose={onClose} placement='right'>
         <DrawerOverlay>

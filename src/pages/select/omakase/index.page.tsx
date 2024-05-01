@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Ingredient, useFetchDislikeByIdQuery, useFetchItemsQuery } from '@/gql/graphql'
+import { useFetchDislikeByIdQuery, useFetchItemsQuery } from '@/gql/graphql'
 import { useUserContext } from '@/contexts/UserContext'
 
 type Dislike = {

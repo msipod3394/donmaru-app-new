@@ -21,7 +21,7 @@ export default function PageOrder() {
   // ユーザー情報をセット
   const [user] = useUserContext()
 
-  // 取得したお気に入りデータ
+  // 取得した注文履歴データ
   const [orders, setOrders] = useState<Order[]>([])
 
   // 注文履歴カウント

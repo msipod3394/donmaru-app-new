@@ -13,7 +13,7 @@ export const ItemCard = memo(({ item, clickAddFavorite }) => {
           {item.favorite && (
             <HStack gap={1}>
               <StarIcon boxSize={2} color='orange' />
-              <SFavText>お気に入り登録中</SFavText>
+              <SFavText>お気に入り登録</SFavText>
             </HStack>
           )}
           <Text size='sm' fontWeight='500'>

@@ -106,7 +106,7 @@ export default function PageSelectIngredient() {
               ? '該当する丼がないよ😖'
               : `該当 ${hitCount}個、ガチャしよう!`}
           </PageDescription>
-          <VStack mb='2rem' alignItems='flex-start'>
+          <VStack mb={10} flexDirection='row' flexWrap='wrap' alignItems='flex-start'>
             {ingredients &&
               ingredients.map((item) => {
                 return (

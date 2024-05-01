@@ -34,4 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
 src/_bk/*
+src/pages/_app.page.tsx
+src/shared/utils/authAction.ts
+

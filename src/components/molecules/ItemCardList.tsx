@@ -1,7 +1,16 @@
 import { memo } from 'react'
-import { ItemCard } from './ItemCard'
+import { VStack } from '@chakra-ui/react'
 import { ItemWithCount } from '@/types/ItemWithCount'
+import { ItemCard } from './ItemCard'
 
 export const ItemCardList = memo(({ items }: { items: ItemWithCount[] }) => {
-  return items.map((item: ItemWithCount) => <ItemCard key={item.id} item={item} />)
+  return (
+    <>
+      <VStack mb={10}>
+        {items.map((item: ItemWithCount) => (
+          <ItemCard key={item.id} item={item} />
+        ))}
+      </VStack>
+    </>
+  )
 })
